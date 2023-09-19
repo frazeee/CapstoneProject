@@ -2,10 +2,10 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 
 
-const LandingPage= () => {
+const LandingPage= ({token}) => {
     return(
         <div>
-        <Navbar />
+        <Navbar token={token}/>
         <Header />
         </div>
     )

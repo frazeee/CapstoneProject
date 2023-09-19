@@ -1,9 +1,46 @@
 import "./Login.css";
 import React, { useEffect, useState } from "react";
 import loginPicture from "../images/loginPicture.png";
-import { Link } from "react-router-dom";
+import { supabase } from "../components/client";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({setToken}) => {
+  let navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  console.log(formData);
+
+  function handleChange(event) {
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        [event.target.name]: event.target.value,
+      };
+    });
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (error) throw error;
+      console.log(data)
+      setToken(data)
+      navigate('/')
+
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -14,7 +51,7 @@ const Login = () => {
         <div className="col-xl-8 px-5 pt-5">
           <h1 className="formHeader">Login</h1>
           <hr></hr>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div class="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Email address
@@ -22,8 +59,8 @@ const Login = () => {
               <input
                 type="email"
                 className="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
+                name="email"
+                onChange={handleChange}
               />
               <div id="emailHelp" class="form-text">
                 We'll never share your email with anyone else.
@@ -36,16 +73,18 @@ const Login = () => {
               <input
                 type="password"
                 className="form-control"
-                id="exampleInputPassword1"
+                name="password"
+                onChange={handleChange}
               />
             </div>
-            <div class="mb-3 form-check">
-            </div>
+            <div class="mb-3 form-check"></div>
             <button type="submit" class="btn rounded-pill">
               Login
             </button>
           </form>
-          <Link to="/Register" style={{textDecoration: 'none'}}><a className="span-link">Don't have an account? Register Here!</a></Link>
+          <Link to="/Register" style={{ textDecoration: "none" }}>
+            <a className="span-link">Don't have an account? Register Here!</a>
+          </Link>
         </div>
       </div>
     </div>

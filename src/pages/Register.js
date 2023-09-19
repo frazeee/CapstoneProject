@@ -2,16 +2,18 @@ import "./Login.css";
 import React, { useEffect, useState } from "react";
 import loginPicture from "../images/loginPicture.png";
 import { supabase } from "../components/client";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
 const Login = () => {
+  let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName:'',lastName:'',email:'',password:''
   })
 
-  console.log(formData)
+
 
   function handleChange(event){
     setFormData((prevFormData)=>{
@@ -40,6 +42,7 @@ const Login = () => {
     )
     if(error) throw error
     alert('Check your email for a verification link.')
+    navigate('/Login')
 
 
    } catch(error) {
@@ -108,6 +111,7 @@ const Login = () => {
               Register
             </button>
           </form>
+          <Link to="/Login" style={{textDecoration: 'none'}}><a className="span-link">Already have an account? Login Here!</a></Link>
         </div>
       </div>
     </div>
