@@ -6,6 +6,17 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({setToken}) => {
   let navigate = useNavigate();
+  console.log(sessionStorage.getItem('token'))
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+
+    if (token) {
+      // If the access token exists, navigate to the '/' route
+      navigate('/');
+    }
+  }, [navigate]);
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -35,20 +46,20 @@ const Login = ({setToken}) => {
       console.log(data)
       setToken(data)
       navigate('/')
-
     } catch (error) {
       alert(error);
     }
   }
 
-  return (
+
+   return(
     <div className="container-fluid">
       <div className="row">
-        <div className="left-panel pt-5 col-xl-4 d-flex flex-column mb-3 align-items-center">
-          <h1>Adopt a pet today!</h1>
+        <div className="left-panel pt-5 col-xl-4 col-lg-4 col-md-4 d-flex flex-column align-items-center">
+          <h1 className="text-center">Adopt a pet today!</h1>
           <img src={loginPicture} className="img-fluid" />
         </div>
-        <div className="col-xl-8 px-5 pt-5">
+        <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Login</h1>
           <hr></hr>
           <form onSubmit={handleSubmit}>
@@ -77,10 +88,11 @@ const Login = ({setToken}) => {
                 onChange={handleChange}
               />
             </div>
-            <div class="mb-3 form-check"></div>
+            <div class="">
             <button type="submit" class="btn rounded-pill">
               Login
             </button>
+            </div>
           </form>
           <Link to="/Register" style={{ textDecoration: "none" }}>
             <a className="span-link">Don't have an account? Register Here!</a>
@@ -88,7 +100,7 @@ const Login = ({setToken}) => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default Login;

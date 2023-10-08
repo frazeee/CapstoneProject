@@ -1,13 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 
 
 const LandingPage= ({token}) => {
-    return(
-        <div>
+    
+    return (
+     <div>
         <Navbar token={token}/>
         <Header />
-        </div>
+    </div>
     )
+        
+      
+
 }
+
 export default LandingPage;

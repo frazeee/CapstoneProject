@@ -53,11 +53,11 @@ const Login = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="left-panel pt-5 col-xl-4 d-flex flex-column mb-3 align-items-center">
+        <div className="left-panel pt-5 col-xl-4 col-lg-4 col-md-4  d-flex flex-column align-items-center">
           <h1>Adopt a pet today!</h1>
           <img src={loginPicture} className="img-fluid" />
         </div>
-        <div className="col-xl-8 px-5 pt-5">
+        <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Register</h1>
           <hr></hr>
           <form onSubmit={handleSubmit}>

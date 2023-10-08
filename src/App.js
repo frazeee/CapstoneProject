@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 
 
 
-function App() {
 
+function App() {
   const [token, setToken] = useState(false)
 
   if(token){
@@ -15,19 +15,13 @@ function App() {
 
   }
 
-  useEffect(()=>{
-    if(sessionStorage.getItem('token')){
-        let data =JSON.parse(sessionStorage.getItem('token'))
-        setToken(data)
-    }
-
-  }, [])
 
 
 
 
   return (
     <>
+
      <Router>
       <Routes>
         <Route path ="/" element={<LandingPage token={token} />}/>
