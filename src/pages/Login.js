@@ -6,16 +6,15 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({setToken}) => {
   let navigate = useNavigate();
-  console.log(sessionStorage.getItem('token'))
 
-  useEffect(() => {
-    const token = sessionStorage.getItem('token');
-
-    if (token) {
-      // If the access token exists, navigate to the '/' route
-      navigate('/');
-    }
-  }, [navigate]);
+    useEffect(() =>{
+      if(sessionStorage.getItem('token')){
+        var token = sessionStorage.getItem('token')
+        console.log(token)
+        navigate("/", { state: { token } })
+      }
+    })
+ 
 
 
   const [formData, setFormData] = useState({
@@ -23,7 +22,6 @@ const Login = ({setToken}) => {
     password: "",
   });
 
-  console.log(formData);
 
   function handleChange(event) {
     setFormData((prevFormData) => {

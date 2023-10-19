@@ -1,0 +1,85 @@
+.content{
+    height: 500px;
+}
+
+.card{
+    width: 346px;
+}
+
+.card-design{
+    background-color: #FFBD59;
+    color: whitesmoke;
+    height: 65px;
+}
+
+.card-body{
+    color: dimgray;
+}
+
+
+
+.card-image-top img {
+    width: clamp(345px,345px,345px);
+    height: clamp(300px,300px,300px);
+    object-fit: cover;
+  }
+
+
+.highlight-word{
+    color: #FFBD59!important;
+}
+
+.row-bottom-margin{
+    margin-bottom: -150px;
+}
+
+.card-pictures img{
+    max-height: 350px;
+}
+
+.card-pictures h2{
+    margin-left: 90px;
+}
+
+.buttons button{
+    padding: 15px;
+    width: 150px;
+    font-weight: bold;
+}
+
+.buttons :nth-child(2){
+    background-color: white;
+    color: black;
+    border-color: #FFBD59;
+    border-width: 3px;
+}
+
+.filter-buttons button{
+    font-size: 18px;
+    background-color: white;
+    color: black;
+    border-color: #FFBD59;
+    border-width: 3px;
+    font-weight: bold;
+    
+}
+
+.btn.active{
+    background-color: #FFBD59;
+    border-color: #FFBD59;
+    color: whitesmoke;
+}
+
+.on-hover {
+    transition: transform 300ms ease-in-out;
+  }
+  
+  .on-hover:hover {
+    transform: translate(0px, 0px) scale(1.05, 1.05);
+  }
+
+@media (max-width: 768px) {
+    .card-pictures {
+      display: none;
+    }
+  }

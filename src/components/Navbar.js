@@ -1,13 +1,18 @@
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from './client';
 
 const Navbar = ({token}) => {
 
-  const navigate = useNavigate()
 
   function handleLogout(){
-    sessionStorage.removeItem('token')
-    navigate('/')
+
+    supabase.auth.signOut().then(() => {
+      localStorage.clear();
+      sessionStorage.removeItem('token');
+    }).catch(error => {
+      console.error('Error during logout:', error);
+    });
   }
 
 
@@ -23,7 +28,7 @@ const Navbar = ({token}) => {
           </button>
           <div className='collapse navbar-collapse' id='navbarNav'>
               <div className='nav-item'>
-                <Link className="nav-link mx-3" to="/">Adopt A Pet</Link>
+                <Link className="nav-link mx-3" to="/Pets">Adopt A Pet</Link>
               </div>
              <ul className='navbar-nav ms-auto'>
               {token ? (
@@ -32,7 +37,7 @@ const Navbar = ({token}) => {
                 <ul className='dropdown-menu dropdown-menu-lg-end'> 
                   <li className='dropdown-item'><Link style={{ textDecoration: 'none' }} to="/">Account Details</Link></li>
                   <li className='dropdown-divider'><hr class="dropdown-divider" /></li>
-                  <li className='dropdown-item'><a href=''className='' onClick={handleLogout()}>Logout</a></li>
+                  <li className='dropdown-item'><a href=''className='' onClick={handleLogout}>Logout</a></li>
                 </ul>
               </li>
               ) : (
