@@ -4,17 +4,8 @@ import loginPicture from "../images/loginPicture.png";
 import { supabase } from "../components/client";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({setToken}) => {
+const Login = ({setSession , setUser}) => {
   let navigate = useNavigate();
-
-    useEffect(() =>{
-      if(sessionStorage.getItem('token')){
-        var token = sessionStorage.getItem('token')
-        console.log(token)
-        navigate("/", { state: { token } })
-      }
-    })
- 
 
 
   const [formData, setFormData] = useState({
@@ -41,8 +32,9 @@ const Login = ({setToken}) => {
       });
 
       if (error) throw error;
-      console.log(data)
-      setToken(data)
+      setSession(data.session)
+      setUser(data.user)
+      console.log("Logged In!" + data)
       navigate('/')
     } catch (error) {
       alert(error);

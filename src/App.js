@@ -1,31 +1,56 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
-import { Login, Register, LandingPage, Pets } from './pages' 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from 'react';
+import { Login, Register, LandingPage, Pets, PetPage } from './pages' 
+import { BrowserRouter as Router, Routes, Route, } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { supabase } from './components/client';
 
 
 
 
 function App() {
-  const [token, setToken] = useState(false)
 
-  if(token){
-    sessionStorage.setItem('token', JSON.stringify(token))
-  }
+  const [session, setSession] = useState(null)
+  const [user, setUser] = useState(null)
+
+  console.log(session)
+  console.log(user)
+
+  useEffect(() => {
+    const getSessionData = async () => {
+          console.log("GET SESSION RUNS")
+      if (session && session.expires_at) {
+        console.log("pumasok")
+        const now = new Date()
+        const expiresAt = new Date(session.expires_at)
+        console.log(now >= expiresAt) 
+        if (now >= expiresAt) {
+          
+        }
+      }
+
+      const{data} = await supabase.auth.getUser()
+        setSession(data.session)
+    }
+    
+    getSessionData()
+    
+
+  },[])
 
 
+  
   return (
     <>
-
-     <Router>
-      <Routes>
-        <Route path ="/" element={<LandingPage token={token} />}/>
-        <Route path ="/Login" element={<Login setToken={setToken}/>} />
-        <Route path='/Register' element={<Register />} />
-        <Route path='/Pets' element={<Pets token={token}/>} />
-      </Routes>
-    </Router> 
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage user={user} />} />
+          <Route path="/login" element={<Login setSession = {setSession} setUser = {setUser} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/pets" element={<Pets user={user} />} />
+          <Route path="/petPage/:cardId" element={<PetPage user={user} />} />
+        </Routes>
+      </Router>
     </>
   );
 }

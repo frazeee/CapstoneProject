@@ -2,14 +2,14 @@ import Navbar from "../components/Navbar";
 import './Pets.css'
 import { useEffect , useState } from "react";
 import { supabase } from "../components/client";
-import { act } from "react-dom/test-utils";
+import { Link } from "react-router-dom";
 
 
-function Pets({token}){
+
+function Pets({user}){
 
 
   const [data, setData] = useState([])
-
 
   useEffect(() => {
     async function getData() {
@@ -41,28 +41,29 @@ function Pets({token}){
     return false;
   })
 
-  
-
-
+ 
   return (
     <>
-    <Navbar token={token}/>
-    <div className="container-fluid col-lg-6 pt-3">
-        <div className="headerText">
-          <h2 className="fw-bolder text-center">Every Pet Deserves a Loving Home.</h2>
-          <h2 className="fw-bolder second-header text-center"> <span className="highlight-word">Adopt</span> a Pet Today!</h2>
-          <p className="text-center bottom-header">Browse our available animals and learn more about the adoption process. Together, we can rescue, rehabilitate, and rehome pets in need. Thank you for supporting our mission to bring joy to families through pet adoption.</p>
-        </div>
+    <Navbar user={user}/>
+
+    <div class="bg-dark hero text-secondary px-4 py-5 text-center shadow-sm">
+    <div class="py-5">
+      <h1 class="display-5 fw-bold text-white">Every Pet Deserves a Loving Home.</h1>
+      <h1 class="display-5 fw-bold text-white">Adopt a Pet Today!</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="fs-6 mb-4">Browse our available animals and learn more about the adoption process. Together, we can rescue, rehabilitate, and rehome pets in need. Thank you for supporting our mission to bring joy to families through pet adoption.</p>
       </div>
+    </div>
+  </div>
 
     <div className="container content pt-5 px-3">
       <div className="row row-bottom-margin">
         <div className="col-xl-6">
-          <h1 className="highlight-word">Adopt a Shelter cat or dog</h1>
-          <p>Our adoptable cats and dogs are all spayed/neutered and vaccinated. They’ve lived a difficult life before being in the shelters and we need to make sure that they get adopted by loving humans and won’t be subjected to further cruelty or neglect. Here’s how to apply:</p>
+          <h1 className="highlight-word text-decoration-underline">Adopt a Shelter cat or dog.</h1>
+          <p className="fs-6">Our adoptable cats and dogs are all spayed/neutered and vaccinated. They’ve lived a difficult life before being in the shelters and we need to make sure that they get adopted by loving humans and won’t be subjected to further cruelty or neglect. Here’s how to apply:</p>
           <ul className="">
             <li>Submit the adoption application form</li>
-            <li>Attend the onsite interview</li>
+            <li>Attend the online interview</li>
             <li>Meet our shelter animals in person</li>
             <li>Visit your chosen pet to confirm your choice</li>
             <li>Wait for vet clearance and schedule pick up</li>
@@ -76,14 +77,19 @@ function Pets({token}){
         </div>
 
         <div className="col-xl-6 ps-5 d-flex card-pictures highlight-word d-none d-xl-flex">
-          <div className="col align-items-center">
-            <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/JOJO1.jpg" className="img-fluid align-self-middle rounded" alt="Jojo Picture" />
-            <h2>Name</h2>
+          <div className="col pe-5">
+              <div className="card pet-card shadow on-hover">
+                <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/SMILE1.jpg" className="img-fluid align-self-middle rounded card-img-top" alt="Smile" />
+                <h2 className="card-title ps-3 text-light">Smile</h2>
+              </div>
           </div>
-          <div className="col align-items-center">
-            <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/JOJO1.jpg" className="img-fluid rounded" alt="Jojo Picture" />
-            <h2>Name</h2>
+          <div className="col">
+              <div className="card pet-card shadow on-hover">
+              <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/JOJO1.jpg" className="img-fluid rounded" alt="Jojo" />
+                <h2 className="card-title ps-4 text-light">Jojo</h2>
+              </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -113,8 +119,9 @@ function Pets({token}){
 
       <div className="row" key={`row`}>
         {filteredCardItems.map((cardItem) => (
-          <div key={cardItem.id} className="container col-xl-3 col-lg-6 col-md-6 col-sm-12 pb-4 d-flex flex-column justify-content-center align-items-center">
-            <div className="card shadow on-hover ">
+          <div key={cardItem.id} className="container col-xl-3 col-lg-6 col-md-6 col-sm-12 pb-4 d-flex flex-column justify-content-center align-items-center">  
+            <Link to={`/petPage/${cardItem.id}`} className="text-decoration-none">
+            <div className="card shadow on-hover">
               <div className="card-image-top">
                 <img src={cardItem.image_url1} alt={cardItem.pet_name} />
               </div>
@@ -126,6 +133,7 @@ function Pets({token}){
                 <p>Personality: {cardItem.pet_personality}</p>
               </div>
             </div>
+            </Link>
           </div>
         ))}
       </div>

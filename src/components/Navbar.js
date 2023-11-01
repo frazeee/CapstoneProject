@@ -1,15 +1,15 @@
 import './Navbar.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from './client';
+import { useEffect, useState } from 'react';
 
-const Navbar = ({token}) => {
+const Navbar = ({user}) => {
 
 
   function handleLogout(){
 
     supabase.auth.signOut().then(() => {
       localStorage.clear();
-      sessionStorage.removeItem('token');
     }).catch(error => {
       console.error('Error during logout:', error);
     });
@@ -19,7 +19,7 @@ const Navbar = ({token}) => {
   return(
     <>
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
-      <div className="container-fluid">
+      <div className="container">
           <div className="nav-item">
             <Link className="nav-link mx-3" to="/">Home</Link>
           </div>
@@ -31,15 +31,16 @@ const Navbar = ({token}) => {
                 <Link className="nav-link mx-3" to="/Pets">Adopt A Pet</Link>
               </div>
              <ul className='navbar-nav ms-auto'>
-              {token ? (
-              <li className="nav-item dropdown">
-                <li className="nav-link dropdown-toggle mx-3" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >{token.user.user_metadata.first_name}</li>
-                <ul className='dropdown-menu dropdown-menu-lg-end'> 
-                  <li className='dropdown-item'><Link style={{ textDecoration: 'none' }} to="/">Account Details</Link></li>
-                  <li className='dropdown-divider'><hr class="dropdown-divider" /></li>
-                  <li className='dropdown-item'><a href=''className='' onClick={handleLogout}>Logout</a></li>
-                </ul>
-              </li>
+              
+               { user ? (
+                <li className="nav-item dropdown">
+                <li className="nav-link dropdown-toggle mx-3" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >{user.user_metadata.first_name}</li>
+                  <ul className='dropdown-menu'> 
+                    <li className='dropdown-item'><Link style={{ textDecoration: 'none' }} to="/">Account Details</Link></li>
+                    <li className='dropdown-divider'><hr className="dropdown-divider" /></li>
+                    <li className='dropdown-item '><a href=''className='text-decoration-none' onClick={handleLogout}>Logout</a></li>
+                  </ul>
+                </li>
               ) : (
                 <>
               <li className="nav-item">
@@ -49,12 +50,11 @@ const Navbar = ({token}) => {
                 <Link className="nav-link mx-3" to="/Register">Register</Link>
               </li>
               </>
-              )} 
+              )}  
           </ul>
           </div>
         </div>
     </nav>
-
     </>
   )
 }

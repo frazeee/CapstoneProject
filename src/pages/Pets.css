@@ -17,7 +17,6 @@
 }
 
 
-
 .card-image-top img {
     width: clamp(345px,345px,345px);
     height: clamp(300px,300px,300px);
@@ -70,6 +69,12 @@
     color: whitesmoke;
 }
 
+.pet-card{
+    max-width: 300px;
+    max-height: 400px;
+    background-color: #FFBD59;
+}
+
 .on-hover {
     transition: transform 300ms ease-in-out;
   }
@@ -83,3 +88,10 @@
       display: none;
     }
   }
+
+.hero{
+    /* background-image:url(../images/HeroBanner.png);
+    background-repeat: no-repeat;
+    background-position: center; 
+    position: relative; */
+}
