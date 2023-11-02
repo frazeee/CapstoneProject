@@ -34,7 +34,7 @@ const Login = ({setSession , setUser}) => {
       if (error) throw error;
       setSession(data.session)
       setUser(data.user)
-      console.log("Logged In!" + data)
+      console.log("Logged In!")
       navigate('/')
     } catch (error) {
       alert(error);

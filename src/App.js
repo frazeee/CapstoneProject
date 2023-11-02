@@ -8,35 +8,61 @@ import { supabase } from './components/client';
 
 
 
-function App() {
+function App() {  
 
-  const [session, setSession] = useState(null)
-  const [user, setUser] = useState(null)
+  const [session, setSession] = useState(false)
+  const [user, setUser] = useState(false)
 
   console.log(session)
   console.log(user)
 
-  useEffect(() => {
-    const getSessionData = async () => {
-          console.log("GET SESSION RUNS")
-      if (session && session.expires_at) {
-        console.log("pumasok")
-        const now = new Date()
-        const expiresAt = new Date(session.expires_at)
-        console.log(now >= expiresAt) 
-        if (now >= expiresAt) {
-          
-        }
-      }
 
-      const{data} = await supabase.auth.getUser()
-        setSession(data.session)
-    }
-    
-    getSessionData()
-    
+  useEffect(()=>{
+
+    const getSessionData = async () => {
+      console.log("GET SESSION RUNS")
+  if (session && session.expires_at) {
+    console.log("pumasok")
+    const now = new Date()
+    const expiresAt = session.expires_at
+    console.log(now) 
+    console.log(expiresAt)
+  }
+
+  const{data, error} = await supabase.auth.getSession()
+    setSession(data.session)
+    setUser(data.session.user)
+}
+
+getSessionData()
+
+
 
   },[])
+
+
+  // useEffect(() => {
+  //   const getSessionData = async () => {
+  //         console.log("GET SESSION RUNS")
+  //     if (session && session.expires_at) {
+  //       console.log("pumasok")
+  //       const now = new Date()
+  //       const expiresAt = new Date(session.expires_at)
+  //       console.log(now >= expiresAt) 
+  //       if (now >= expiresAt) {
+          
+  //       }
+  //     }
+
+  //     const{data} = await supabase.auth.getUser()
+  //       setSession(data.session)
+  //       console.log(session)
+  //   }
+    
+  //   getSessionData()
+    
+
+  // },[])
 
 
   
