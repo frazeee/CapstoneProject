@@ -51,7 +51,7 @@ function Pets({user}){
       <h1 class="display-5 fw-bold text-white">Every Pet Deserves a Loving Home.</h1>
       <h1 class="display-5 fw-bold text-white">Adopt a Pet Today!</h1>
       <div class="col-lg-6 mx-auto">
-        <p class="fs-6 mb-4">Browse our available animals and learn more about the adoption process. Together, we can rescue, rehabilitate, and rehome pets in need. Thank you for supporting our mission to bring joy to families through pet adoption.</p>
+        <p class="fs-6 text-light mb-4">Browse our available animals and learn more about the adoption process. Together, we can rescue, rehabilitate, and rehome pets in need. Thank you for supporting our mission to bring joy to families through pet adoption.</p>
       </div>
     </div>
   </div>

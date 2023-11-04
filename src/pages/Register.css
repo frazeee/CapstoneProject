@@ -6,9 +6,6 @@ hr{
     border: 3px solid #ffb13d;
 }
 
-.row{
-    min-height: 100vh;
-}
 
 .formHeader{
     font-weight: bold;

@@ -10,18 +10,18 @@ const Register = () => {
   let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName:'',lastName:'',email:'',password:''
+    firstName:'',lastName:'',email:'',password:'', phoneNumber:'',address:''
   })
   
   const [loading, setLoading] = useState(null)
 
 
   function handleChange(event){
+    console.log(formData)
     setFormData((prevFormData)=>{
       return{
         ...prevFormData,
         [event.target.name] : event.target.value
-        
       }
     })
   }
@@ -38,7 +38,8 @@ const Register = () => {
   
     return data.length > 0
   }
-  
+
+
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -60,16 +61,30 @@ const Register = () => {
             firstName: formData.firstName,
             lastName: formData.lastName
           }
-        }
-        
+        }        
       });
 
-   
-  
   
       if (error) {
         throw error;
       }
+      const { data, error: insertError } = await supabase
+      .from('Users')
+      .insert([
+        {
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          address: formData.address,
+          phone: formData.phoneNumber
+        }
+      ]);
+
+    if (insertError) {
+      throw insertError;
+    }
+
+
       alert('Check your email for a verification link!');
       navigate('/Login');
     } catch (error) {
@@ -138,9 +153,32 @@ const Register = () => {
                 required
               />
             </div>
-            <div className="mb-3 form-check">
+            <div className="mb-3">
+              <label htmlFor="phoneNumber" className="form-label">
+                Phone
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                name="phoneNumber"
+                onChange={handleChange}
+                required
+              />
             </div>
-            <button type="submit" className="btn rounded-pill">
+            <div className="mb-3">
+              <label htmlFor="Address" className="form-label">
+                Address
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="address"
+                onChange={handleChange}
+                required
+              />
+            </div>
+           
+            <button type="submit" className="btn rounded-pill mb-2">
               Register
             </button>
           </form>

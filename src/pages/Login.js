@@ -3,9 +3,12 @@ import React, { useEffect, useState } from "react";
 import loginPicture from "../images/loginPicture.png";
 import { supabase } from "../components/client";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useAuth } from "../utils/AuthProvider";
 
-const Login = ({setSession , setUser}) => {
+const Login = ({}) => {
   let navigate = useNavigate();
+  const { setUser, setSession } = useAuth(); 
 
 
   const [formData, setFormData] = useState({
@@ -32,8 +35,9 @@ const Login = ({setSession , setUser}) => {
       });
 
       if (error) throw error;
-      setSession(data.session)
-      setUser(data.user)
+      Cookies.set('userSession', JSON.stringify({ data }), { expires: 365 });
+      setUser(data.user);
+      setSession(data.session);
       console.log("Logged In!")
       navigate('/')
     } catch (error) {

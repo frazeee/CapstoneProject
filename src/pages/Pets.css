@@ -90,8 +90,8 @@
   }
 
 .hero{
-    /* background-image:url(../images/HeroBanner.png);
+    background-image:url(../images/HeroBannerImage.jpg);
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-    background-position: center; 
-    position: relative; */
 }

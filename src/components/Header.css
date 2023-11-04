@@ -37,6 +37,7 @@ p{
 .btn{
   background-color: #FFBD59;
   color: white;
+  white-space: nowrap;
 }
 
 .link{
@@ -88,6 +89,10 @@ hr{
 
 .description-button{
   width: auto;
+}
+
+.carousel-item{
+  max-height: 500px;
 }
 
 

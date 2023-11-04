@@ -2,13 +2,19 @@ import './Navbar.css';
 import { Link } from 'react-router-dom';
 import { supabase } from './client';
 import { useEffect, useState } from 'react';
+import { useAuth } from '../utils/AuthProvider';
+import Cookies from 'js-cookie';
 
-const Navbar = ({user}) => {
+const Navbar = ({}) => {
+  const { user, session } = useAuth(); 
+  console.log(user)
+  console.log(session)
 
 
   function handleLogout(){
 
     supabase.auth.signOut().then(() => {
+      Cookies.remove('userSession')
       localStorage.clear();
     }).catch(error => {
       console.error('Error during logout:', error);
@@ -36,7 +42,7 @@ const Navbar = ({user}) => {
                 <li className="nav-item dropdown">
                 <li className="nav-link dropdown-toggle mx-3" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >{user.user_metadata.firstName}</li>
                   <ul className='dropdown-menu'> 
-                    <li className='dropdown-item'><Link style={{ textDecoration: 'none' }} to="/">Account Details</Link></li>
+                    <li className='dropdown-item'><Link style={{ textDecoration: 'none' }} to="/accountInformation">Account Details</Link></li>
                     <li className='dropdown-divider'><hr className="dropdown-divider" /></li>
                     <li className='dropdown-item '><a href=''className='text-decoration-none' onClick={handleLogout}>Logout</a></li>
                   </ul>
