@@ -11,6 +11,7 @@ const Login = ({}) => {
   const { setUser, setSession } = useAuth(); 
 
 
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,6 +27,8 @@ const Login = ({}) => {
     });
   }
 
+
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -33,13 +36,37 @@ const Login = ({}) => {
         email: formData.email,
         password: formData.password
       });
+  
+      if (error) {
+        throw error;
+      }
 
-      if (error) throw error;
       Cookies.set('userSession', JSON.stringify({ data }), { expires: 365 });
       setUser(data.user);
       setSession(data.session);
-      console.log("Logged In!")
-      navigate('/')
+  
+      // Fetch the user's role from the 'users' table based on their email
+      const { data: userData, error: userError } = await supabase
+        .from('Users')
+        .select('role')
+        .eq('email', formData.email)
+        .single(); 
+  
+      if (userError) {
+        throw userError;
+      }
+  
+      if (userData) {
+        const userRole = userData.role;
+        if( userRole === "ADMIN")
+        navigate('/Admin')
+      } else {
+
+      }
+  
+    
+      console.log('Logged In!');
+        navigate('/');
     } catch (error) {
       alert(error);
     }

@@ -1,5 +1,5 @@
 import './Navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from './client';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../utils/AuthProvider';
@@ -7,15 +7,15 @@ import Cookies from 'js-cookie';
 
 const Navbar = ({}) => {
   const { user, session } = useAuth(); 
-  console.log(user)
-  console.log(session)
-
+  const navigate = useNavigate()
+  
 
   function handleLogout(){
 
     supabase.auth.signOut().then(() => {
       Cookies.remove('userSession')
       localStorage.clear();
+      navigate('/')
     }).catch(error => {
       console.error('Error during logout:', error);
     });

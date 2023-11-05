@@ -1,11 +1,12 @@
 import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 
-const PrivateRoutes = ({session}) => {
-    let auth = true
+const PrivateRoutes = ({}) => {
+    const {session} = useAuth()
     console.log(session)
     return(
-        auth ? <Outlet /> : <Navigate to="/login" />
+        session ? <Outlet /> : <Navigate to="/login" />
     )
 }
 

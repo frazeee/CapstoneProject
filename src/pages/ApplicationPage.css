@@ -1,0 +1,31 @@
+body {
+    background-color: rgb(251, 251, 221);
+}
+
+#updateBtn {
+    background-color: orange !important;
+}
+
+#updateBtn:hover {
+    background-color: rgb(144, 97, 11) !important;
+}
+
+.card {
+    /* background-color: rgba(255, 224, 178, 0.7); */
+    background-image: url('logo.png');
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+}
+
+.card-body {
+    background-color: transparent;
+}
+
+input.form-control {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    /* Add a bottom border to simulate the underline */
+    border-radius: 0;
+    /* Optional: Remove the border radius as well */
+}

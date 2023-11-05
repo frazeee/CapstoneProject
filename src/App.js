@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
-import { Login, Register, LandingPage, Pets, PetPage, AccountInformation } from './pages' 
-import { BrowserRouter as Router, Routes, Route, json, } from "react-router-dom";
+import { Login, Register, LandingPage, Pets, PetPage, AccountInformation, AdminPage, ApplicationPage } from './pages' 
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { supabase } from './components/client';
 import PrivateRoutes from './utils/PrivateRoute';
@@ -13,8 +13,7 @@ import Cookies from 'js-cookie';
 
 function App() {  
 
-
-  
+ 
   return (
     <>
     <AuthProvider>
@@ -30,6 +29,8 @@ function App() {
           <Route element= {<PrivateRoutes  />}>
              <Route path="/accountInformation" element={<AccountInformation />} />
           </Route>
+          <Route path="/Admin" element={<AdminPage/>} />
+          <Route path="/Application" element={<ApplicationPage />}/>
         </Routes>
       </Router>
       </AuthProvider>

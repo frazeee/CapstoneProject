@@ -3,11 +3,10 @@ import { useAuth } from "./AuthProvider";
 
 
 const AuthorizedRoute = ({}) => {
-    const session = useAuth()
-    const auth = session
+    const {session} = useAuth()
     console.log(session)
     return(
-        auth.access_token ?  <Navigate to="/Pets" /> : <Outlet />
+      session ?  <Navigate to="/Pets" /> : <Outlet />
     )
 }
 

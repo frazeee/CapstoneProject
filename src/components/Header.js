@@ -32,7 +32,7 @@ const Header = () => {
         <div className="row carousel-div">
           <div className="row-header">
             <h2 className="fw-semibold">Partnered Shelters</h2>
-            <hr/>
+            <hr className="mb-5 w-100"/>
           </div>
         <div className="col-xl-6">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">

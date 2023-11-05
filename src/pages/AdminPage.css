@@ -1,0 +1,48 @@
+hr {
+    width: 50%;
+    margin: 0 auto;
+    background-color: #FFB692;
+}
+
+.box {
+    border-right: 1px solid #ffffff;
+    /* Add a vertical line on the right side of each box */
+    padding: 15px;
+}
+
+/* Remove the border-right from the last box to avoid a line on its right side */
+.box:last-child {
+    border-right: none;
+}
+
+#infoCard {
+    background-color: #FFBD59;
+}
+
+.card{
+    width: auto;
+}
+
+.box button{
+    width: 150px;
+    background: whitesmoke;
+    color: black;
+    border: none;
+}
+
+a{
+    color:gray;
+}
+
+.icon{
+    padding-left: 240px;
+}
+
+.modal-image{
+    background-color: #FFBD59;
+    
+}
+
+.btn-save{
+    min-width: 200px;
+}
