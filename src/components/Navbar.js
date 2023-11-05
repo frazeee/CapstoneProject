@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../utils/AuthProvider';
 import Cookies from 'js-cookie';
 
+
 const Navbar = ({}) => {
   const { user, session } = useAuth(); 
   const navigate = useNavigate()
+
   
 
   function handleLogout(){
@@ -24,6 +26,7 @@ const Navbar = ({}) => {
 
   return(
     <>
+
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
       <div className="container">
           <div className="nav-item">
@@ -58,9 +61,14 @@ const Navbar = ({}) => {
               </>
               )}  
           </ul>
+          
           </div>
         </div>
     </nav>
+
+
+
+    
     </>
   )
 }
