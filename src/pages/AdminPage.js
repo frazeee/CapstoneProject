@@ -1,9 +1,9 @@
-import "./AdminPage.css";
 import { useState, useEffect } from "react";
+import './AdminPage.css'
 import Navbar from "../components/Navbar";
 import CPSSLogo from "../images/CPSSLogo.png"
 import { supabase } from "../components/client";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 
 
@@ -118,12 +118,12 @@ const AdminPage = () => {
               <div className="row">
                 <div className="box col-lg-4 text-center py-5">
                   <h1 style={{ color: '#ffffff' }}>{dataCount}</h1>
-                  <h2 style={{ color: '#ffffff' }}>PETS FOR <br/> ADOPTION</h2>
+                  <h2 style={{ color: '#ffffff' }}>PETS FOR ADOPTION</h2>
                   <button type="button" className="btn btn-lg btn-dark px-5">Add</button>
                 </div>
                 <div className="box col-lg-4 text-center py-5">
                   <h1 style={{ color: '#ffffff' }}>1</h1>
-                  <h2 style={{ color: '#ffffff' }}>POTENTIAL <br/> ADOPTERS</h2>
+                  <h2 style={{ color: '#ffffff' }}>POTENTIAL ADOPTERS</h2>
                   <button type="button" className="btn btn-lg btn-dark px-5">Check</button>
                 </div>
                 <div className="box col-lg-4 text-center py-5">

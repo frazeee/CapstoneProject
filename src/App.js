@@ -1,6 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.css'
+
 import './App.css';
-import { Login, Register, LandingPage, Pets, PetPage, AccountInformation, AdminPage, ApplicationPage } from './pages' 
+import { Login, Register, LandingPage, Pets, PetPage, AccountInformation, ApplicationPage, AdminPage } from './pages' 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { supabase } from './components/client';
@@ -29,7 +29,7 @@ function App() {
           <Route element= {<PrivateRoutes  />}>
              <Route path="/accountInformation" element={<AccountInformation />} />
           </Route>
-          <Route path="/Admin" element={<AdminPage/>} />
+          <Route path="/Admin" element={<AdminPage/>} /> 
           <Route path="/Application" element={<ApplicationPage />}/>
         </Routes>
       </Router>
