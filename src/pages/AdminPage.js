@@ -7,6 +7,7 @@ import { supabase } from "../components/client";
 
 
 
+
 const AdminPage = () => {
 
     const [data, setData] = useState([])
@@ -69,39 +70,47 @@ const AdminPage = () => {
         ...prevEditedDetails,
         [name]: value,
       }));
-      console.log(editedDetails)
+ 
     };
 
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-  
-      console.log(editedDetails === selectedCard)
-      // Check if there are edited details
-      if (hasEditedDetails()) {
-        // Update the Supabase table with the edited details
-        updateSupabaseTable();
-      }
-  
-      closeModal();
-    };
-  
-    const hasEditedDetails = () => {
-      // Compare editedDetails with selectedCard to determine if there are changes
-      return (
-        editedDetails.age !== selectedCard.age ||
-        editedDetails.gender !== selectedCard.gender ||
-        editedDetails.pet_name !== selectedCard.pet_name ||
-        editedDetails.pet_personality !== selectedCard.pet_personality
-      );
-    };
-  
-    const updateSupabaseTable = () => {
-      console.log(editedDetails)
-      console.log("updates table")
-    };
-
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        
+          try {
+            
+            const { data, error } = await supabase
+              .from('Pets')
+              .update({
+               pet_name : editedDetails.pet_name,
+               age : editedDetails.age,
+               gender : editedDetails.gender,
+               pet_type : editedDetails.pet_type,
+               pet_personality : editedDetails.pet_personality
+              })
+              .eq('id', selectedCard.id);
+              
+    
+      
+            if (error) {
+              // Handle the error here
+              console.error('Error updating user:', error);
+            } else {
+              // Update was successful
+              console.log(error)
+              console.log('User updated successfully:', data);
+              
+            }
+          } catch (error) {
+            // Handle any other errors that may occur during the update.
+            console.error('An error occurred:', error);
+          }
+      
+        closeModal();
+      };
+      
+    
 
   return (
     <>
@@ -118,12 +127,12 @@ const AdminPage = () => {
               <div className="row">
                 <div className="box col-lg-4 text-center py-5">
                   <h1 style={{ color: '#ffffff' }}>{dataCount}</h1>
-                  <h2 style={{ color: '#ffffff' }}>PETS FOR ADOPTION</h2>
-                  <button type="button" className="btn btn-lg btn-dark px-5">Add</button>
+                  <h2 style={{ color: '#ffffff' }}>PETS FOR <br/> ADOPTION</h2>
+                  <button type="button" className="btn btn-lg btn-dark px-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
                 </div>
                 <div className="box col-lg-4 text-center py-5">
                   <h1 style={{ color: '#ffffff' }}>1</h1>
-                  <h2 style={{ color: '#ffffff' }}>POTENTIAL ADOPTERS</h2>
+                  <h2 style={{ color: '#ffffff' }}>POTENTIAL <br/> ADOPTERS</h2>
                   <button type="button" className="btn btn-lg btn-dark px-5">Check</button>
                 </div>
                 <div className="box col-lg-4 text-center py-5">
@@ -164,7 +173,7 @@ const AdminPage = () => {
 
         ))}
 
-{isModalOpen && (
+    {isModalOpen && (
         <div>
           <div
             className="modal-backdrop show"
@@ -183,8 +192,24 @@ const AdminPage = () => {
                   <button className="btn-close" onClick={closeModal} aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                  <img src={selectedCard.image_url1} className="d-block mx-auto"/>
+                  <img src={selectedCard.image_url1} className="d-block mx-auto border modal-image"/>
                   <form onSubmit={handleSubmit}>
+
+                  <div className="mb-3 px-2">
+                      <label htmlFor="pet_name" className="form-label">
+                        Pet Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="pet_name"
+                        name="pet_name"
+                        value={editedDetails.pet_name}
+                        onChange={handleFormChange}
+                      />
+                    </div>
+
+
                     <div className="mb-3 px-2">
                       <label htmlFor="age" className="form-label">
                         Age
@@ -198,6 +223,7 @@ const AdminPage = () => {
                         onChange={handleFormChange}
                       />
                     </div>
+                    
                     <div className="mb-3 px-2">
                       <label htmlFor="gender" className="form-label">
                         Gender
@@ -211,19 +237,7 @@ const AdminPage = () => {
                         onChange={handleFormChange}
                       />
                     </div>
-                    <div className="mb-3 px-2">
-                      <label htmlFor="pet_name" className="form-label">
-                        Pet Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="pet_name"
-                        name="pet_name"
-                        value={editedDetails.pet_name}
-                        onChange={handleFormChange}
-                      />
-                    </div>
+            
                     <div className="mb-3 px-2">
                       <label htmlFor="pet_personality" className="form-label">
                         Pet Personality
@@ -250,7 +264,79 @@ const AdminPage = () => {
         </div>
       )}
 
-    
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Pet</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-3 px-2">
+            <label for="formFile" class="form-label">Add Pet Picture</label>
+            <input class="form-control" type="file" id="formFile" accept=".png, .jpg"/>
+        </div>
+
+        <div className="mb-3 px-2">
+                      <label htmlFor="pet_name" className="form-label">
+                        Pet Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="pet_name"
+                        name="pet_name"
+                        onChange={handleFormChange}
+                      />
+                    </div>
+
+                    <div className="mb-3 px-2">
+                      <label htmlFor="age" className="form-label">
+                        Age
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="age"
+                        name="age"
+                        onChange={handleFormChange}
+                      />
+                    </div>
+
+                    <div className="mb-3 px-2">
+                    <label htmlFor="gender" className="form-label">
+                        Gender
+                      </label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-3 px-2">
+                      <label htmlFor="pet_personality" className="form-label">
+                        Pet Personality
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="pet_personality"
+                        name="pet_personality"
+                        value={editedDetails.pet_personality}
+                        onChange={handleFormChange}
+                      />
+                    </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Add Pet</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
       </div>
     </div>
