@@ -89,6 +89,12 @@
     }
   }
 
+  @media (max-width: 402px) {
+    .padding-bottom-mobile{
+        margin-top: 150px;
+    }
+  }
+
 .hero{
     background-image:url(../images/HeroBannerImage.jpg);
     background-size: cover;

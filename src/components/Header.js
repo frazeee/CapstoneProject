@@ -27,6 +27,8 @@ const Header = () => {
     </div>
   </div>
    </div>
+
+
  
       <div className="container pt-2">
         <div className="row carousel-div">
@@ -66,7 +68,7 @@ const Header = () => {
           <div className="card description-card w-100 shadow">
             <h2 className="fw-bold card-title pt-5 px-5"> Care for Paws Shelter Sanctuary</h2>
             <p className="card-body text-dark px-5">Nestled in Pulong Saging, Silang Cavite, CPSS Inc. is your dedicated partner in pet adoption. This non-profit animal shelter rescues and rehomes abused and neglected stray dogs and cats, offering them a second chance at happiness. With a passionate team working tirelessly, CPSS is where love and care redefine lives. Find your forever friend today!</p>
-            <a className="btn btn-dark description-button text-light mx-5 mb-5" href="https://www.facebook.com/careforpawsphshelter" target="https://www.facebook.com/careforpawsphshelter">Visit Them Here!</a>
+            <a className="btn description-button text-light mx-5 mb-5" href="https://www.facebook.com/careforpawsphshelter" target="https://www.facebook.com/careforpawsphshelter">Visit Them Here!</a>
           </div>
         </div>
         </div>

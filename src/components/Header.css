@@ -84,7 +84,6 @@ hr{
   background-color: #fee481;
   color: black;
   border:none;
-
 }
 
 .description-button{
@@ -93,6 +92,14 @@ hr{
 
 .carousel-item{
   max-height: 500px;
+}
+
+.hero2{
+  background-image:url(../images/HeaderBanner.jpg);
+  object-fit: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 500px;
 }
 
 

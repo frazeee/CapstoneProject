@@ -95,7 +95,7 @@ function Pets({user}){
     </div>
 
 
-    <div className="container-fluid pt-3">
+    <div className="container-fluid pt-3 padding-bottom-mobile">
     <div className="d-flex justify-content-center align-items-center pb-3 filter-buttons">
       <button
         className={`btn ${activeButton === 'All' ? 'active' : ''} mx-3`}
