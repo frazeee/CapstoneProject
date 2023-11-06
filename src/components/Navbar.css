@@ -6,3 +6,18 @@
     font-family: 'Lexend', sans-serif;
     color:white;
 }
+
+.navy-link{
+    font-family: 'Lexend', sans-serif;
+    color:white;
+    text-decoration: none;
+
+}
+
+.navy-link:hover{
+    color: black;
+}
+
+.icon-padding{
+    margin: -15px;
+}

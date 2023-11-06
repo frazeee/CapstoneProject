@@ -80,13 +80,13 @@ function Pets({user}){
           <div className="col pe-5">
               <div className="card pet-card shadow on-hover">
                 <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/SMILE1.jpg" className="img-fluid align-self-middle rounded card-img-top" alt="Smile" />
-                <h2 className="card-title ps-3 text-light">Smile</h2>
+                <h2 className="card-title ps-2 text-light">Smile</h2>
               </div>
           </div>
           <div className="col">
               <div className="card pet-card shadow on-hover">
               <img src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/JOJO1.jpg" className="img-fluid rounded" alt="Jojo" />
-                <h2 className="card-title ps-4 text-light">Jojo</h2>
+                <h2 className="card-title ps-3 text-light">Jojo</h2>
               </div>
           </div>
 

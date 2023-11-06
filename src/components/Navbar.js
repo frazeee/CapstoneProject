@@ -4,6 +4,7 @@ import { supabase } from './client';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../utils/AuthProvider';
 import Cookies from 'js-cookie';
+import BPUADOPT_LOGO from '../images/BPUADOPT_LOGO.png'
 
 
 const Navbar = ({}) => {
@@ -29,9 +30,13 @@ const Navbar = ({}) => {
 
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
       <div className="container">
-          <div className="nav-item">
-            <Link className="nav-link mx-3" to="/">Home</Link>
-          </div>
+      <div class="navbar-brand">
+        <Link className="navy-link" to="/">
+          <img src={BPUADOPT_LOGO} width="50" height="50" alt="BPUAdopt Logo" className='icon-padding me-4'/>
+          <span className='nav-item'>Home</span>
+        </Link>
+      </div>
+      
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
           </button>
