@@ -1,8 +1,67 @@
 .card-heading{
     background-color: #fee481;
     color: black;
+    padding: 5px;
+}
+
+
+.container-bg{
+  background-color: rgba(255, 224, 178, 0.7);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background: url(https://lh3.googleusercontent.com/drive-viewer/AK7aPaAwawYwtKsWpNRc8Kpg5_A8B6BIDyYrHGW2LU2ckkdadKR_lPGzzsrMgoNbOHJoHkiwj5AkSpzscEkAbXDUYV_w4gFmxQ=s1600);
 }
 
 .header-divider{
     border: dotted 2px;
 }
+
+.faqs-container {
+    background-color: #fee481;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+
+  .faqs-container h1 {
+    text-align: center;
+  }
+
+
+  .faq-container {
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .pet-container {
+    background-color: #fee481;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .pet-header {
+    text-align: center;
+  }
+
+  .profile-img {
+    display: block;
+    margin: 0 auto;
+    max-width: 500px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  .details-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+  }

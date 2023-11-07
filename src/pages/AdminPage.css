@@ -46,3 +46,16 @@ a{
 .btn-save{
     min-width: 200px;
 }
+
+
+.bi-gender-male{
+    color: #02a3fe;
+}
+
+.bi-gender-female{
+    color: #ec49a6;
+}
+
+.danger-btn{
+    background-color: #F03A47;
+}

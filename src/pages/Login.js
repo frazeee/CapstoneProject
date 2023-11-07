@@ -82,9 +82,9 @@ const Login = ({}) => {
         </div>
         <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Login</h1>
-          <hr></hr>
+          <hr className="w-100 mb-3"/>
           <form onSubmit={handleSubmit}>
-            <div class="mb-3">
+            <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Email address
               </label>
@@ -94,12 +94,12 @@ const Login = ({}) => {
                 name="email"
                 onChange={handleChange}
               />
-              <div id="emailHelp" class="form-text">
+              <div id="emailHelp" className="form-text">
                 We'll never share your email with anyone else.
               </div>
             </div>
-            <div class="mb-3">
-              <label htmlFor="exampleInputPassword1" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
                 Password
               </label>
               <input
@@ -109,14 +109,14 @@ const Login = ({}) => {
                 onChange={handleChange}
               />
             </div>
-            <div class="">
-            <button type="submit" class="btn rounded-pill">
+            <div className="">
+            <button type="submit" className="btn rounded-pill mb-2">
               Login
             </button>
             </div>
           </form>
           <Link to="/Register" style={{ textDecoration: "none" }}>
-            <a className="span-link">Don't have an account? Register Here!</a>
+            <a className="span-link">Don't have an account? <span className="text-dark text-decoration-underline"> Register Here!</span> </a>
           </Link>
         </div>
       </div>

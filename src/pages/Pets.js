@@ -129,7 +129,7 @@ function Pets({user}){
                 <h2>{cardItem.pet_name}</h2>
               </div>
               <div class="card-body">
-                <p>Age: {cardItem.age} {cardItem.gender === 'Male' ? <i class="bi bi-gender-male "></i> : <i class="bi bi-gender-female"></i>} </p>
+              <p>Age: {cardItem.age} {cardItem.gender === 'Male' ? <i className="icon bi bi-gender-male "></i> : <i className="icon bi bi-gender-female"></i>} </p>
                 <p>Personality: {cardItem.pet_personality}</p>
               </div>
             </div>

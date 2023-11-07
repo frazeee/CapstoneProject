@@ -30,7 +30,7 @@ const Navbar = ({}) => {
 
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
       <div className="container">
-      <div class="navbar-brand">
+      <div className="navbar-brand">
         <Link className="navy-link" to="/">
           <img src={BPUADOPT_LOGO} width="50" height="50" alt="BPUAdopt Logo" className='icon-padding me-4'/>
           <span className='nav-item'>Home</span>
