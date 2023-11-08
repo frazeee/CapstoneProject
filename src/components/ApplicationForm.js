@@ -999,7 +999,7 @@ const ApplicationForm = () => {
               </div>
 
               <div className="d-flex justify-content-end">
-                <div>
+                <div className="mx-3">
                   <button
                     type="button"
                     className="btn rounded-pill my-2"

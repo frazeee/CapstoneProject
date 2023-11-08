@@ -10,7 +10,10 @@ function OpenPaymentGateway() {
       // Replace this with your secret key in paymongo account
       const paymongoSecretKey = "sk_test_xMz3971iAhy4Hp1SqE7eNRmx";
       // Replace this env + 'payment-success'
-      const successPage = "http://localhost:3000/payment-success";
+      const successPage =
+        process.env.NODE_ENV === "production"
+          ? "http://localhost:3000/payment-success"
+          : "https://bpuadopt.vercel.app/payment-success";
 
       const payload = {
         data: {
