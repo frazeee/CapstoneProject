@@ -21,16 +21,14 @@ export function AuthProvider({ children }) {
       setUser(tokenData.data.user);
       setSession(tokenData.data.session);
       setEmail(tokenData.data.user.email)
-      
+    
     }
 
   }, []);
 
 
-
-
   return (
-    <AuthContext.Provider value={{ user, setUser, session, setSession, role }}>
+    <AuthContext.Provider value={{ user, setUser, session, setSession, email }}>
       {children}
     </AuthContext.Provider>
   );

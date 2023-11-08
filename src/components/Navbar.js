@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BPUADOPT_LOGO from "../images/BPUADOPT_LOGO.png";
 import { useAuth } from "../utils/AuthProvider";
@@ -6,8 +7,31 @@ import "./Navbar.css";
 import { supabase } from "./client";
 
 const Navbar = ({}) => {
-  const { user, session } = useAuth();
+  const { user, session, email } = useAuth();
   const navigate = useNavigate();
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const fetchUserRole = async (userEmail) => {
+      try {
+        console.log(userEmail);
+        const { data, error } = await supabase
+          .from("Users")
+          .select("role")
+          .eq("email", userEmail)
+          .single();
+
+        if (error) {
+          console.error("Error fetching user role:", error.message);
+        } else {
+          setRole(data.role);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    };
+    fetchUserRole(email);
+  }, []);
 
   function handleLogout() {
     supabase.auth
@@ -50,6 +74,7 @@ const Navbar = ({}) => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="nav-item">
               <Link className="nav-link mx-3" to="/Pets">
@@ -58,39 +83,74 @@ const Navbar = ({}) => {
             </div>
             <ul className="navbar-nav ms-auto">
               {user ? (
-                <li className="nav-item dropdown">
-                  <a
-                    className="nav-link dropdown-toggle mx-3"
-                    id="navbarDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    {user.user_metadata.firstName}
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="dropdown-item">
-                      <Link
-                        style={{ textDecoration: "none" }}
-                        to="/accountInformation"
+                <>
+                  {role === "ADMIN" ? (
+                    <li className="nav-item dropdown">
+                      <li
+                        className="nav-link dropdown-toggle mx-3"
+                        id="navbarDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        Account Details
-                      </Link>
+                        {user.user_metadata.firstName}
+                      </li>
+                      <ul className="dropdown-menu">
+                        <li className="dropdown-item">
+                          <Link style={{ textDecoration: "none" }} to="/Admin">
+                            Admin Dashboard
+                          </Link>
+                        </li>
+                        <li className="dropdown-divider">
+                          <hr className="dropdown-divider" />
+                        </li>
+                        <li className="dropdown-item">
+                          <a
+                            href=""
+                            className="text-decoration-none"
+                            onClick={handleLogout}
+                          >
+                            Logout
+                          </a>
+                        </li>
+                      </ul>
                     </li>
-                    <li className="dropdown-divider">
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li className="dropdown-item">
-                      <a
-                        href="#"
-                        className="text-decoration-none"
-                        onClick={handleLogout}
+                  ) : (
+                    <li className="nav-item dropdown">
+                      <li
+                        className="nav-link dropdown-toggle mx-3"
+                        id="navbarDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        Logout
-                      </a>
+                        {user.user_metadata.firstName}
+                      </li>
+                      <ul className="dropdown-menu">
+                        <li className="dropdown-item">
+                          <Link
+                            style={{ textDecoration: "none" }}
+                            to="/accountInformation"
+                          >
+                            Account Details
+                          </Link>
+                        </li>
+                        <li className="dropdown-divider">
+                          <hr className="dropdown-divider" />
+                        </li>
+                        <li className="dropdown-item">
+                          <a
+                            href=""
+                            className="text-decoration-none"
+                            onClick={handleLogout}
+                          >
+                            Logout
+                          </a>
+                        </li>
+                      </ul>
                     </li>
-                  </ul>
-                </li>
+                  )}
+                </>
               ) : (
                 <>
                   <li className="nav-item">
