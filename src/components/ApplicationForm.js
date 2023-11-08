@@ -531,6 +531,7 @@ const ApplicationForm = () => {
         </div>
       </div>
     </div>
+    </div>
   );
 };
 
