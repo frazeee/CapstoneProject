@@ -1,8 +1,8 @@
-import "./Register.css";
-import React, { useEffect, useState } from "react";
-import loginPicture from "../images/loginPicture.png";
-import { supabase } from "../components/client";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../components/client";
+import loginPicture from "../images/loginPicture.png";
+import "./Register.css";
 
 
 
@@ -178,7 +178,7 @@ const Register = () => {
               />
             </div>
            
-            <button type="submit" className="btn rounded-pill mb-2">
+            <button type="submit" className="register-btn btn rounded-pill mb-2">
               Register
             </button>
           </form>

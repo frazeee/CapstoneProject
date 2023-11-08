@@ -1,16 +1,14 @@
 import ApplicationForm from "../components/ApplicationForm";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import Navbar from "../components/Navbar";
 
 
 const ApplicationPage = () => {
-
-
   return (
     <>
       <Navbar />
-      <ApplicationForm/>
+      <ApplicationForm />
+      
       <Footer />
     </>
   );

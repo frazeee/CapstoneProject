@@ -1,10 +1,10 @@
-import "./Login.css";
-import React, { useEffect, useState } from "react";
-import loginPicture from "../images/loginPicture.png";
-import { supabase } from "../components/client";
-import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../components/client";
+import loginPicture from "../images/loginPicture.png";
 import { useAuth } from "../utils/AuthProvider";
+import "./Login.css";
 
 const Login = ({}) => {
   let navigate = useNavigate();
@@ -110,7 +110,7 @@ const Login = ({}) => {
               />
             </div>
             <div className="">
-            <button type="submit" className="btn rounded-pill mb-2">
+            <button type="submit" className="login-btn btn rounded-pill mb-2">
               Login
             </button>
             </div>

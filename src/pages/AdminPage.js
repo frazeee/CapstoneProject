@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import './AdminPage.css'
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import CPSSLogo from "../images/CPSSLogo.png"
 import { supabase } from "../components/client";
+import './AdminPage.css';
 
 
 
@@ -251,7 +250,7 @@ const AdminPage = () => {
                 <p>Age: {cardItem.age} {cardItem.gender === 'Male' ? <i className="icon bi bi-gender-male "></i> : <i className="icon bi bi-gender-female"></i>} </p>
                 <p>Personality: {cardItem.pet_personality}</p>
                 <button className="btn w-100"  onClick={() => openModal(cardItem)} type="button">Edit Details</button>
-                <button type="button" class="btn danger-btn w-100 mt-2">Delete Pet</button>
+                <button type="button" className="btn danger-btn w-100 mt-2">Delete Pet</button>
               </div>
             </div>
             </a>
@@ -364,7 +363,7 @@ const AdminPage = () => {
               <form onSubmit={handleAddSubmit}>
                 <div className="modal-body">
                   <div className="mb-3 px-2">
-                      <label for="formFile" className="form-label">Add Pet Picture</label>
+                      <label htmlFor="formFile" className="form-label">Add Pet Picture</label>
                       <input className="form-control" type="file" id="formFile" accept=".png, .jpg"  onChange={(e) => setFile(e.target.files[0])}/>
                   </div>
 

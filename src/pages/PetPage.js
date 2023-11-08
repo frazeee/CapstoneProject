@@ -1,9 +1,9 @@
-import './PetPage.css'
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { Link, useParams } from "react-router-dom";
-import { supabase } from "../components/client";
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import { supabase } from "../components/client";
+import './PetPage.css';
 
 const PetPage = ({user}) => {
     const { cardId } = useParams();
