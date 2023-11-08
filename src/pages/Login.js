@@ -28,7 +28,6 @@ const Login = ({}) => {
   }
 
 
-
   async function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -41,7 +40,7 @@ const Login = ({}) => {
         throw error;
       }
 
-      Cookies.set('userSession', JSON.stringify({ data }), { expires: 365 });
+      Cookies.set('userSession', JSON.stringify({ data }), { expires: 5 });
       setUser(data.user);
       setSession(data.session);
   

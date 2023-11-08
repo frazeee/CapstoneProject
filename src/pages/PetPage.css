@@ -7,10 +7,7 @@
 
 .container-bg{
   background-color: rgba(255, 224, 178, 0.7);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background: url(https://lh3.googleusercontent.com/drive-viewer/AK7aPaAwawYwtKsWpNRc8Kpg5_A8B6BIDyYrHGW2LU2ckkdadKR_lPGzzsrMgoNbOHJoHkiwj5AkSpzscEkAbXDUYV_w4gFmxQ=s1600);
+  background: url(https://lh3.googleusercontent.com/drive-viewer/AK7aPaAwawYwtKsWpNRc8Kpg5_A8B6BIDyYrHGW2LU2ckkdadKR_lPGzzsrMgoNbOHJoHkiwj5AkSpzscEkAbXDUYV_w4gFmxQ=s1600) center center/cover no-repeat;
 }
 
 .header-divider{

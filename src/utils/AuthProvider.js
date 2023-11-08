@@ -5,10 +5,9 @@ import { supabase } from '../components/client';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(false);
-  const [session, setSession] = useState(false);
-  const [role, setRole] = useState(false)
-  const [email, setEmail] = useState(false)
+  const [user, setUser] = useState(null); // Set to null initially
+  const [session, setSession] = useState(null); // Set to null initially
+  const [email, setEmail] = useState(null); // Set to null initially
 
 
   useEffect(() => {
@@ -21,10 +20,13 @@ export function AuthProvider({ children }) {
       setUser(tokenData.data.user);
       setSession(tokenData.data.session);
       setEmail(tokenData.data.user.email)
-    
+      
+
     }
 
-  }, []);
+  }, [user]);
+
+  
 
 
   return (
