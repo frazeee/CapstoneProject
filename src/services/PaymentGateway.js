@@ -8,7 +8,7 @@ function OpenPaymentGateway() {
     try {
       // TO DO: Move this to .env
       // Replace this with your secret key in paymongo account
-      const paymongoSecretKey = "sk_test_xMz3971iAhy4Hp1SqE7eNRmx";
+      const paymongoSecretKey = "sk_test_N5d44ZGz6gy6nGCcB6z3PrAF";
       // Replace this env + 'payment-success'
       const successPage =
         process.env.NODE_ENV === "production"
@@ -32,9 +32,9 @@ function OpenPaymentGateway() {
             ],
             line_items: [
               {
-                name: "Product A",
+                name: "Adoption Fee",
                 quantity: 1,
-                amount: 2000, // Amount in cents (e.g., $50.00 is represented as 5000)
+                amount: 50000, // Amount in cents (e.g., $50.00 is represented as 5000)
                 currency: "PHP",
               },
               // Add more items as needed

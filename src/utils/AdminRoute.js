@@ -1,27 +1,21 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { supabase } from "../components/client";
-import Cookies from "js-cookie";
-import { useAuth } from "./AuthProvider";
-import { useState, useEffect} from "react";
-import LoadingSpinner from "../components/LoadingSpinner";
+import React, { useEffect, useState } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { supabase } from '../components/client';
+import { BeatLoader } from 'react-spinners';
 
-const AdminRoute = ({}) => {
-  const [email, setEmail] = useState(null);
+const AdminRoute = () => {
   const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true); // Initialize as true to show loading spinner
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userSessionData = Cookies.get('userSession');
 
     if (userSessionData) {
       const tokenData = JSON.parse(userSessionData);
-
-      setEmail(tokenData.data.user.email);
       
-      // Fetch the user's role and set the loading state to false when the role is fetched
       fetchUserRole(tokenData.data.user.email);
     } else {
-      // If there's no userSessionData, set the loading state to false
       setLoading(false);
     }
   }, []);
@@ -42,12 +36,16 @@ const AdminRoute = ({}) => {
     } catch (error) {
       console.error('An error occurred:', error);
     } finally {
-      setLoading(false); // Set loading state to false once role is fetched or an error occurs
+      setLoading(false); // Set loading to false when done fetching
     }
   };
 
   if (loading) {
-    return <LoadingSpinner />; // Show the loading spinner while fetching the role
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+      <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+    </div>
+    );
   }
 
   return role === "ADMIN" ? <Outlet /> : <Navigate to="/" />;

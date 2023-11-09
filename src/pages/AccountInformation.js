@@ -1,39 +1,45 @@
 import Navbar from '../components/Navbar';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../utils/AuthProvider';
+import { supabase } from '../components/client';
 
 
 const AccountInformation = () => {
 
-    const {email} = useAuth()
-    console.log(email)
+    const {user, email} = useAuth()
     const [userData, setUserData] = useState(null)
 
+    console.log(user)
+
     useEffect(() => {
-        // Function to fetch a user by email
-        async function getUserByEmail(email) {
-          try {
-            // Query the 'users' table in your Supabase database
-            const { data, error } = await supabase.from('Users').select('*').eq('email', email);
+      // Function to fetch a user by email
+      async function getUserByEmail(email) {
+        try {
+          // Query the 'users' table in your Supabase database
+          const { data, error } = await supabase.from('Users').select('*').eq('email', email);
     
-            if (error) {
-              console.error('Error fetching user:', error);
-              return;
-            }
-    
-            // Set the user if found, or null if not found
-            if (data && data.length > 0) {
-              setUserData(data[0]);
-              console.log(userData)
-            } else {
-              setUserData(null);
-            }
-          } catch (error) {
-            console.error('Error:', error);
+          if (error) {
+            console.error('Error fetching user:', error);
+            return;
           }
-        }
     
-        // Call the getUserByEmail function
-        getUserByEmail(email);
-      }, []);
+          // Set the user if found, or null if not found
+          if (data && data.length > 0) {
+            setUserData(data[0]);
+          } else {
+            setUserData(null);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    
+      // Call the getUserByEmail function when the email changes
+      getUserByEmail(email);
+    }, [email]);
+    
+
+   
     
       const [formData, setformData] = useState({
         first_name: '',

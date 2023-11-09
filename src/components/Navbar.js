@@ -32,6 +32,7 @@ const Navbar = ({}) => {
     //   };
     //   fetchUserRole(email)
     // },[])
+    
   
   function handleLogout(){
 
@@ -43,6 +44,8 @@ const Navbar = ({}) => {
       console.error('Error during logout:', error);
     });
   }
+
+  
 
   return (
     <>
@@ -91,7 +94,7 @@ const Navbar = ({}) => {
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        {user.user_metadata.firstName}
+                        {user.first_name}
                       </li>
                       <ul className="dropdown-menu">
                         <li className="dropdown-item">
@@ -122,7 +125,7 @@ const Navbar = ({}) => {
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        {user.user_metadata.firstName}
+                        {user.first_name}
                       </li>
                       <ul className="dropdown-menu">
                         <li className="dropdown-item">
