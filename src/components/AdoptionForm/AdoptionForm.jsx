@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import "./PersonalForm.css";
+import "./AdoptionForm.css";
 
-function PersonalForm(props) {
+function AdoptionForm(props) {
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
     props.parentCallback(data);
@@ -654,4 +654,4 @@ function PersonalForm(props) {
   );
 }
 
-export default PersonalForm;
+export default AdoptionForm;

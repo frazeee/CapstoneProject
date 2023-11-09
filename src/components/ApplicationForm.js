@@ -1,5 +1,5 @@
 import { supabase } from "../components/client";
-import PersonalForm from "./PersonalForm/PersonalForm";
+import AdoptionForm from "./AdoptionForm/AdoptionForm";
 
 const ApplicationForm = () => {
   //child component
@@ -40,7 +40,7 @@ const ApplicationForm = () => {
             <div className="card-body">
               <h1 className="text-center">Adoption Form</h1>
               <hr className="w-100" />
-              <PersonalForm parentCallback={handleCallback}></PersonalForm>
+              <AdoptionForm parentCallback={handleCallback}></AdoptionForm>
             </div>
           </div>
         </div>
