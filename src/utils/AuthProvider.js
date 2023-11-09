@@ -30,37 +30,42 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const fetchUserData = async () => {
       const userSessionData = Cookies.get('userSession');
-      setLoading(true)
-      if (userSessionData) {
-        const tokenData = JSON.parse(userSessionData);
-
-        // Assuming you have a unique identifier like 'email' or 'id' to fetch the user
-        const email = tokenData.data.user.email;
-
-        // Use the Supabase 'select' function to fetch user data
-        const { data, error } = await supabase
-          .from('Users')
-          .select('*')
-          .eq('email', email); // Replace 'email' with the actual unique identifier
-
-         
-
-        if (error) {
-          console.error('Error fetching user:', error);
-        } else {
-          if (data && data.length > 0) {
-            const user = data[0];
-            setUser(user);
-            setSession(tokenData.data.session);
-            setEmail(user.email);
-            setLoading(false)
+      setLoading(true);
+  
+      try {
+        if (userSessionData) {
+          const tokenData = JSON.parse(userSessionData);
+  
+          // Assuming you have a unique identifier like 'email' or 'id' to fetch the user
+          const email = tokenData.data.user.email;
+  
+          // Use the Supabase 'select' function to fetch user data
+          const { data, error } = await supabase
+            .from('Users')
+            .select('*')
+            .eq('email', email); // Replace 'email' with the actual unique identifier
+  
+          if (error) {
+            console.error('Error fetching user:', error);
+          } else {
+            if (data && data.length > 0) {
+              const user = data[0];
+              setUser(user);
+              setSession(tokenData.data.session);
+              setEmail(user.email);
+            }
           }
         }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
       }
     };
-
+  
     fetchUserData();
   }, []);
+  
 
   console.log(user)
 
