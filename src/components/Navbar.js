@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BPUADOPT_LOGO from "../images/BPUADOPT_LOGO.png";
 import { useAuth } from "../utils/AuthProvider";
@@ -7,51 +7,50 @@ import "./Navbar.css";
 import { supabase } from "./client";
 
 const Navbar = ({}) => {
-  const { user, session, email } = useAuth(); 
-  const navigate = useNavigate()
-  const [role ,setRole] = useState(null)
-  
-    // useEffect(()=> {
-    //   const fetchUserRole = async (userEmail) => {
-    //     try {
+  const { user, session, email } = useAuth();
+  const navigate = useNavigate();
+  const [role, setRole] = useState(null);
 
-    //       const { data, error } = await supabase
-    //         .from('Users')
-    //         .select('role')
-    //         .eq('email', userEmail)
-    //         .single();
-    
-    //       if (error) {
-    //         console.error('Error fetching user role:', error.message);
-    //       } else {
-    //         setRole(data.role)
-    //       }
-    //     } catch (error) {
-    //       console.error('An error occurred:', error);
-    //     } 
-    //   };
-    //   fetchUserRole(email)
-    // },[])
-    
-  
-  function handleLogout(){
+  // useEffect(()=> {
+  //   const fetchUserRole = async (userEmail) => {
+  //     try {
 
-    supabase.auth.signOut().then(() => {
-      Cookies.remove('userSession')
-      localStorage.clear();
-      navigate('/')
-    }).catch(error => {
-      console.error('Error during logout:', error);
-    });
+  //       const { data, error } = await supabase
+  //         .from('Users')
+  //         .select('role')
+  //         .eq('email', userEmail)
+  //         .single();
+
+  //       if (error) {
+  //         console.error('Error fetching user role:', error.message);
+  //       } else {
+  //         setRole(data.role)
+  //       }
+  //     } catch (error) {
+  //       console.error('An error occurred:', error);
+  //     }
+  //   };
+  //   fetchUserRole(email)
+  // },[])
+
+  function handleLogout() {
+    supabase.auth
+      .signOut()
+      .then(() => {
+        Cookies.remove("userSession");
+        localStorage.clear();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
   }
-
-  
 
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
         <div className="container">
-          <div className="navbar-brand">
+          <div className="navbar-brand d-flex align-items-center">
             <Link className="navy-link" to="/">
               <img
                 src={BPUADOPT_LOGO}
@@ -60,7 +59,6 @@ const Navbar = ({}) => {
                 alt="BPUAdopt Logo"
                 className="icon-padding me-4"
               />
-              <span className="nav-item">Home</span>
             </Link>
           </div>
 
@@ -76,12 +74,10 @@ const Navbar = ({}) => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <div className="nav-item">
-              <Link className="nav-link mx-3" to="/Pets">
-                Adopt A Pet
-              </Link>
-            </div>
+          <div
+            className="collapse navbar-collapse justify-content-end"
+            id="navbarNav"
+          >
             <ul className="navbar-nav ms-auto">
               {user ? (
                 <>
@@ -154,13 +150,23 @@ const Navbar = ({}) => {
                 </>
               ) : (
                 <>
-                  <li className="nav-item">
-                    <Link className="nav-link mx-3" to="/Login">
+                  <li className="nav-item mx-3">
+                    <Link className="nav-link text-white" to="/">
+                      Home
+                    </Link>
+                  </li>
+                  <li className="nav-item mx-3">
+                    <Link className="nav-link text-white" to="/Pets">
+                      Adopt A Pet
+                    </Link>
+                  </li>
+                  <li className="nav-item mx-3">
+                    <Link className="nav-link text-white" to="/Login">
                       Login
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link mx-3" to="/Register">
+                  <li className="nav-item mx-3">
+                    <Link className="nav-link text-white" to="/Register">
                       Register
                     </Link>
                   </li>
