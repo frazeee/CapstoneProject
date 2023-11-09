@@ -95,10 +95,7 @@ const PetPage = ({user}) => {
               </div>
             </div>
           </div>
-         </div>
-
-
-         
+         </div>         
          <Footer />
     </div>
     )

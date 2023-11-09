@@ -7,44 +7,45 @@ import "./Navbar.css";
 import { supabase } from "./client";
 
 const Navbar = ({}) => {
-  const { user, session, email } = useAuth();
-  const navigate = useNavigate();
-  const [role, setRole] = useState(null);
+  const { user, session, email } = useAuth(); 
+  const navigate = useNavigate()
+  const [role ,setRole] = useState(null)
+  
+    // useEffect(()=> {
+    //   const fetchUserRole = async (userEmail) => {
+    //     try {
 
-  useEffect(() => {
-    const fetchUserRole = async (userEmail) => {
-      try {
-        console.log(userEmail);
-        const { data, error } = await supabase
-          .from("Users")
-          .select("role")
-          .eq("email", userEmail)
-          .single();
+    //       const { data, error } = await supabase
+    //         .from('Users')
+    //         .select('role')
+    //         .eq('email', userEmail)
+    //         .single();
+    
+    //       if (error) {
+    //         console.error('Error fetching user role:', error.message);
+    //       } else {
+    //         setRole(data.role)
+    //       }
+    //     } catch (error) {
+    //       console.error('An error occurred:', error);
+    //     } 
+    //   };
+    //   fetchUserRole(email)
+    // },[])
+    
+  
+  function handleLogout(){
 
-        if (error) {
-          console.error("Error fetching user role:", error.message);
-        } else {
-          setRole(data.role);
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-    fetchUserRole(email);
-  }, []);
-
-  function handleLogout() {
-    supabase.auth
-      .signOut()
-      .then(() => {
-        Cookies.remove("userSession");
-        localStorage.clear();
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
+    supabase.auth.signOut().then(() => {
+      Cookies.remove('userSession')
+      localStorage.clear();
+      navigate('/')
+    }).catch(error => {
+      console.error('Error during logout:', error);
+    });
   }
+
+  
 
   return (
     <>
@@ -93,7 +94,7 @@ const Navbar = ({}) => {
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        {user.user_metadata.firstName}
+                        {user.first_name}
                       </li>
                       <ul className="dropdown-menu">
                         <li className="dropdown-item">
@@ -124,7 +125,7 @@ const Navbar = ({}) => {
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        {user.user_metadata.firstName}
+                        {user.first_name}
                       </li>
                       <ul className="dropdown-menu">
                         <li className="dropdown-item">

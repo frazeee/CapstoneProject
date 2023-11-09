@@ -13,8 +13,7 @@ function Pets({ user }) {
       if (error) {
         console.log("Error getting data:", error.message);
       } else {
-        setData(data);
-        console.log(data);
+        setData(data)
       }
     }
     getData();
