@@ -1,0 +1,35 @@
+.personal-form .row > div {
+  margin-bottom: 1rem;
+}
+
+.personal-form .title {
+  color: #ffbe0b;
+}
+
+.personal-form .row .btn-group {
+  height: 40px;
+}
+
+.personal-form .time {
+  min-width: 65px;
+  height: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.personal-form .submit-btn {
+  min-width: 170px;
+}
+
+/* .personal-form .radio-cntr {
+  height: 40px
+}
+
+.personal-form .status-cntr label {
+  margin-right: 2rem;
+}
+
+.personal-form .status-cntr label input {
+  margin-right: 0.5rem;
+} */
