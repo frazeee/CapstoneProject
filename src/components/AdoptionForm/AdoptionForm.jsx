@@ -11,6 +11,25 @@ function AdoptionForm(props) {
     console.log(data);
   };
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const day = today.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const year = tomorrow.getFullYear();
+    const month = (tomorrow.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const day = tomorrow.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
   const status = ["Single", "Married", "Others"];
   const source = ["Friends", "Website", "Social Media", "Others"];
   const yesOrNo = ["Yes", "No"];
@@ -114,6 +133,7 @@ function AdoptionForm(props) {
               className="form-control"
               placeholder="Enter your Birth Date"
               required
+              max={getCurrentDate()}
               {...register("birthdate", { required: true })}
             />
           </div>
@@ -590,6 +610,7 @@ function AdoptionForm(props) {
               type="date"
               className="form-control"
               required
+              min={getTomorrowDate()}
               {...register("zoomDate", { required: true })}
             />
           </div>

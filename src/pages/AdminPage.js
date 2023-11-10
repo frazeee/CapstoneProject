@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AdminInterviewModal from "../components/AdminInterviewModal/AdminInterviewModal";
 import AdminRequestModal from "../components/AdminRequestModal/AdminRequestModal";
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
@@ -7,6 +8,7 @@ import "./AdminPage.css";
 const AdminPage = () => {
   const [data, setData] = useState([]);
   const [requestListCount, setRequestListCount] = useState(0);
+  const [interviewListCount, setInterviewListCount] = useState(0);
 
   useEffect(() => {
     async function getData() {
@@ -20,6 +22,7 @@ const AdminPage = () => {
     getData();
 
     getRequestList();
+    getInterviewList();
   }, []);
 
   const getRequestList = async () => {
@@ -29,8 +32,21 @@ const AdminPage = () => {
         .select()
         .eq("payment_status", "PAID");
 
-      console.log(data);
       setRequestListCount(data.length);
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
+  };
+
+  const getInterviewList = async () => {
+    try {
+      const currentDate = new Date();
+      const { data, error } = await supabase
+        .from("Requests")
+        .select()
+        .gt("interview_date", currentDate.toISOString());
+
+      setInterviewListCount(data.length);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
     }
@@ -233,17 +249,12 @@ const AdminPage = () => {
                       POTENTIAL <br /> ADOPTERS
                     </h2>
                     {/* <button type="button" className="btn btn-lg btn-dark px-5">Check</button> */}
-                    <AdminRequestModal></AdminRequestModal>
+                    <AdminRequestModal />
                   </div>
                   <div className="box col-lg-4 text-center py-5">
-                    <h1 style={{ color: "#ffffff" }}>1</h1>
+                    <h1 style={{ color: "#ffffff" }}>{interviewListCount}</h1>
                     <h2 style={{ color: "#ffffff" }}>SCHEDULED INTERVIEWS</h2>
-                    <button
-                      type="button"
-                      className="btn btn-lg btn-dark px-5 header-btn"
-                    >
-                      Check
-                    </button>
+                    <AdminInterviewModal />
                   </div>
                 </div>
               </div>

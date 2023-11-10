@@ -1,0 +1,15 @@
+.interview-modal-body {
+  max-width: 99%;
+}
+
+.interview-check-btn {
+  width: 150px;
+  background: whitesmoke !important;
+  color: black !important;
+  border: none;
+}
+
+.interview-modal-body .table thead th,
+.interview-modal-body .table td {
+  white-space: nowrap;
+}
