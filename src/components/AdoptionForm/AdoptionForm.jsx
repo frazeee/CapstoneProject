@@ -574,7 +574,7 @@ function AdoptionForm(props) {
 
          */}
 
-        {/* <div className="mb-3">
+        <div className="mb-3">
           <h3 className="text-primary">Interview & Visitation</h3>
           <p>(Minors must be accompanied by a parent or guardian.)</p>
         </div>
@@ -646,7 +646,7 @@ function AdoptionForm(props) {
               ))}
             </div>
           </div>
-        </div> */}
+        </div>
 
         <div className="d-flex justify-content-end">
           <button type="submit" className="btn rounded-pill pr-3 submit-btn">

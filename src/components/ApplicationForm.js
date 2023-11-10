@@ -10,12 +10,10 @@ const ApplicationForm = () => {
   //child component
   const handleCallback = (childData) => {
     // Update the name in the component's state
-    console.log(childData);
     saveData(childData);
   };
 
   const openGateway = async (requestId) => {
-    console.log(requestId);
     try {
       // TO DO: Move this to .env
       // Replace this with your secret key in paymongo account
@@ -77,6 +75,28 @@ const ApplicationForm = () => {
     }
   };
 
+  const interviewDatetime = (payload) => {
+    const zoomDate = payload.zoomDate;
+    const zoomMeridiem = payload.zoomMeridiem;
+    const zoomMinutes = payload.zoomMinutes;
+    const zoomTime = payload.zoomTime;
+
+    console.log(zoomMeridiem === "PM");
+
+    // Parse the date and time values
+    const date = new Date(zoomDate);
+    const hours = parseInt(zoomTime, 10) + (zoomMeridiem === "PM" ? 12 : 0);
+    const minutes = parseInt(zoomMinutes, 10);
+
+    // Set the time in the Date object
+    date.setHours(hours, minutes);
+
+    // Format the date-time string
+    const formattedDateTime = date.toISOString();
+
+    return formattedDateTime;
+  };
+
   async function saveData(payload) {
     try {
       const { data, error } = await supabase
@@ -95,6 +115,7 @@ const ApplicationForm = () => {
           source: payload.source,
           had_adapted: payload.hadAdapted === "Yes" ? true : false,
           payment_status: "UNPAID",
+          interview_date: interviewDatetime(payload),
         })
         .select();
 
