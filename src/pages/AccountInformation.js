@@ -2,12 +2,14 @@ import Navbar from '../components/Navbar';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../utils/AuthProvider';
 import { supabase } from '../components/client';
+import { BeatLoader } from 'react-spinners';
 
 
 const AccountInformation = () => {
 
     const {user, email} = useAuth()
     const [userData, setUserData] = useState(null)
+    const [Loading, setLoading] = useState(null)
 
     console.log(user)
     console.log(email)
@@ -17,6 +19,7 @@ const AccountInformation = () => {
       async function getUserByEmail(email) {
         try {
           // Query the 'users' table in your Supabase database
+         setLoading(true)
           const { data, error } = await supabase.from('Users').select('*').eq('email', email);
     
           if (error) {
@@ -33,12 +36,16 @@ const AccountInformation = () => {
         } catch (error) {
           console.error('Error:', error);
         }
+        finally{
+          setLoading(false)
+        }
       }
     
       // Call the getUserByEmail function when the email changes
       getUserByEmail(email);
     }, []);
-    
+
+
 
    
     
@@ -92,7 +99,13 @@ const AccountInformation = () => {
         }
       };
 
-    
+      if (Loading) {
+        return (
+          <div className="d-flex justify-content-center align-items-center">
+          <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+        </div>
+        );
+      }
 
     return(
 
