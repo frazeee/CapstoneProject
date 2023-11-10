@@ -19,8 +19,11 @@ const ApplicationForm = () => {
       // Replace this with your secret key in paymongo account
       const paymongoSecretKey = "sk_test_N5d44ZGz6gy6nGCcB6z3PrAF";
       // Replace this env + 'payment-success'
-      // const successPage = `http://localhost:3000/payment-success/${requestId}`;
-      const successPage = `https://bpuadopt.vercel.app/payment-success/${requestId}`;
+
+      const successPage =
+        process.env.NODE_ENV === "development"
+          ? `http://localhost:3000/payment-success/${requestId}`
+          : `https://bpuadopt.vercel.app/payment-success/${requestId}`;
 
       const payload = {
         data: {
@@ -116,6 +119,10 @@ const ApplicationForm = () => {
           had_adapted: payload.hadAdapted === "Yes" ? true : false,
           payment_status: "UNPAID",
           interview_date: interviewDatetime(payload),
+          ac_first_name: payload.alternateFirstName,
+          ac_last_name: payload.alternateLastName,
+          ac_phone_number: payload.alternatePhone,
+          ac_email: payload.alternateEmail,
         })
         .select();
 

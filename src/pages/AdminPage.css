@@ -1,61 +1,60 @@
 hr {
-    width: 50%;
-    margin: 0 auto;
-    background-color: #FFB692;
+  width: 50%;
+  margin: 0 auto;
+  background-color: #ffb692;
 }
 
 .box {
-    border-right: 1px solid #ffffff;
-    /* Add a vertical line on the right side of each box */
-    padding: 15px;
+  border-right: 1px solid #ffffff;
+  /* Add a vertical line on the right side of each box */
+  padding: 15px;
 }
 
 /* Remove the border-right from the last box to avoid a line on its right side */
 .box:last-child {
-    border-right: none;
+  border-right: none;
 }
 
 #infoCard {
-    background-color: #FFBD59;
+  background-color: #ffbd59;
 }
 
-.card{
-    width: auto;
+.card {
+  width: auto;
 }
 
-.box button{
-    width: 150px;
-    background: whitesmoke;
-    color: black;
-    border: none;
+.admin-page .box .header-btn {
+  width: 150px;
+  background: whitesmoke;
+  color: black;
+  border: none;
 }
 
-a{
-    color:gray;
+a {
+  color: gray;
 }
 
-.icon{
-    padding-left: 240px;
+.icon {
+  padding-left: 240px;
 }
 
-.modal-image{
-    background-color: #FFBD59;
-    padding: 5px;
+.modal-image {
+  background-color: #ffbd59;
+  padding: 5px;
 }
 
-.btn-save{
-    min-width: 200px;
+.btn-save {
+  min-width: 200px;
 }
 
-
-.bi-gender-male{
-    color: #02a3fe;
+.bi-gender-male {
+  color: #02a3fe;
 }
 
-.bi-gender-female{
-    color: #ec49a6;
+.bi-gender-female {
+  color: #ec49a6;
 }
 
-.danger-btn{
-    background-color: #F03A47;
+.danger-btn {
+  background-color: #f03a47;
 }

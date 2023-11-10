@@ -1,0 +1,15 @@
+.request-modal-body {
+  max-width: 99%;
+}
+
+.request-check-btn {
+  width: 150px;
+  background: whitesmoke !important;
+  color: black !important;
+  border: none;
+}
+
+.request-modal-body .table thead th,
+.request-modal-body .table td {
+  white-space: nowrap;
+}
