@@ -113,39 +113,51 @@ const Navbar = ({}) => {
                       </ul>
                     </li>
                   ) : (
-                    <li className="nav-item dropdown">
-                      <li
-                        className="nav-link dropdown-toggle mx-3 text-white"
-                        id="navbarDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {user.first_name}
+                    <>
+                      <li className="nav-item mx-3">
+                        <Link className="nav-link text-white" to="/">
+                          Home
+                        </Link>
                       </li>
-                      <ul className="dropdown-menu">
-                        <li className="dropdown-item">
-                          <Link
-                            style={{ textDecoration: "none" }}
-                            to="/accountInformation"
-                          >
-                            Account Details
-                          </Link>
+                      <li className="nav-item mx-3">
+                        <Link className="nav-link text-white" to="/Pets">
+                          Adopt A Pet
+                        </Link>
+                      </li>
+                      <li className="nav-item dropdown">
+                        <li
+                          className="nav-link dropdown-toggle mx-3 text-white"
+                          id="navbarDropdown"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {user.first_name}
                         </li>
-                        <li className="dropdown-divider">
-                          <hr className="dropdown-divider" />
-                        </li>
-                        <li className="dropdown-item">
-                          <a
-                            href=""
-                            className="text-decoration-none"
-                            onClick={handleLogout}
-                          >
-                            Logout
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
+                        <ul className="dropdown-menu">
+                          <li className="dropdown-item">
+                            <Link
+                              style={{ textDecoration: "none" }}
+                              to="/accountInformation"
+                            >
+                              Account Details
+                            </Link>
+                          </li>
+                          <li className="dropdown-divider">
+                            <hr className="dropdown-divider" />
+                          </li>
+                          <li className="dropdown-item">
+                            <a
+                              href=""
+                              className="text-decoration-none"
+                              onClick={handleLogout}
+                            >
+                              Logout
+                            </a>
+                          </li>
+                        </ul>
+                      </li>
+                    </>
                   )}
                 </>
               ) : (
