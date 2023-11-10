@@ -13,7 +13,7 @@ function Pets({ user }) {
       if (error) {
         console.log("Error getting data:", error.message);
       } else {
-        setData(data)
+        setData(data);
       }
     }
     getData();
@@ -57,12 +57,13 @@ function Pets({ user }) {
         </div>
       </div>
 
-      <div className="container content pt-5 px-3">
-        <div className="row row-bottom-margin">
-          <div className="col-xl-6">
-            <h1 className="highlight-word text-decoration-underline">
-              Adopt a Shelter cat or dog.
+      <div className="container py-3 px-3">
+        <div className="row">
+          <div className="col-12">
+            <h1 className="highlight-word">
+              Adopt a Shelter cat or dog
             </h1>
+            <hr className="w-100 mb-3" />
             <p className="fs-6">
               Our adoptable cats and dogs are all spayed/neutered and
               vaccinated. They’ve lived a difficult life before being in the
@@ -80,12 +81,12 @@ function Pets({ user }) {
               <li>Take your pet home!</li>
             </ul>
             <div className="buttons">
-              <button className="btn">Apply Now!</button>
+              <button className="btn mr-3">Apply Now!</button>
               <button className="btn ms-3">Adoption FAQ</button>
             </div>
           </div>
 
-          <div className="col-xl-6 ps-5 d-flex card-pictures highlight-word d-none d-xl-flex">
+          {/* <div className="col-xl-6 ps-5 d-flex card-pictures highlight-word d-none d-xl-flex">
             <div className="col pe-5">
               <div className="card pet-card shadow on-hover">
                 <img
@@ -106,7 +107,7 @@ function Pets({ user }) {
                 <h2 className="card-title ps-3 text-light">Jojo</h2>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
