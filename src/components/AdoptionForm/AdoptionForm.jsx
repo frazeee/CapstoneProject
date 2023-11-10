@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "./AdoptionForm.css";
 
 function AdoptionForm(props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState, control } = useForm();
+  const [adoptFormData, setAdoptFormData] = useState(null);
+
   const onSubmit = (data) => {
     props.parentCallback(data);
+    console.log(data);
   };
 
   const status = ["Single", "Married", "Others"];
@@ -48,7 +51,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="First Name"
               required
-              {...register("firstName")}
+              {...register("firstName", { required: true })}
             ></input>
           </div>
           <div className="col-md-6">
@@ -59,7 +62,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Last Name"
               required
-              {...register("lastName")}
+              {...register("lastName", { required: true })}
             ></input>
           </div>
         </div>
@@ -73,7 +76,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Address"
               required
-              {...register("address")}
+              {...register("address", { required: true })}
             ></input>
           </div>
         </div>
@@ -87,7 +90,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Phone Number"
               required
-              {...register("phone")}
+              {...register("phone", { required: true })}
             ></input>
           </div>
           <div className="col-md-6">
@@ -98,12 +101,12 @@ function AdoptionForm(props) {
               type="email"
               placeholder="Email"
               required
-              {...register("email")}
+              {...register("email", { required: true })}
             ></input>
           </div>
         </div>
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col-md-6">
             <label>Birthdate</label>
             <input
@@ -111,7 +114,7 @@ function AdoptionForm(props) {
               className="form-control"
               placeholder="Enter your Birth Date"
               required
-              {...register("birthdate")}
+              {...register("birthdate", { required: true })}
             />
           </div>
           <div className="col-md-6">
@@ -123,7 +126,7 @@ function AdoptionForm(props) {
                     className="form-check-input mb-1"
                     type="radio"
                     value={option}
-                    {...register("status")}
+                    {...register("status", { required: true })}
                   />
                   <label className="form-check-label" key={option}>
                     {option}
@@ -142,7 +145,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Please type N/A if unemployed"
               required
-              {...register("occupation")}
+              {...register("occupation", { required: true })}
             ></input>
           </div>
           <div className="col-md-6">
@@ -152,7 +155,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Please type N/A if no social media"
               required
-              {...register("socialMedia")}
+              {...register("socialMedia", { required: true })}
             ></input>
           </div>
         </div>
@@ -167,7 +170,7 @@ function AdoptionForm(props) {
                     className="form-check-input mb-1"
                     type="checkbox"
                     value={option}
-                    {...register("source")}
+                    {...register("source", { required: true })}
                   />
                   <label className="form-check-label" key={option}>
                     {option}
@@ -185,7 +188,7 @@ function AdoptionForm(props) {
                     className="form-check-input mb-1"
                     type="radio"
                     value={option}
-                    {...register("hadAdapted")}
+                    {...register("hadAdapted", { required: true })}
                   />
                   <label className="form-check-label" key={option}>
                     {option}
@@ -194,9 +197,9 @@ function AdoptionForm(props) {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <h3 className="text-primary">Alternate Contact</h3>
           <p className="text-muted">
             If the applicant is a minor, a parent or a guardian must be the
@@ -211,7 +214,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Alternate Contact First Name"
               required
-              {...register("alternateFirstName")}
+              {...register("alternateFirstName", { required: true })}
             ></input>
           </div>
           <div className="col-md-6">
@@ -221,7 +224,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Alternate Contact Last Name"
               required
-              {...register("alternateLastName")}
+              {...register("alternateLastName", { required: true })}
             ></input>
           </div>
         </div>
@@ -235,7 +238,7 @@ function AdoptionForm(props) {
               type="text"
               placeholder="Alternate Contact Phone Number"
               required
-              {...register("alternatePhone")}
+              {...register("alternatePhone", { required: true })}
             ></input>
           </div>
           <div className="col-md-6">
@@ -246,10 +249,10 @@ function AdoptionForm(props) {
               type="email"
               placeholder="Alternate Contact Email"
               required
-              {...register("alternateEmail")}
+              {...register("alternateEmail", { required: true })}
             ></input>
           </div>
-        </div>
+        </div> */}
 
         {/* <div className="mb-3">
           <h3 className="text-primary">Questionnaire</h3>
@@ -569,7 +572,9 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        <div className="mb-3">
+         */}
+
+        {/* <div className="mb-3">
           <h3 className="text-primary">Interview & Visitation</h3>
           <p>(Minors must be accompanied by a parent or guardian.)</p>
         </div>
@@ -585,7 +590,7 @@ function AdoptionForm(props) {
               type="date"
               className="form-control"
               required
-              {...register("zoomDate")}
+              {...register("zoomDate", { required: true })}
             />
           </div>
 
@@ -598,7 +603,7 @@ function AdoptionForm(props) {
                 className="time"
                 min="1"
                 max="12"
-                {...register("zoomTime")}
+                {...register("zoomTime", { required: true })}
               />
               <span className="mx-2">:</span>
               <input
@@ -607,9 +612,12 @@ function AdoptionForm(props) {
                 className="time mr-2"
                 min="0"
                 max="59"
-                {...register("zoomMinutes")}
+                {...register("zoomMinutes", { required: true })}
               />
-              <select className="time" {...register("zoomMeridiem")}>
+              <select
+                className="time"
+                {...register("zoomMeridiem", { required: true })}
+              >
                 <option value="AM">AM</option>
                 <option value="PM">PM</option>
               </select>
@@ -629,7 +637,7 @@ function AdoptionForm(props) {
                     className="form-check-input mb-1"
                     type="radio"
                     value={option}
-                    {...register("willVisit")}
+                    {...register("willVisit", { required: true })}
                   />
                   <label className="form-check-label" key={option}>
                     {option}
@@ -640,12 +648,8 @@ function AdoptionForm(props) {
           </div>
         </div> */}
 
-        <div className="d-flex justify-content-end mr-3">
-          <button
-            type="submit"
-            className="btn rounded-pill my-2 submit-btn"
-            id="updateBtn"
-          >
+        <div className="d-flex justify-content-end">
+          <button type="submit" className="btn rounded-pill pr-3 submit-btn">
             Submit
           </button>
         </div>

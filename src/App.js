@@ -42,7 +42,7 @@ function App() {
               <Route path="/Admin" element={<AdminPage />} />
             </Route>
 
-            <Route path="/payment-success" element={<PaymentSuccessPage />} />
+            <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
           </Routes>
         </Router>
       </AuthProvider>
