@@ -62,7 +62,7 @@ const PetPage = ({ user }) => {
                     </span>{" "}
                   </li>
                 </ul>
-                <Link to="/Application">
+                <Link to={`/Application/${pet.id}`}>
                   {" "}
                   <button className="btn w-25">Apply Now</button>{" "}
                 </Link>

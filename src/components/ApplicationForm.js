@@ -2,6 +2,11 @@ import { supabase } from "../components/client";
 import AdoptionForm from "./AdoptionForm/AdoptionForm";
 
 const ApplicationForm = () => {
+  const currentUrl = window.location.href;
+
+  // Split the URL by slashes and get the last part
+  const petId = currentUrl.split("/").pop();
+
   //child component
   const handleCallback = (childData) => {
     // Update the name in the component's state
@@ -82,14 +87,14 @@ const ApplicationForm = () => {
           address: payload.address,
           phone_number: payload.phone,
           email: payload.email,
-          pet_id: 1, // TO DO: Replace with the pet adapting id
+          pet_id: petId,
           birthdate: payload.birthdate,
           status: payload.status,
           occupation: payload.occupation,
           soc_med: payload.socialMedia,
-          // source: payload.source,
+          source: payload.source,
           had_adapted: payload.hadAdapted === "Yes" ? true : false,
-          payment_status: "UNPAID"
+          payment_status: "UNPAID",
         })
         .select();
 

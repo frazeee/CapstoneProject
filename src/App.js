@@ -36,7 +36,7 @@ function App() {
                 path="/accountInformation"
                 element={<AccountInformation />}
               />
-              <Route path="/Application" element={<ApplicationPage />} />
+              <Route path="/Application/:petId" element={<ApplicationPage />} />
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/Admin" element={<AdminPage />} />
