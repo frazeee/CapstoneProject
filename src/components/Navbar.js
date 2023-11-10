@@ -84,7 +84,7 @@ const Navbar = ({}) => {
                   {role === "ADMIN" ? (
                     <li className="nav-item dropdown">
                       <li
-                        className="nav-link dropdown-toggle mx-3"
+                        className="nav-link dropdown-toggle mx-3 text-white"
                         id="navbarDropdown"
                         role="button"
                         data-bs-toggle="dropdown"
@@ -115,7 +115,7 @@ const Navbar = ({}) => {
                   ) : (
                     <li className="nav-item dropdown">
                       <li
-                        className="nav-link dropdown-toggle mx-3"
+                        className="nav-link dropdown-toggle mx-3 text-white"
                         id="navbarDropdown"
                         role="button"
                         data-bs-toggle="dropdown"
