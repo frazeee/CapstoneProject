@@ -125,7 +125,7 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        {/* <div className="row">
+        <div className="row">
           <div className="col-md-6">
             <label>Birthdate</label>
             <input
@@ -180,46 +180,7 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-md-6 form-check">
-            <label>What prompted you to adopt a pet?</label>
-            <div className="d-flex mb-0 btn-group">
-              {source.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="checkbox"
-                    value={option}
-                    {...register("source", { required: true })}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-6">
-            <label>Have you adapted pet before?</label>
-            <div className="d-flex mb-0 btn-group">
-              {yesOrNo.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register("hadAdapted", { required: true })}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div> */}
-
-        {/* <div className="mb-3">
+        <div className="mb-3">
           <h3 className="text-primary">Alternate Contact</h3>
           <p className="text-muted">
             If the applicant is a minor, a parent or a guardian must be the
@@ -272,7 +233,7 @@ function AdoptionForm(props) {
               {...register("alternateEmail", { required: true })}
             ></input>
           </div>
-        </div> */}
+        </div>
 
         {/* <div className="mb-3">
           <h3 className="text-primary">Questionnaire</h3>
@@ -280,6 +241,45 @@ function AdoptionForm(props) {
             In an effort to help the process go smoothly, please be as detailed
             as possible with your responses to the questions below.
           </p>
+        </div>
+
+         <div className="row">
+          <div className="col-md-6 form-check">
+            <label>What prompted you to adopt a pet?</label>
+            <div className="d-flex mb-0 btn-group">
+              {source.map((option) => (
+                <div className="form-check mr-3 d-flex align-items-center mb-0">
+                  <input
+                    className="form-check-input mb-1"
+                    type="checkbox"
+                    value={option}
+                    {...register("source", { required: true })}
+                  />
+                  <label className="form-check-label" key={option}>
+                    {option}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="col-md-6">
+            <label>Have you adapted pet before?</label>
+            <div className="d-flex mb-0 btn-group">
+              {yesOrNo.map((option) => (
+                <div className="form-check mr-3 d-flex align-items-center mb-0">
+                  <input
+                    className="form-check-input mb-1"
+                    type="radio"
+                    value={option}
+                    {...register("hadAdapted", { required: true })}
+                  />
+                  <label className="form-check-label" key={option}>
+                    {option}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="row">
