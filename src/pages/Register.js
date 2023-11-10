@@ -4,42 +4,42 @@ import { supabase } from "../components/client";
 import loginPicture from "../images/loginPicture.png";
 import "./Register.css";
 
-
-
 const Register = () => {
   let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName:'',lastName:'',email:'',password:'', phoneNumber:'',address:''
-  })
-  
-  const [loading, setLoading] = useState(null)
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    address: "",
+  });
 
+  const [loading, setLoading] = useState(null);
 
-  function handleChange(event){
-    console.log(formData)
-    setFormData((prevFormData)=>{
-      return{
+  function handleChange(event) {
+    console.log(formData);
+    setFormData((prevFormData) => {
+      return {
         ...prevFormData,
-        [event.target.name] : event.target.value
-      }
-    })
+        [event.target.name]: event.target.value,
+      };
+    });
   }
 
   const checkEmailExists = async (email) => {
     const { data, error } = await supabase
-      .from('Users')
-      .select('email')
-      .eq('email', email)
-  
+      .from("Users")
+      .select("email")
+      .eq("email", email);
+
     if (error) {
-      throw error
+      throw error;
     }
-  
-    return data.length > 0
-  }
 
-
+    return data.length > 0;
+  };
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -48,45 +48,41 @@ const Register = () => {
       const emailExists = await checkEmailExists(formData.email);
       console.log(emailExists);
       if (emailExists) {
-        alert('This email has already been registered');
+        alert("This email has already been registered");
         setLoading(false);
         return;
       }
-  
+
       const { user, session, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options:{
-          data:{
+        options: {
+          data: {
             firstName: formData.firstName,
-            lastName: formData.lastName
-          }
-        }        
+            lastName: formData.lastName,
+          },
+        },
       });
 
-  
       if (error) {
         throw error;
       }
-      const { data, error: insertError } = await supabase
-      .from('Users')
-      .insert([
+      const { data, error: insertError } = await supabase.from("Users").insert([
         {
           email: formData.email,
           first_name: formData.firstName,
           last_name: formData.lastName,
           address: formData.address,
-          phone: formData.phoneNumber
-        }
+          phone: formData.phoneNumber,
+        },
       ]);
 
-    if (insertError) {
-      throw insertError;
-    }
+      if (insertError) {
+        throw insertError;
+      }
 
-
-      alert('Check your email for a verification link!');
-      navigate('/Login');
+      alert("Check your email for a verification link!");
+      navigate("/Login");
     } catch (error) {
       alert(error.error_description || error.message);
     } finally {
@@ -103,9 +99,10 @@ const Register = () => {
         </div>
         <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Register</h1>
-          <hr></hr>
+          <hr className="mb-3 w-100" />
+
           <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+            <div className="mb-3">
               <label htmlFor="firstName" className="form-label">
                 First Name
               </label>
@@ -177,12 +174,20 @@ const Register = () => {
                 required
               />
             </div>
-           
-            <button type="submit" className="register-btn btn rounded-pill mb-2">
+
+            <button
+              type="submit"
+              className="register-btn btn rounded-pill mb-2"
+            >
               Register
             </button>
           </form>
-          <Link to="/Login" className="span-link" style={{textDecoration: 'none'}}>Already have an account? Login Here!</Link>
+          <div>
+            Already have an account?
+            <Link to="/Login" style={{ textDecoration: "none" }}>
+              <span className="text-primary"> Login Here!</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
