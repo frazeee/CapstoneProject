@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../components/client";
 import loginPicture from "../images/loginPicture.png";
 import "./Register.css";
+import { BeatLoader } from "react-spinners";
 
 const Register = () => {
   let navigate = useNavigate();
@@ -89,6 +90,15 @@ const Register = () => {
       setLoading(false);
     }
   }
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+      <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+    </div>
+    );
+  }
+
 
   return (
     <div className="container-fluid">

@@ -11,63 +11,34 @@ export function AuthProvider({ children }) {
   const [email, setEmail] = useState(null); // Set to null initially
   const [loading, setLoading] = useState(null); // Set to null initially
 
-  // useEffect(() => {
+ 
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const { data, error } = await supabase.auth.getUser();
 
-  //   const userSessionData = Cookies.get('userSession');
-
-  //   if (userSessionData) {
-  //     const tokenData = JSON.parse(userSessionData);
-  //     const userData = tokenData.data.user; // Use userData instead of JSON.stringify
-
-  //     setUser(userData);
-  //     setSession(tokenData.data.session);
-  //     setEmail(userData.email); // Set email from userData
-
-  //   }
-  // }, []);
-
-  
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userSessionData = Cookies.get('userSession');
-      setLoading(true);
-  
-      try {
-        if (userSessionData) {
-          const tokenData = JSON.parse(userSessionData);
-  
-          // Assuming you have a unique identifier like 'email' or 'id' to fetch the user
-          const email = tokenData.data.user.email;
-  
-          // Use the Supabase 'select' function to fetch user data
-          const { data, error } = await supabase
-            .from('Users')
-            .select('*')
-            .eq('email', email); // Replace 'email' with the actual unique identifier
-  
-          if (error) {
-            console.error('Error fetching user:', error);
-          } else {
-            if (data && data.length > 0) {
-              const user = data[0];
-              setUser(user);
-              setSession(tokenData.data.session);
-              setEmail(user.email);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
+      if (error) {
+        console.error("Error fetching user:", error);
+        setLoading(false);
+      } else if (data) {
+        const { user } = data;
+        setUser(user);
+        setEmail(user.email)
+        setLoading(false);
+      } else {
+        setUser(null);
         setLoading(false);
       }
-    };
-  
-    fetchUserData();
-  }, []);
-  
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setLoading(false);
+    }
+  };
 
-  console.log(user)
+  fetchUser();
+}, []);
+
+
 
   if (loading) {
     return (

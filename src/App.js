@@ -19,8 +19,9 @@ import PrivateRoutes from "./utils/PrivateRoute";
 function App() {
   return (
     <>
-      <AuthProvider>
+      
         <Router>
+        <AuthProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route element={<AuthorizedRoute />}>
@@ -44,8 +45,9 @@ function App() {
 
             <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
           </Routes>
+          </AuthProvider>
         </Router>
-      </AuthProvider>
+      
     </>
   );
 }

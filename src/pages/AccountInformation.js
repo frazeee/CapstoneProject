@@ -10,6 +10,7 @@ const AccountInformation = () => {
     const [userData, setUserData] = useState(null)
 
     console.log(user)
+    console.log(email)
 
     useEffect(() => {
       // Function to fetch a user by email
@@ -36,7 +37,7 @@ const AccountInformation = () => {
     
       // Call the getUserByEmail function when the email changes
       getUserByEmail(email);
-    }, [email]);
+    }, []);
     
 
    

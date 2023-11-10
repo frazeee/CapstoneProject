@@ -3,12 +3,16 @@ import AdminInterviewModal from "../components/AdminInterviewModal/AdminIntervie
 import AdminRequestModal from "../components/AdminRequestModal/AdminRequestModal";
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
-import "./AdminPage.css";
+import './AdminPage.css';
+import AddPetModal from "../components/AddPetModal";
+
+
 
 const AdminPage = () => {
   const [data, setData] = useState([]);
   const [requestListCount, setRequestListCount] = useState(0);
   const [interviewListCount, setInterviewListCount] = useState(0);
+    const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -103,36 +107,42 @@ const AdminPage = () => {
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const { data, error } = await supabase
-        .from("Pets")
-        .update({
-          pet_name: editedDetails.pet_name,
-          age: editedDetails.age,
-          gender: editedDetails.gender,
-          pet_type: editedDetails.pet_type,
-          pet_personality: editedDetails.pet_personality,
-        })
-        .eq("id", selectedCard.id);
-
-      if (error) {
-        // Handle the error here
-        console.error("Error updating user:", error);
-      } else {
-        // Update was successful
-        console.log(error);
-        console.log("User updated successfully:", data);
-      }
-    } catch (error) {
-      // Handle any other errors that may occur during the update.
-      console.error("An error occurred:", error);
-    }
-
-    closeModal();
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        
+          try {
+            
+            const { data, error } = await supabase
+              .from('Pets')
+              .update({
+               pet_name : editedDetails.pet_name,
+               age : editedDetails.age,
+               gender : editedDetails.gender,
+               pet_type : editedDetails.pet_type,
+               pet_personality : editedDetails.pet_personality
+              })
+              .eq('id', selectedCard.id);
+              
+    
+      
+            if (error) {
+              // Handle the error here
+              console.error('Error updating user:', error);
+            } else {
+              // Update was successful
+              console.log(error)
+              console.log('User updated successfully:', data);
+              
+            }
+          } catch (error) {
+            // Handle any other errors that may occur during the update.
+            console.error('An error occurred:', error);
+          }
+      
+        closeModal();
+      };
+      
 
   const [addFormData, setAddFormData] = useState({
     pet_name: "",
@@ -213,6 +223,100 @@ const AdminPage = () => {
       setUploading(false);
     }
   };
+          setImageUrl(publicUrl)
+          console.log(publicUrl.publicUrl)
+
+          
+          const { data, error } = await supabase
+          .from('Pets')
+          .insert([
+            { pet_name: addFormData.pet_name, 
+              age: addFormData.age,
+              gender: addFormData.gender,
+              pet_type: addFormData.petType,
+              pet_personality: addFormData.pet_personality,
+              image_url1: publicUrl.publicUrl},
+          ])
+          .select()
+
+          if (error){
+            throw error
+          }
+          else{
+            alert("Pet added successfully!")
+            document.getElementById("exampleModal").classList.remove("show");
+          }
+
+          } catch (error) {
+            alert(error.message)
+          }
+
+          finally {
+            setUploading(false)
+          }
+      
+      };
+      
+
+      const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false);
+
+      const handleClick = (cardItem) => {
+        setSelectedCard(cardItem)
+        setisDeleteModalOpen(true);
+      };
+
+      const closeDeleteModal = () => {
+        setisDeleteModalOpen(false);
+      };
+
+      // const DeletePet = async () => {
+      //   try {
+      //     setLoading(true); // Set loading to true when starting the deletion
+    
+      //     const { data, error } = await supabase
+      //       .from('Pets')
+      //       .delete()
+      //       .eq('id', cardItemId);
+    
+      //     if (error) {
+      //       console.error('Error deleting pet:', error);
+      //     } else {
+      //       // Deletion was successful
+      //       console.log('Pet deleted successfully:', data);
+      //     }
+      //   } catch (error) {
+      //     // Handle any other errors that may occur during the deletion.
+      //     console.error('An error occurred:', error);
+      //   } finally {
+      //     setLoading(false); // Set loading back to false when the operation is complete
+      //   }
+      // };
+
+      const DeletePet = async () => {
+        try{
+          console.log(selectedCard.id)
+          setLoading(true)
+          const {data, error} = await supabase
+          .from('Pets')
+          .delete()
+          .eq('id', selectedCard.id)
+            if (error) {
+            console.error('Error deleting pet:', error);
+          } else {
+            // Deletion was successful
+            console.log('Pet deleted successfully:', data);
+          }
+        }
+        catch (error){
+          console.error('An error occurred:', error);
+        }
+        finally{
+          setLoading(false);
+          closeDeleteModal();
+        }
+        
+      }
+
 
   return (
     <>
@@ -538,6 +642,45 @@ const AdminPage = () => {
             </div>
           </div>
         </div>
+
+
+         {/* Delete Modal */}
+        {isDeleteModalOpen && (
+          <div>
+            <div
+              className="modal-backdrop show"
+              style={{ zIndex: 1040 }}
+              onClick={closeDeleteModal}
+            ></div>
+
+            <div
+              className="modal fade show"
+              style={{ display: 'block' }}
+            >
+              <div className="modal-dialog modal-dialog-centered modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5">Delete Pet</h1>
+                    <button className="btn-close" onClick={closeDeleteModal} aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                        Are you sure you want to delete <span className="fw-bold"> {selectedCard.pet_name}</span> ?
+
+                      </div>
+                      <div className="modal-footer">
+                        <button className="btn btn-lg danger-btn" onClick={DeletePet}>Delete Pet</button>
+                        <button className="btn btn-lg " onClick={closeDeleteModal}>Close</button>
+                      </div>
+                  </div>
+              
+                </div>
+              </div>
+            </div>
+        )}
+      
+        
+
+
       </div>
     </>
   );
