@@ -10,8 +10,15 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null); // Set to null initially
   const [email, setEmail] = useState(null); // Set to null initially
   const [loading, setLoading] = useState(null); // Set to null initially
-
+  const userData = Cookies.get("userSession")
  
+  
+  // if (user === null && userData){
+    
+    
+  // }
+
+
 useEffect(() => {
   const fetchUser = async () => {
     try {

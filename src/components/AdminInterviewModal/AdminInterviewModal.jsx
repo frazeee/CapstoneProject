@@ -9,7 +9,7 @@ function AdminInterviewModal() {
     getInterviewList();
   }, []);
 
-  const tranformDateTime = (dateString) => {
+  const transformDateTime = (dateString) => {
     const dateTime = new Date(dateString);
     return `${dateTime.toLocaleDateString()}, ${dateTime.toLocaleTimeString()}`;
   };
@@ -104,7 +104,7 @@ function AdminInterviewModal() {
                         <td>{req.soc_med}</td>
                         <td>
                           {req.interview_date
-                            ? tranformDateTime(req.interview_date)
+                            ? transformDateTime(req.interview_date)
                             : ""}
                         </td>
                         <td>{req.had_adapted ? "Yes" : "No"}</td>

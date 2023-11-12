@@ -172,6 +172,17 @@ const Navbar = ({}) => {
                             <hr className="dropdown-divider" />
                           </li>
                           <li className="dropdown-item">
+                            <Link
+                              style={{ textDecoration: "none" }}
+                              to="/Adoptions"
+                            >
+                              Adoption Requests
+                            </Link>
+                          </li>
+                          <li className="dropdown-divider">
+                            <hr className="dropdown-divider" />
+                          </li>
+                          <li className="dropdown-item">
                             <a
                               href=""
                               className="text-decoration-none"

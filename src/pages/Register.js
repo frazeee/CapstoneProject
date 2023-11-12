@@ -33,7 +33,7 @@ const Register = () => {
     const { data, error } = await supabase
       .from("Users")
       .select("email")
-      .eq("email", email);
+      .eq("email", email)
 
     if (error) {
       throw error;
@@ -61,6 +61,7 @@ const Register = () => {
           data: {
             firstName: formData.firstName,
             lastName: formData.lastName,
+            redirectTo: '/login'
           },
         },
       });
