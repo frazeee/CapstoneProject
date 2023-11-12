@@ -12,10 +12,12 @@ function EmailConfirmation() {
       const urlParams = new URLSearchParams(window.location.search)
       const tokenHash = urlParams.get('token_hash')
       const type = urlParams.get('type')
+      console.log(type)
+      console.log(tokenHash)
 
       if (tokenHash && type === 'email') {
         setLoading(true)
-        const { error } = await supabase.auth.api.updateUser({ email: tokenHash })
+        const { error } = await supabase.auth.api.verifyOtp({ email: tokenHash, type })
         if (error) {
           console.error(error)
         } else {
