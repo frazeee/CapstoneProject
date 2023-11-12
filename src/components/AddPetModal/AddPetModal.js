@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "./client";
+import { supabase } from "../client";
 
 const AddPetModal = () => {
 
@@ -97,7 +97,7 @@ const AddPetModal = () => {
 
     return(
     <>
-        <button type="button" className="btn btn-lg btn-dark px-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
+        <button type="button" className="btn btn-lg interview-check-btn px-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
 
         <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">

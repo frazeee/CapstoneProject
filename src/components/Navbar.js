@@ -1,38 +1,52 @@
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BPUADOPT_LOGO from "../images/BPUADOPT_LOGO.png";
 import { useAuth } from "../utils/AuthProvider";
 import "./Navbar.css";
 import { supabase } from "./client";
+import { BeatLoader } from "react-spinners";
 
 const Navbar = ({}) => {
-  const { user, session, email } = useAuth();
+  const { user} = useAuth();
   const navigate = useNavigate();
   const [role, setRole] = useState(null);
-  console.log(user)
+  const [loading, setLoading] = useState(null);
+  const [userEmail, setUserEmail] = useState(null)
+  
+  const userData = Cookies.get('userSession')
+  if (userData && userEmail === null) {
+    try {
+      const parsedUserData = JSON.parse(userData);
+      const email = parsedUserData.data.user.email;
+      setUserEmail(email)
+    } catch (error) {
+      console.error('Error parsing userData:', error);
+    }
+  }
+  useEffect(()=> {
+    const fetchUserRole = async (userEmail) => {
+      try {
+        const { data, error } = await supabase
+          .from('Users')
+          .select('role')
+          .eq('email', userEmail)
+          .single();
 
-  // useEffect(()=> {
-  //   const fetchUserRole = async (userEmail) => {
-  //     try {
-
-  //       const { data, error } = await supabase
-  //         .from('Users')
-  //         .select('role')
-  //         .eq('email', userEmail)
-  //         .single();
-
-  //       if (error) {
-  //         console.error('Error fetching user role:', error.message);
-  //       } else {
-  //         setRole(data.role)
-  //       }
-  //     } catch (error) {
-  //       console.error('An error occurred:', error);
-  //     }
-  //   };
-  //   fetchUserRole(email)
-  // },[])
+        if (error) {
+          console.error('Error fetching user role:', error.message);
+        } else {
+          setRole(data.role)
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    };
+    if(userData){
+    fetchUserRole(userEmail)
+  }
+   
+  },[])
 
   function handleLogout() {
     supabase.auth
@@ -47,6 +61,14 @@ const Navbar = ({}) => {
       });
   }
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+      <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+    </div>
+    );
+  }
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark sticky-top topbar">
@@ -82,7 +104,18 @@ const Navbar = ({}) => {
             <ul className="navbar-nav ms-auto">
               {user ? (
                 <>
+                <li className="nav-item mx-3">
+                        <Link className="nav-link text-white" to="/">
+                          Home
+                        </Link>
+                      </li>
+                      <li className="nav-item mx-3">
+                        <Link className="nav-link text-white" to="/Pets">
+                          Adopt A Pet
+                        </Link>
+                      </li>
                   {role === "ADMIN" ? (
+                    
                     <li className="nav-item dropdown">
                       <li
                         className="nav-link dropdown-toggle mx-3 text-white"
@@ -115,16 +148,7 @@ const Navbar = ({}) => {
                     </li>
                   ) : (
                     <>
-                      <li className="nav-item mx-3">
-                        <Link className="nav-link text-white" to="/">
-                          Home
-                        </Link>
-                      </li>
-                      <li className="nav-item mx-3">
-                        <Link className="nav-link text-white" to="/Pets">
-                          Adopt A Pet
-                        </Link>
-                      </li>
+                   
                       <li className="nav-item dropdown">
                         <li
                           className="nav-link dropdown-toggle mx-3 text-white"

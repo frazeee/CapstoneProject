@@ -41,6 +41,7 @@ a {
 .modal-image {
   background-color: #ffbd59;
   padding: 5px;
+
 }
 
 .btn-save {
@@ -56,5 +57,5 @@ a {
 }
 
 .danger-btn{
-    background-color: #F03A47;
+    background-color: #F03A47!important;
 }

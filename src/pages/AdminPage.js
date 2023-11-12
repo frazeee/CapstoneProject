@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import AdminInterviewModal from "../components/AdminInterviewModal/AdminInterviewModal";
 import AdminRequestModal from "../components/AdminRequestModal/AdminRequestModal";
+import Footer from "../components/Footer"
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
 import './AdminPage.css';
-import AddPetModal from "../components/AddPetModal";
-
-
-
+import AddPetModal from "../components/AddPetModal/AddPetModal";
+import DeletedModal from "../components/DeletedModal/DeletedModal";
+ 
 const AdminPage = () => {
   const [data, setData] = useState([]);
   const [requestListCount, setRequestListCount] = useState(0);
   const [interviewListCount, setInterviewListCount] = useState(0);
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     async function getData() {
@@ -101,6 +102,7 @@ const AdminPage = () => {
       ...prevEditedDetails,
       [name]: value,
     }));
+    console.log(editedDetails)
   };
 
   const [file, setFile] = useState(null);
@@ -108,11 +110,9 @@ const AdminPage = () => {
   const [imageUrl, setImageUrl] = useState(null);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        
+        e.preventDefault()
           try {
-            
+            console.log(editedDetails)
             const { data, error } = await supabase
               .from('Pets')
               .update({
@@ -122,17 +122,15 @@ const AdminPage = () => {
                pet_type : editedDetails.pet_type,
                pet_personality : editedDetails.pet_personality
               })
-              .eq('id', selectedCard.id);
+              .eq('id', parseInt(selectedCard.id, 10))
+              .single()
               
-    
-      
             if (error) {
               // Handle the error here
               console.error('Error updating user:', error);
             } else {
               // Update was successful
-              console.log(error)
-              console.log('User updated successfully:', data);
+              console.log('Pet updated successfully:', data);
               
             }
           } catch (error) {
@@ -144,28 +142,7 @@ const AdminPage = () => {
       };
       
 
-  const [addFormData, setAddFormData] = useState({
-    pet_name: "",
-    age: "",
-    gender: "Male",
-    petType: "Dog",
-    pet_personality: "",
-  });
-
-  const handleAddChange = (e) => {
-    const { name, value } = e.target;
-
-    // If the input is a file input, handle it differently
-    if (e.target.type === "file") {
-      setFile(e.target.files[0]);
-    } else {
-      setAddFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-    console.log(addFormData);
-  };
+ 
 
       
 
@@ -180,29 +157,6 @@ const AdminPage = () => {
         setisDeleteModalOpen(false);
       };
 
-      // const DeletePet = async () => {
-      //   try {
-      //     setLoading(true); // Set loading to true when starting the deletion
-    
-      //     const { data, error } = await supabase
-      //       .from('Pets')
-      //       .delete()
-      //       .eq('id', cardItemId);
-    
-      //     if (error) {
-      //       console.error('Error deleting pet:', error);
-      //     } else {
-      //       // Deletion was successful
-      //       console.log('Pet deleted successfully:', data);
-      //     }
-      //   } catch (error) {
-      //     // Handle any other errors that may occur during the deletion.
-      //     console.error('An error occurred:', error);
-      //   } finally {
-      //     setLoading(false); // Set loading back to false when the operation is complete
-      //   }
-      // };
-
       const DeletePet = async () => {
         try{
           console.log(selectedCard.id)
@@ -214,7 +168,6 @@ const AdminPage = () => {
             if (error) {
             console.error('Error deleting pet:', error);
           } else {
-            // Deletion was successful
             console.log('Pet deleted successfully:', data);
           }
         }
@@ -256,7 +209,6 @@ const AdminPage = () => {
                     <h2 style={{ color: "#ffffff" }}>
                       POTENTIAL <br /> ADOPTERS
                     </h2>
-                    {/* <button type="button" className="btn btn-lg btn-dark px-5">Check</button> */}
                     <AdminRequestModal />
                   </div>
                   <div className="box col-lg-4 text-center py-5">
@@ -308,7 +260,11 @@ const AdminPage = () => {
                     >
                       Edit Details
                     </button>
-                    <button type="button" className="btn danger-btn w-100 mt-2">
+                    <button
+                      className="btn btn-danger danger-btn w-100 mt-2"
+                      onClick={() => handleClick(cardItem)}
+                      type="button"
+                    >
                       Delete Pet
                     </button>
                   </div>
@@ -342,7 +298,7 @@ const AdminPage = () => {
                     <div className="modal-body">
                       <img
                         src={selectedCard.image_url1}
-                        className="d-block mx-auto border modal-image"
+                        className="d-block mx-auto border img-thumbnail modal-image"
                       />
                       <form onSubmit={handleSubmit}>
                         <div className="mb-3 px-2">
@@ -453,12 +409,10 @@ const AdminPage = () => {
               </div>
             </div>
         )}
-      
-        
-
 
         </div>
       </div>
+      <Footer />
     </>
   );
 };

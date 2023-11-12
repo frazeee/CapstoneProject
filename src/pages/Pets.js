@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
 import "./Pets.css";
+import Footer from "../components/Footer";
 
 function Pets({ user }) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(null);
 
   useEffect(() => {
     async function getData() {
+      setLoading(true)
       const { data, error } = await supabase.from("Pets").select("*");
       if (error) {
         console.log("Error getting data:", error.message);
+        setLoading(false)
       } else {
         setData(data);
+        setLoading(false)
       }
     }
     getData();
@@ -38,7 +43,7 @@ function Pets({ user }) {
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
 
       <div className="bg-dark hero text-secondary px-4 py-5 text-center shadow-sm">
         <div className="py-5">
@@ -85,29 +90,6 @@ function Pets({ user }) {
               <button className="btn ms-3">Adoption FAQ</button>
             </div>
           </div>
-
-          {/* <div className="col-xl-6 ps-5 d-flex card-pictures highlight-word d-none d-xl-flex">
-            <div className="col pe-5">
-              <div className="card pet-card shadow on-hover">
-                <img
-                  src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/SMILE1.jpg"
-                  className="img-fluid align-self-middle rounded card-img-top"
-                  alt="Smile"
-                />
-                <h2 className="card-title ps-2 text-light">Smile</h2>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card pet-card shadow on-hover">
-                <img
-                  src="https://vemcrisinvdyuoutagqq.supabase.co/storage/v1/object/public/PetPictures/JOJO1.jpg"
-                  className="img-fluid rounded"
-                  alt="Jojo"
-                />
-                <h2 className="card-title ps-3 text-light">Jojo</h2>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
 
@@ -132,6 +114,8 @@ function Pets({ user }) {
             Dogs
           </button>
         </div>
+
+        
 
         <div className="row" key={`row`}>
           {filteredCardItems.map((cardItem) => (
@@ -167,6 +151,7 @@ function Pets({ user }) {
           ))}
         </div>
       </div>
+      <Footer/>
     </>
   );
 }
