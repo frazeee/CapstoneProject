@@ -54,10 +54,12 @@ const Navbar = ({}) => {
       .then(() => {
         Cookies.remove("userSession");
         localStorage.clear();
-        navigate("/");
       })
       .catch((error) => {
         console.error("Error during logout:", error);
+      })
+      .finally(() => {
+       navigate("/")
       });
   }
 

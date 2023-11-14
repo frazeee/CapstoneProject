@@ -16,7 +16,8 @@ import { AuthProvider } from "./utils/AuthProvider";
 import AuthorizedRoute from "./utils/AuthorizedRoute";
 import PrivateRoutes from "./utils/PrivateRoute";
 import AccountAdoptions from "./pages/AccountAdoptions";
-import EmailConfirmation from "./pages/EmailConfirmation";
+import InactivityTimer from "./utils/InactivityTimer";
+
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       
         <Router>
         <AuthProvider>
+        <InactivityTimer/>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route element={<AuthorizedRoute />}>
@@ -49,7 +51,6 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route path="/Admin" element={<AdminPage />} />
             </Route>
-            <Route path="/auth/confirm" element={<EmailConfirmation/>}/>
             <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
           </Routes>
           </AuthProvider>

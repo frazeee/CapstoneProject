@@ -235,7 +235,7 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        {/* <div className="mb-3">
+        <div className="mb-3">
           <h3 className="text-primary">Questionnaire</h3>
           <p className="text-muted">
             In an effort to help the process go smoothly, please be as detailed
@@ -535,26 +535,6 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-md-6">
-            <label>Do you have other pets?</label>
-            <div className="d-flex mb-0 btn-group">
-              {yesOrNo.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register("haveOtherPets")}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
         <div className="mb-3">
           <h3 className="text-primary">House Inspection</h3>
@@ -592,7 +572,7 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-         */}
+        
 
         <div className="mb-3">
           <h3 className="text-primary">Interview & Visitation</h3>

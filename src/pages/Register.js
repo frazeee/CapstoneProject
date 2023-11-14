@@ -67,6 +67,7 @@ const Register = () => {
       });
 
       if (error) {
+        console.log(error)
         throw error;
       }
       const { data, error: insertError } = await supabase.from("Users").insert([
@@ -89,6 +90,7 @@ const Register = () => {
       alert(error.error_description || error.message);
     } finally {
       setLoading(false);
+      setFormData("")
     }
   }
 

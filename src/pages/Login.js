@@ -41,26 +41,10 @@ const Login = ({}) => {
         throw error;
       }
 
-      Cookies.set("userSession", JSON.stringify({ data }), { expires: 5 });
+      Cookies.set("userSession", JSON.stringify({ data }), { expires: 1 });
       setUser(data.user);
       setSession(data.session);
 
-      // Fetch the user's role from the 'users' table based on their email
-      const { data: userData, error: userError } = await supabase
-        .from("Users")
-        .select("role")
-        .eq("email", formData.email)
-        .single();
-
-      if (userError) {
-        throw userError;
-      }
-
-      if (userData) {
-        const userRole = userData.role;
-        if (userRole === "ADMIN") navigate("/Admin");
-      } else {
-      }
 
       console.log("Logged In!");
       navigate("/");
