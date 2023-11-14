@@ -14,10 +14,8 @@ const ApplicationForm = () => {
 
   const openGateway = async (requestId) => {
     try {
-      // TO DO: Move this to .env
-      // Replace this with your secret key in paymongo account
-      const paymongoSecretKey = "sk_test_N5d44ZGz6gy6nGCcB6z3PrAF";
-      // Replace this env + 'payment-success'
+   
+      const paymongoSecretKey = process.env.REACT_APP_PAYMONGO_SECRET_KEY;
 
       const successPage =
         process.env.NODE_ENV === "development"

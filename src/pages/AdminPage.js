@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import AdminInterviewModal from "../components/AdminInterviewModal/AdminInterviewModal";
 import AdminRequestModal from "../components/AdminRequestModal/AdminRequestModal";
+import Footer from "../components/Footer"
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
-import "./AdminPage.css";
-
+import './AdminPage.css';
+import AddPetModal from "../components/AddPetModal/AddPetModal";
+import DeletedModal from "../components/DeletedModal/DeletedModal";
+ 
 const AdminPage = () => {
   const [data, setData] = useState([]);
   const [requestListCount, setRequestListCount] = useState(0);
   const [interviewListCount, setInterviewListCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     async function getData() {
@@ -97,122 +102,85 @@ const AdminPage = () => {
       ...prevEditedDetails,
       [name]: value,
     }));
+    console.log(editedDetails)
   };
 
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+          try {
+            console.log(editedDetails)
+            const { data, error } = await supabase
+              .from('Pets')
+              .update({
+               pet_name : editedDetails.pet_name,
+               age : editedDetails.age,
+               gender : editedDetails.gender,
+               pet_type : editedDetails.pet_type,
+               pet_personality : editedDetails.pet_personality
+              })
+              .eq('id', parseInt(selectedCard.id, 10))
+              .single()
+              
+            if (error) {
+              // Handle the error here
+              console.error('Error updating user:', error);
+            } else {
+              // Update was successful
+              console.log('Pet updated successfully:', data);
+              
+            }
+          } catch (error) {
+            // Handle any other errors that may occur during the update.
+            console.error('An error occurred:', error);
+          }
+      
+        closeModal();
+      };
+      
 
-    try {
-      const { data, error } = await supabase
-        .from("Pets")
-        .update({
-          pet_name: editedDetails.pet_name,
-          age: editedDetails.age,
-          gender: editedDetails.gender,
-          pet_type: editedDetails.pet_type,
-          pet_personality: editedDetails.pet_personality,
-        })
-        .eq("id", selectedCard.id);
+ 
 
-      if (error) {
-        // Handle the error here
-        console.error("Error updating user:", error);
-      } else {
-        // Update was successful
-        console.log(error);
-        console.log("User updated successfully:", data);
-      }
-    } catch (error) {
-      // Handle any other errors that may occur during the update.
-      console.error("An error occurred:", error);
-    }
+      
 
-    closeModal();
-  };
+      const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false);
 
-  const [addFormData, setAddFormData] = useState({
-    pet_name: "",
-    age: "",
-    gender: "Male",
-    petType: "Dog",
-    pet_personality: "",
-  });
+      const handleClick = (cardItem) => {
+        setSelectedCard(cardItem)
+        setisDeleteModalOpen(true);
+      };
 
-  const handleAddChange = (e) => {
-    const { name, value } = e.target;
+      const closeDeleteModal = () => {
+        setisDeleteModalOpen(false);
+      };
 
-    // If the input is a file input, handle it differently
-    if (e.target.type === "file") {
-      setFile(e.target.files[0]);
-    } else {
-      setAddFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-    console.log(addFormData);
-  };
-
-  const handleAddSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!file) {
-        alert("You must select an image to upload.");
-      }
-
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${addFormData.pet_name}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("PetPictures")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: publicUrl, error: getUrlError } = await supabase.storage
-        .from("PetPictures")
-        .getPublicUrl(filePath);
-
-      if (getUrlError) {
-        throw getUrlError;
+      const DeletePet = async () => {
+        try{
+          console.log(selectedCard.id)
+          setLoading(true)
+          const {data, error} = await supabase
+          .from('Pets')
+          .delete()
+          .eq('id', selectedCard.id)
+            if (error) {
+            console.error('Error deleting pet:', error);
+          } else {
+            console.log('Pet deleted successfully:', data);
+          }
+        }
+        catch (error){
+          console.error('An error occurred:', error);
+        }
+        finally{
+          setLoading(false);
+          closeDeleteModal();
+        }
+        
       }
 
-      setImageUrl(publicUrl);
-      console.log(publicUrl.publicUrl);
-
-      const { data, error } = await supabase
-        .from("Pets")
-        .insert([
-          {
-            pet_name: addFormData.pet_name,
-            age: addFormData.age,
-            gender: addFormData.gender,
-            pet_type: addFormData.petType,
-            pet_personality: addFormData.pet_personality,
-            image_url1: publicUrl.publicUrl,
-          },
-        ])
-        .select();
-
-      if (error) {
-        throw error;
-      } else {
-        alert("Pet added successfully!");
-        document.getElementById("exampleModal").classList.remove("show");
-      }
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setUploading(false);
-    }
-  };
 
   return (
     <>
@@ -234,21 +202,13 @@ const AdminPage = () => {
                     <h2 style={{ color: "#ffffff" }}>
                       PETS FOR <br /> ADOPTION
                     </h2>
-                    <button
-                      type="button"
-                      className="btn btn-lg btn-dark px-5 header-btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
-                    >
-                      Add
-                    </button>
+                    <AddPetModal/>
                   </div>
                   <div className="box col-lg-4 text-center py-5">
                     <h1 style={{ color: "#ffffff" }}>{requestListCount}</h1>
                     <h2 style={{ color: "#ffffff" }}>
                       POTENTIAL <br /> ADOPTERS
                     </h2>
-                    {/* <button type="button" className="btn btn-lg btn-dark px-5">Check</button> */}
                     <AdminRequestModal />
                   </div>
                   <div className="box col-lg-4 text-center py-5">
@@ -300,7 +260,11 @@ const AdminPage = () => {
                     >
                       Edit Details
                     </button>
-                    <button type="button" className="btn danger-btn w-100 mt-2">
+                    <button
+                      className="btn btn-danger danger-btn w-100 mt-2"
+                      onClick={() => handleClick(cardItem)}
+                      type="button"
+                    >
                       Delete Pet
                     </button>
                   </div>
@@ -334,7 +298,7 @@ const AdminPage = () => {
                     <div className="modal-body">
                       <img
                         src={selectedCard.image_url1}
-                        className="d-block mx-auto border modal-image"
+                        className="d-block mx-auto border img-thumbnail modal-image"
                       />
                       <form onSubmit={handleSubmit}>
                         <div className="mb-3 px-2">
@@ -411,134 +375,44 @@ const AdminPage = () => {
             </div>
           )}
 
-          {/* Add Modal */}
-          <div
-            className="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="exampleModalLabel">
-                    Add Pet
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form onSubmit={handleAddSubmit}>
+         
+         {/* Delete Modal */}
+        {isDeleteModalOpen && (
+          <div>
+            <div
+              className="modal-backdrop show"
+              style={{ zIndex: 1040 }}
+              onClick={closeDeleteModal}
+            ></div>
+
+            <div
+              className="modal fade show"
+              style={{ display: 'block' }}
+            >
+              <div className="modal-dialog modal-dialog-centered modal-lg">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5">Delete Pet</h1>
+                    <button className="btn-close" onClick={closeDeleteModal} aria-label="Close"></button>
+                  </div>
                   <div className="modal-body">
-                    <div className="mb-3 px-2">
-                      <label htmlFor="formFile" className="form-label">
-                        Add Pet Picture
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        id="formFile"
-                        accept=".png, .jpg"
-                        onChange={(e) => setFile(e.target.files[0])}
-                      />
-                    </div>
+                        Are you sure you want to delete <span className="fw-bold"> {selectedCard.pet_name}</span> ?
 
-                    <div className="mb-3 px-2">
-                      <label htmlFor="pet_name" className="form-label">
-                        Pet Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="pet_name"
-                        name="pet_name"
-                        onChange={handleAddChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="mb-3 px-2">
-                      <label htmlFor="age" className="form-label">
-                        Age
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="age"
-                        name="age"
-                        onChange={handleAddChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="mb-3 px-2">
-                      <label htmlFor="gender" className="form-label">
-                        Gender
-                      </label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        onChange={handleAddChange}
-                      >
-                        <option selected value="Male">
-                          Male
-                        </option>
-                        <option value="Female">Female</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-3 px-2">
-                      <label htmlFor="petType" className="form-label">
-                        Pet Type
-                      </label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        onChange={handleAddChange}
-                      >
-                        <option selected value="Dog">
-                          Dog
-                        </option>
-                        <option value="Cat">Cat</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-3 px-2">
-                      <label htmlFor="pet_personality" className="form-label">
-                        Pet Personality
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="pet_personality"
-                        name="pet_personality"
-                        onChange={handleAddChange}
-                        required
-                      />
-                    </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button className="btn btn-lg danger-btn" onClick={DeletePet}>Delete Pet</button>
+                        <button className="btn btn-lg " onClick={closeDeleteModal}>Close</button>
+                      </div>
                   </div>
-                  <div className="modal-footer">
-                    <button type="submit" className="btn btn-primary">
-                      Add Pet
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </form>
+              
+                </div>
               </div>
             </div>
-          </div>
+        )}
+
         </div>
       </div>
+      <Footer />
     </>
   );
 };

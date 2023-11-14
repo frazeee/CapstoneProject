@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../components/client";
 import loginPicture from "../images/loginPicture.png";
 import "./Register.css";
+import { BeatLoader } from "react-spinners";
 
 const Register = () => {
   let navigate = useNavigate();
@@ -32,7 +33,7 @@ const Register = () => {
     const { data, error } = await supabase
       .from("Users")
       .select("email")
-      .eq("email", email);
+      .eq("email", email)
 
     if (error) {
       throw error;
@@ -60,11 +61,13 @@ const Register = () => {
           data: {
             firstName: formData.firstName,
             lastName: formData.lastName,
+            redirectTo: '/login'
           },
         },
       });
 
       if (error) {
+        console.log(error)
         throw error;
       }
       const { data, error: insertError } = await supabase.from("Users").insert([
@@ -87,8 +90,18 @@ const Register = () => {
       alert(error.error_description || error.message);
     } finally {
       setLoading(false);
+      setFormData("")
     }
   }
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+      <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+    </div>
+    );
+  }
+
 
   return (
     <div className="container-fluid">

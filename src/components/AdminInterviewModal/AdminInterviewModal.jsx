@@ -9,7 +9,7 @@ function AdminInterviewModal() {
     getInterviewList();
   }, []);
 
-  const tranformDateTime = (dateString) => {
+  const transformDateTime = (dateString) => {
     const dateTime = new Date(dateString);
     return `${dateTime.toLocaleDateString()}, ${dateTime.toLocaleTimeString()}`;
   };
@@ -31,12 +31,12 @@ function AdminInterviewModal() {
         .gt("interview_date", currentDate.toISOString())
         .order("interview_date");
 
-      console.log(data);
       setInterviewList(data);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
     }
   };
+
 
   return (
     <>
@@ -83,7 +83,8 @@ function AdminInterviewModal() {
                       <th scope="col">Email</th>
                       <th scope="col">Social Media</th>
                       <th scope="col">Interview Schedule (mm//dd/yyy)</th>
-                      <th scope="col">Had Adapted</th>
+                      <th scope="col">Had Adopted</th>
+                      <th scope="col">Payment Status</th>
                       <th scope="col">Alternate Contact First Name</th>
                       <th scope="col">Alternate Contact Last Name</th>
                       <th scope="col">Alternate Contact Phone Number</th>
@@ -103,10 +104,11 @@ function AdminInterviewModal() {
                         <td>{req.soc_med}</td>
                         <td>
                           {req.interview_date
-                            ? tranformDateTime(req.interview_date)
+                            ? transformDateTime(req.interview_date)
                             : ""}
                         </td>
                         <td>{req.had_adapted ? "Yes" : "No"}</td>
+                        <td>{req.payment_status}</td>
                         <td>{req.ac_first_name}</td>
                         <td>{req.ac_last_name}</td>
                         <td>{req.ac_phone_number}</td>

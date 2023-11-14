@@ -3,6 +3,7 @@ import CPSSLogo from "../images/CPSSLogo.png";
 import CPSS_Image from "../images/CPSS_Image.png";
 import CPSS_Image2 from "../images/CPSS_Image2.png";
 import HeaderBanner from "../images/HeaderBanner.jpg";
+import LoginPicture from "../images/loginPicture.png"
 import "./Header.css";
 
 const Header = () => {
@@ -38,10 +39,10 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="container pt-2">
+      <div className="container pt-3">
         <div className="row">
           <h2 className="fw-semibold">Partnered Shelters</h2>
-          <hr className="mb-5 w-100" />
+          <hr className="mb-5" />
         </div>
 
         <div className="row">
@@ -135,6 +136,30 @@ const Header = () => {
           </div>
         </div>
       </div>
+      
+      <div className="container mt-5">
+        <div className="row">
+        <h2 className="fw-semibold text-end">Interested as signing-up as a shelter?</h2>
+        <hr className=""/>
+        </div>
+      </div>
+
+  <div className="container col-xl-10 px-4 py-5">
+    <div className="row flex-lg-row-reverse align-items-center g-5 py-2">
+      <div className="col-10 col-sm-8 col-lg-6">
+        <img src={CPSS_Image2} className="d-block mx-lg-auto img-fluid"  width="700" height="500" loading="lazy"/>
+      </div>
+      <div className="col-lg-6">
+        <h1 className="display-5 fw-bold lh-1 mb-3 pb-1">Welcome To BPUAdopt!</h1>
+        <hr className="w-100"/>
+        <p className="lead pt-3"> Your gateway to responsible pet adoption. Register your shelter today to efficiently connect with potential adopters. Showcase the pets available for adoption, providing essential information and images. By joining our platform, you contribute to finding loving homes for animals in need. Click below to begin the registration process and be part of the solution for responsible and caring pet ownership."</p>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+          <Link to="" className="btn btn-lg px-4 mt-3 me-md-2">Sign Up</Link>
+        </div>
+      </div>
+    </div>
+  </div>
+
     </>
   );
 };
