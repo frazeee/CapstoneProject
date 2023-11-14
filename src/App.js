@@ -17,6 +17,7 @@ import AuthorizedRoute from "./utils/AuthorizedRoute";
 import PrivateRoutes from "./utils/PrivateRoute";
 import AccountAdoptions from "./pages/AccountAdoptions";
 import InactivityTimer from "./utils/InactivityTimer";
+import ShelterSignup from "./pages/ShelterSignupPage/ShelterSignup";
 
 
 
@@ -52,6 +53,7 @@ function App() {
               <Route path="/Admin" element={<AdminPage />} />
             </Route>
             <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
+            <Route path="/ShelterSignup" element={<ShelterSignup/>}/>
           </Routes>
           </AuthProvider>
         </Router>

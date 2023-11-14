@@ -47,68 +47,18 @@ const Header = () => {
 
         <div className="row">
           <div className="col-md-6">
-            <div
-              id="carouselExampleIndicators"
-              className="carousel slide"
-              data-bs-ride="carousel"
-            >
-              <ol className="carousel-indicators">
-                <li
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="0"
-                  className="active"
-                  aria-current="true"
-                  aria-label="Slide 1"
-                ></li>
-                <li
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="1"
-                  aria-label="Slide 2"
-                ></li>
-                <li
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="2"
-                  aria-label="Slide 3"
-                ></li>
-              </ol>
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img src={CPSSLogo} className="d-block w-100" alt="..." />
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src={CPSSLogo} class="d-block w-100" alt="..."/>
+                  </div>
+                  <div class="carousel-item">
+                    <img src={CPSS_Image} class="d-block w-100" alt="..."/>
+                  </div>
+                  <div class="carousel-item">
+                    <img src={CPSS_Image2} class="d-block w-100" alt="..."/>
+                  </div>
                 </div>
-                <div className="carousel-item">
-                  <img src={CPSS_Image} className="d-block w-100" alt="..." />
-                </div>
-                <div className="carousel-item">
-                  <img src={CPSS_Image2} className="d-block w-100" alt="..." />
-                </div>
-              </div>
-              <a
-                className="carousel-control-prev"
-                href="#carouselExampleIndicators"
-                role="button"
-                data-slide="prev"
-              >
-                <span
-                  className="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="sr-only">Previous</span>
-              </a>
-              <a
-                className="carousel-control-next"
-                href="#carouselExampleIndicators"
-                role="button"
-                data-slide="next"
-              >
-                <span
-                  className="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="sr-only">Next</span>
-              </a>
             </div>
           </div>
           <div className="col-md-6">
@@ -154,7 +104,7 @@ const Header = () => {
         <hr className="w-100"/>
         <p className="lead pt-3"> Your gateway to responsible pet adoption. Register your shelter today to efficiently connect with potential adopters. Showcase the pets available for adoption, providing essential information and images. By joining our platform, you contribute to finding loving homes for animals in need. Click below to begin the registration process and be part of the solution for responsible and caring pet ownership."</p>
         <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-          <Link to="" className="btn btn-lg px-4 mt-3 me-md-2">Sign Up</Link>
+          <Link to="/ShelterSignup" className="btn btn-lg px-4 mt-3 me-md-2">Sign Up</Link>
         </div>
       </div>
     </div>

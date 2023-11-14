@@ -60,9 +60,12 @@ const AccountAdoptions = () => {
         <hr />
         <div className="container mt-3">
           {loading ? (
-             <div className="d-flex justify-content-center align-items-center">
+            <>
+             <div className="d-flex justify-content-center align-items-center mt-5">
                 <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
              </div>
+            <h5 className='text-warning text-center'>Fetching Requests...</h5>
+            </>
           ) : (
             <table className="table border border-2">
               <thead className="table-warning">

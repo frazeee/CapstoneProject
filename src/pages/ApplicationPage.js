@@ -9,7 +9,6 @@ const ApplicationPage = () => {
     <>
       <Navbar />
       <ApplicationForm />
-      
       <Footer />
     </>
   );
