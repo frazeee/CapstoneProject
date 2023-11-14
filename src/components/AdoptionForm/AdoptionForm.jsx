@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import "./AdoptionForm.css";
 
 function AdoptionForm(props) {
-  const { register, handleSubmit, formState, control } = useForm();
+  const { register, handleSubmit } = useForm();
   const [adoptFormData, setAdoptFormData] = useState(null);
 
   const onSubmit = (data) => {
@@ -235,7 +235,7 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        {/* <div className="mb-3">
+        <div className="mb-3">
           <h3 className="text-primary">Questionnaire</h3>
           <p className="text-muted">
             In an effort to help the process go smoothly, please be as detailed
@@ -243,7 +243,7 @@ function AdoptionForm(props) {
           </p>
         </div>
 
-         <div className="row">
+        <div className="row">
           <div className="col-md-6 form-check">
             <label>What prompted you to adopt a pet?</label>
             <div className="d-flex mb-0 btn-group">
@@ -400,7 +400,7 @@ function AdoptionForm(props) {
 
         <div className="row">
           <div className="col-12">
-            <label>Are members of your hosehold allergic to animals?</label>
+            <label>Are members of your household allergic to animals?</label>
             <div className="d-flex mb-0 btn-group">
               {yesOrNo.map((option) => (
                 <div className="form-check mr-3 d-flex align-items-center mb-0">
@@ -535,27 +535,6 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-md-6">
-            <label>Do you have other pets?</label>
-            <div className="d-flex mb-0 btn-group">
-              {yesOrNo.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register("haveOtherPets")}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="mb-3">
           <h3 className="text-primary">House Inspection</h3>
         </div>
@@ -583,16 +562,14 @@ function AdoptionForm(props) {
             <div className="col-12">
               <input
                 type="file"
+                accept="image/*"
                 className="form-control"
-                multiple={true}
                 required
                 {...register("housePicture")}
               />
             </div>
           </div>
         </div>
-
-         */}
 
         <div className="mb-3">
           <h3 className="text-primary">Interview & Visitation</h3>
