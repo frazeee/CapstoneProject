@@ -101,9 +101,13 @@ const AccountInformation = () => {
 
       if (Loading) {
         return (
-          <div className="d-flex justify-content-center align-items-center">
-          <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
-        </div>
+          <>
+          <Navbar/>
+          <div className="d-flex justify-content-center align-items-center mt-5">
+            <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+          </div>
+          <h5 className='text-warning text-center'>Fetching User Data...</h5>
+        </>
         );
       }
 
