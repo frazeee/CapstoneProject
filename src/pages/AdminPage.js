@@ -25,7 +25,6 @@ const AdminPage = () => {
       }
     }
     getData();
-
     getRequestList();
     getInterviewList();
   }, []);

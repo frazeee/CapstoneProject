@@ -45,7 +45,7 @@ function App() {
                 element={<AccountInformation />}
               />
                <Route
-                path="/adoptions"
+                path="/adoptions" 
                 element={<AccountAdoptions />}
               />
               <Route path="/Application/:petId" element={<ApplicationPage />} />

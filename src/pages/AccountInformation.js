@@ -3,16 +3,18 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../utils/AuthProvider';
 import { supabase } from '../components/client';
 import { BeatLoader } from 'react-spinners';
+import Cookies from 'js-cookie';
 
 
 const AccountInformation = () => {
-
+    const UserData = JSON.parse(Cookies.get("userSession"))
+    const userEmail = UserData.data.user.email
     const {user, email} = useAuth()
     const [userData, setUserData] = useState(null)
     const [Loading, setLoading] = useState(null)
 
     console.log(user)
-    console.log(email)
+    console.log(UserData)
 
     useEffect(() => {
       // Function to fetch a user by email
@@ -42,10 +44,8 @@ const AccountInformation = () => {
       }
     
       // Call the getUserByEmail function when the email changes
-      getUserByEmail(email);
-    }, []);
-
-
+      getUserByEmail(userEmail);
+    }, [user]);
 
    
     
