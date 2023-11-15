@@ -13,8 +13,6 @@ const Footer = () =>{
             <ul className="nav col-md-4 justify-content-end">
                 <li className="nav-item"><Link to="/" className="nav-link px-2 text-light">Home</Link></li>
                 <li className="nav-item"><Link to="Pets" className="nav-link px-2 text-light">Adopt A Pet</Link></li>
-                <li className="nav-item"><Link to className="nav-link px-2 text-light">FAQs</Link></li>
-                <li className="nav-item"><Link to className="nav-link px-2 text-light">About</Link></li>
             </ul>
         </footer>
         </>

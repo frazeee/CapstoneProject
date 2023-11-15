@@ -47,18 +47,23 @@ const Header = () => {
 
         <div className="row">
           <div className="col-md-6">
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <img src={CPSSLogo} class="d-block w-100" alt="..."/>
-                  </div>
-                  <div class="carousel-item">
-                    <img src={CPSS_Image} class="d-block w-100" alt="..."/>
-                  </div>
-                  <div class="carousel-item">
-                    <img src={CPSS_Image2} class="d-block w-100" alt="..."/>
-                  </div>
+            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+              <div className="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
+                <div className="carousel-inner">
+                  <div className="carousel-item active">
+                    <img src={CPSSLogo} className="d-block w-100" alt="..."/>
+                  </div>
+                  <div className="carousel-item">
+                    <img src={CPSS_Image} className="d-block w-100" alt="..."/>
+                  </div>
+                  <div className="carousel-item">
+                    <img src={CPSS_Image2} className="d-block w-100" alt="..."/>
+                  </div>
+              </div>
             </div>
           </div>
           <div className="col-md-6">

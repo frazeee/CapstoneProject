@@ -28,13 +28,14 @@ const ShelterSignup = ({}) => {
       async function handleSubmit(event) {
         event.preventDefault();
         setLoading(true);
+        console.log(formData)
         try {
           const { data, error: insertError } = await supabase.from("ShelterSignup").insert([
             {
-                ShelterName: formData.ShelterName,
-                ShelterEmail: formData.ShelterEmail,
-                ShelterSocMed: formData.ShelterSocMed,
-                ShelterPetNumber: formData.ShelterPetNumber
+                shelter_name: formData.ShelterName,
+                shelter_email: formData.ShelterEmail,
+                shelter_socmed: formData.ShelterSocMed,
+                shelter_petNumber: formData.PetNumber
             },
           ]);
     
@@ -50,27 +51,27 @@ const ShelterSignup = ({}) => {
         }
       }
 
-//   if (loading) {
-//     return (
-//       <div className="d-flex justify-content-center align-items-center">
-//       <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
-//     </div>
-//     );
-//   }
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+      <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+    </div>
+    );
+  }
 
 
    return(
     <div className="container-fluid">
       <div className="row">
-        <div className="left-panel pt-3 col-xl-4 col-lg-4 col-md-4 d-flex flex-column">
-            <Link to="/" className="text-light text-decoration-none">Back to home</Link>
+        <div className="left-panel col-xl-4 col-lg-4 col-md-4 d-flex flex-column">
+        <Link to="/" className="pt-3 pb-2 text-light"><i class="bi bi-arrow-left-short"></i>Back to Home</Link>
           <h1 className="text-center">Become a partner shelter today!</h1>
           <img className="img-fluid align-self-center" src={loginPicture} />
         </div>
         <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Sign Up Here!</h1>
           <hr className="w-100 mb-3" />
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Shelter Name
@@ -127,7 +128,23 @@ const ShelterSignup = ({}) => {
           </form>
         </div>
       </div>
+
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="..."/>
+                <strong class="me-auto">Bootstrap</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+
     </div>
+
+    
+
+    
   );
 };
 

@@ -106,9 +106,10 @@ const Register = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="left-panel pt-5 col-xl-4 col-lg-4 col-md-4  d-flex flex-column align-items-center">
-          <h1>Adopt a pet today!</h1>
-          <img src={loginPicture} className="img-fluid" />
+        <div className="left-panel col-xl-4 col-lg-4 col-md-4 d-flex flex-column">
+        <Link to="/" className="pt-3 pb-4 text-light"><i class="bi bi-arrow-left-short"></i>Back to Home</Link>
+          <h1 className="text-center">Adopt a pet today!</h1>
+          <img src={loginPicture} className="img-fluid align-self-center"/>
         </div>
         <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
           <h1 className="formHeader">Register</h1>

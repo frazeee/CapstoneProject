@@ -33,7 +33,6 @@ const InactivityTimer = () => {
   const [showModal, setShowModal] = useState(false);
   const {user} = useAuth()
   const navigate = useNavigate()
-  console.log(user)
 
   useEffect(() => {
     let inactivityTimeout;
@@ -44,7 +43,7 @@ const InactivityTimer = () => {
     };
 
     const logout = async () => {
-      console.log("timeout")
+      console.log("User Timeout")
       if(user){
       await supabase.auth.signOut();
       Cookies.remove("userSession")
