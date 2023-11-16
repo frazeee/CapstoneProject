@@ -9,12 +9,9 @@ import Cookies from 'js-cookie';
 const AccountInformation = () => {
     const UserData = JSON.parse(Cookies.get("userSession"))
     const userEmail = UserData.data.user.email
-    const {user, email} = useAuth()
+    const {user} = useAuth()
     const [userData, setUserData] = useState(null)
     const [Loading, setLoading] = useState(null)
-
-    console.log(user)
-    console.log(UserData)
 
     useEffect(() => {
       // Function to fetch a user by email

@@ -13,3 +13,9 @@
 .request-modal-body .table td {
   white-space: nowrap;
 }
+
+.check-link{
+  color: blue;
+  text-decoration: underline;
+  text-decoration-color: blue;
+}

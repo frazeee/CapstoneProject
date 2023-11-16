@@ -19,6 +19,7 @@ import PrivateRoutes from "./utils/PrivateRoute";
 import AccountAdoptions from "./pages/AccountAdoptions";
 import InactivityTimer from "./utils/InactivityTimer";
 import ShelterSignup from "./pages/ShelterSignupPage/ShelterSignup";
+import CheckRequestPage from "./pages/CheckRequestPage/CheckRequestPage";
 
 
 
@@ -48,12 +49,14 @@ function App() {
                 path="/adoptions" 
                 element={<AccountAdoptions />}
               />
+              <Route path="/Application" element={<ApplicationPage />} />
               <Route path="/Application/:petId" element={<ApplicationPage />} />
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/Admin" element={<AdminPage />} />
             </Route>
             <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
+            <Route path="/CheckApplication/:applicationId" element={<CheckRequestPage/>}/>
             <Route path="/ShelterSignup" element={<ShelterSignup/>}/>
           </Routes>
           </AuthProvider>

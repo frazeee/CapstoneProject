@@ -86,8 +86,7 @@ function Pets({ user }) {
               <li>Take your pet home!</li>
             </ul>
             <div className="buttons">
-              <button className="btn mr-3">Apply Now!</button>
-              <button className="btn ms-3">Adoption FAQ</button>
+              <Link to="/Application"><button className="btn mr-3">Apply Now!</button></Link>
             </div>
           </div>
         </div>

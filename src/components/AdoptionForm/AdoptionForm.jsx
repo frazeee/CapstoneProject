@@ -1,15 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import "./AdoptionForm.css";
+import { supabase } from "../client";
+import { useAuth } from "../../utils/AuthProvider";
+import { BeatLoader } from 'react-spinners';
+import Cookies from "js-cookie";
+
 
 function AdoptionForm(props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch} = useForm();
   const [adoptFormData, setAdoptFormData] = useState(null);
+  const {user} = useAuth()
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const UserData = JSON.parse(Cookies.get("userSession"))
+  const userEmail = UserData.data.user.email
+
+  useEffect(() => {
+    async function getUserByEmail(email) {
+      try {
+       setLoading(true)
+        const { data, error } = await supabase.from('Users').select('*').eq('email', email);
+  
+        if (error) {
+          console.error('Error fetching user:', error);
+          return;
+        }
+  
+        if (data && data.length > 0) {
+          setUserData(data[0]);
+        } else {
+          setUserData(null);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      finally{
+        setLoading(false)
+      }
+    }
+  
+    // Call the getUserByEmail function when the email changes
+    getUserByEmail(userEmail);
+  }, [user]);
 
   const onSubmit = (data) => {
     props.parentCallback(data);
     console.log(data);
   };
+
+  const birthdate = watch("birthdate");
+  const [isUnder18, setIsUnder18] = useState(false)
+
+
+  useEffect(() => {
+    const bdayDate = new Date(birthdate);
+    const today = new Date();
+    const age = today.getFullYear() - bdayDate.getFullYear();
+    setIsUnder18(age < 18);
+  }, [birthdate]);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -55,6 +104,19 @@ function AdoptionForm(props) {
     "Front & backyard (if adopting a dog)",
   ];
 
+
+
+  if(loading){
+    return(
+      <>
+        <div className="d-flex justify-content-center align-items-center mt-5">
+          <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+        </div>
+          <h5 className='text-warning text-center'>Fetching User Data...</h5>
+      </>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="personal-form pt-3">
@@ -68,7 +130,7 @@ function AdoptionForm(props) {
               name="firstName"
               className="form-control"
               type="text"
-              placeholder="First Name"
+              placeholder={userData?.first_name}
               required
               {...register("firstName", { required: true })}
             ></input>
@@ -79,7 +141,7 @@ function AdoptionForm(props) {
               name="lastName"
               className="form-control"
               type="text"
-              placeholder="Last Name"
+              placeholder={userData?.last_name}
               required
               {...register("lastName", { required: true })}
             ></input>
@@ -93,7 +155,7 @@ function AdoptionForm(props) {
               name="address"
               className="form-control"
               type="text"
-              placeholder="Address"
+              placeholder={userData?.address}
               required
               {...register("address", { required: true })}
             ></input>
@@ -107,7 +169,7 @@ function AdoptionForm(props) {
               name="phone"
               className="form-control"
               type="text"
-              placeholder="Phone Number"
+              placeholder={userData?.phone}
               required
               {...register("phone", { required: true })}
             ></input>
@@ -118,7 +180,7 @@ function AdoptionForm(props) {
               name="email"
               className="form-control"
               type="email"
-              placeholder="Email"
+              placeholder={userData?.email}
               required
               {...register("email", { required: true })}
             ></input>
@@ -180,62 +242,66 @@ function AdoptionForm(props) {
           </div>
         </div>
 
-        <div className="mb-3">
-          <h3 className="text-primary">Alternate Contact</h3>
-          <p className="text-muted">
-            If the applicant is a minor, a parent or a guardian must be the
-            alternate contact and co-sign the application.
-          </p>
-        </div>
-        <div className="row">
-          <div className="col-md-6">
-            <label>First Name</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Alternate Contact First Name"
-              required
-              {...register("alternateFirstName", { required: true })}
-            ></input>
-          </div>
-          <div className="col-md-6">
-            <label>Last Name</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Alternate Contact Last Name"
-              required
-              {...register("alternateLastName", { required: true })}
-            ></input>
-          </div>
-        </div>
+        {isUnder18 && (
+          <>
+            <div className="my-3">
+              <h3 className="text-primary">Alternate Contact</h3>
+              <p className="text-muted">
+                If the applicant is a minor, a parent or a guardian must be the
+                alternate contact and co-sign the application.
+              </p>
+            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <label>First Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Alternate Contact First Name"
+                  required
+                  {...register("alternateFirstName", { required: true })}
+                ></input>
+              </div>
+              <div className="col-md-6">
+                <label>Last Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Alternate Contact Last Name"
+                  required
+                  {...register("alternateLastName", { required: true })}
+                ></input>
+              </div>
+            </div>
 
-        <div className="row">
-          <div className="col-md-6">
-            <label>Phone Number</label>
-            <input
-              name="phone"
-              className="form-control"
-              type="text"
-              placeholder="Alternate Contact Phone Number"
-              required
-              {...register("alternatePhone", { required: true })}
-            ></input>
-          </div>
-          <div className="col-md-6">
-            <label>Email</label>
-            <input
-              name="email"
-              className="form-control"
-              type="email"
-              placeholder="Alternate Contact Email"
-              required
-              {...register("alternateEmail", { required: true })}
-            ></input>
-          </div>
-        </div>
+            <div className="row">
+              <div className="col-md-6">
+                <label>Phone Number</label>
+                <input
+                  name="phone"
+                  className="form-control"
+                  type="text"
+                  placeholder="Alternate Contact Phone Number"
+                  required
+                  {...register("alternatePhone", { required: true })}
+                ></input>
+              </div>
+              <div className="col-md-6">
+                <label>Email</label>
+                <input
+                  name="email"
+                  className="form-control"
+                  type="email"
+                  placeholder="Alternate Contact Email"
+                  required
+                  {...register("alternateEmail", { required: true })}
+                ></input>
+              </div>
+            </div>
+        </>
+        )}
 
-        <div className="mb-3">
+        <div className="my-3">
           <h3 className="text-primary">Questionnaire</h3>
           <p className="text-muted">
             In an effort to help the process go smoothly, please be as detailed
@@ -263,7 +329,7 @@ function AdoptionForm(props) {
             </div>
           </div>
           <div className="col-md-6">
-            <label>Have you adapted pet before?</label>
+            <label>Have you adopted pet before?</label>
             <div className="d-flex mb-0 btn-group">
               {yesOrNo.map((option) => (
                 <div className="form-check mr-3 d-flex align-items-center mb-0">

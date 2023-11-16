@@ -67,6 +67,7 @@ const AccountAdoptions = () => {
             <h5 className='text-warning text-center'>Fetching Requests...</h5>
             </>
           ) : (
+            <div className="table-responsive">
             <table className="table border border-2">
               <thead className="table-warning">
                 <th scope="col"></th>
@@ -74,6 +75,7 @@ const AccountAdoptions = () => {
                 <th scope="col">Last Name</th>
                 <th scope="col">Pet Name</th>
                 <th scope="col">Interview Date Time</th>
+                <th scope="col">Status</th>
               </thead>
               {userRequests &&
                 userRequests.map((request, index) => (
@@ -85,9 +87,17 @@ const AccountAdoptions = () => {
                     <td>
                       {new Date(request.interview_date).toLocaleString()}
                     </td>
+                    <td className={`badge mt-2 ${
+                        request.adoption_status === 'For Verification' ? 'text-bg-primary' :
+                        request.adoption_status === 'Interview Done' ? 'text-light text-bg-info' :
+                        request.adoption_status === 'Approved' && 'text-bg-success'
+                      }`}>
+                        {request.adoption_status}
+                      </td>
                   </tr>
                 ))}
             </table>
+            </div>
           )}
         </div>
       </>

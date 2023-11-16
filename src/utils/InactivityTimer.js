@@ -43,8 +43,9 @@ const InactivityTimer = () => {
     };
 
     const logout = async () => {
-      console.log("User Timeout")
+      console.log(user)
       if(user){
+      console.log("User Timeout")
       await supabase.auth.signOut();
       Cookies.remove("userSession")
       setShowModal(true);

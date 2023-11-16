@@ -1,11 +1,21 @@
 import { supabase } from "../components/client";
+import { useState, useEffect } from "react";
 import AdoptionForm from "./AdoptionForm/AdoptionForm";
+import Cookies from "js-cookie";
+import { useAuth } from "../utils/AuthProvider"
+
 
 const ApplicationForm = () => {
   const currentUrl = window.location.href;
 
   // Split the URL by slashes and get the last part
   const petId = currentUrl.split("/").pop();
+
+  const UserData = JSON.parse(Cookies.get("userSession"))
+  const userEmail = UserData.data.user.email
+  const {user} = useAuth()
+
+
 
   //child component
   const handleCallback = (childData) => {
@@ -184,6 +194,8 @@ const ApplicationForm = () => {
       console.error("An unexpected error occurred:", error);
     }
   }
+
+
 
   return (
     <div className="container">

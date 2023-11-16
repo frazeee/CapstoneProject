@@ -107,6 +107,13 @@ const Login = ({}) => {
             </div>
           </form>
           <div>
+            <Link
+              to="/Register"
+            >
+              <span className=""> Forgot Password</span>
+            </Link>
+          </div>
+          <div>
             Don't have an account?
             <Link
               to="/Register"
