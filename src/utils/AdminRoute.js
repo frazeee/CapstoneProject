@@ -7,38 +7,45 @@ import { BeatLoader } from 'react-spinners';
 const AdminRoute = () => {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState('');
 
   useEffect(() => {
     const userSessionData = Cookies.get('userSession');
 
     if (userSessionData) {
-      const tokenData = JSON.parse(userSessionData);
-      
+      const tokenData = JSON.parse(userSessionData);      
       fetchUserRole(tokenData.data.user.email);
+
     } else {
       setLoading(false);
     }
   }, []);
 
+
   const fetchUserRole = async (userEmail) => {
     try {
       const { data, error } = await supabase
-        .from('Users')
-        .select('role')
-        .eq('email', userEmail)
-        .single();
+      .from('Admins')
+      .select()
+      .eq('shelter_email', userEmail)
+      .single();
 
+
+      console.log(userEmail)
       if (error) {
         console.error('Error fetching user role:', error.message);
       } else {
-        setRole(data.role);
+        setIsAdmin(true);
       }
     } catch (error) {
+      setIsAdmin(false);
       console.error('An error occurred:', error);
     } finally {
       setLoading(false); // Set loading to false when done fetching
     }
   };
+
+  
 
   if (loading) {
     return (
@@ -48,7 +55,7 @@ const AdminRoute = () => {
     );
   }
 
-  return role === "ADMIN" ? <Outlet /> : <Navigate to="/" />;
+  return isAdmin ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default AdminRoute;

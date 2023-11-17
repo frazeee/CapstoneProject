@@ -191,7 +191,7 @@ function CheckRequestPage() {
                       </label>
                       <select
                         className="form-select"
-                        placeholder={data.adoption_status}
+                        defaultValue={data.adoption_status}
                         onChange={(e) => setSelectedStatus(e.target.value)}
                       >
                         <option value="For Verification">For Verification</option>

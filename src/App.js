@@ -20,6 +20,8 @@ import AccountAdoptions from "./pages/AccountAdoptions";
 import InactivityTimer from "./utils/InactivityTimer";
 import ShelterSignup from "./pages/ShelterSignupPage/ShelterSignup";
 import CheckRequestPage from "./pages/CheckRequestPage/CheckRequestPage";
+import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPasswordPage";
+import ShelterRegister from "./pages/ShelterRegisterPage/ShelterRegisterPage";
 
 
 
@@ -54,10 +56,12 @@ function App() {
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/Admin" element={<AdminPage />} />
+              <Route path="/CheckApplication/:applicationId" element={<CheckRequestPage/>}/>
             </Route>
             <Route path="/payment-success/:requestId" element={<PaymentSuccessPage />} />
-            <Route path="/CheckApplication/:applicationId" element={<CheckRequestPage/>}/>
             <Route path="/ShelterSignup" element={<ShelterSignup/>}/>
+            <Route path="/account/forgotPassword" element={<ForgotPassword/>}/>
+            <Route path="/ShelterRegister" element={<ShelterRegister/>}/>
           </Routes>
           </AuthProvider>
         </Router>

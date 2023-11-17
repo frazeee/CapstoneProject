@@ -10,7 +10,7 @@ import { BeatLoader } from "react-spinners";
 const Navbar = ({}) => {
   const { user} = useAuth();
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(null);
   const [loading, setLoading] = useState(null);
   const [userEmail, setUserEmail] = useState(null)
   
@@ -28,15 +28,17 @@ const Navbar = ({}) => {
     const fetchUserRole = async (userEmail) => {
       try {
         const { data, error } = await supabase
-          .from('Users')
-          .select('role')
-          .eq('email', userEmail)
+          .from('Admins')
+          .select('*')
+          .eq('shelter_email', userEmail)
           .single();
+
 
         if (error) {
           console.error('Error fetching user role:', error.message);
+          setIsAdmin(false)
         } else {
-          setRole(data.role)
+          setIsAdmin(true)
         }
       } catch (error) {
         console.error('An error occurred:', error);
@@ -116,38 +118,23 @@ const Navbar = ({}) => {
                           Adopt A Pet
                         </Link>
                       </li>
-                  {role === "ADMIN" ? (
-                    
-                    <li className="nav-item dropdown">
-                      <li
-                        className="nav-link dropdown-toggle mx-3 text-white"
-                        id="navbarDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {user.user_metadata.firstName}
-                      </li>
-                      <ul className="dropdown-menu">
-                        <li className="dropdown-item">
-                          <Link style={{ textDecoration: "none" }} to="/Admin">
-                            Admin Dashboard
-                          </Link>
-                        </li>
-                        <li className="dropdown-divider">
-                          <hr className="dropdown-divider" />
-                        </li>
-                        <li className="dropdown-item">
-                          <a
-                            href=""
-                            className="text-decoration-none"
-                            onClick={handleLogout}
-                          >
-                            Logout
-                          </a>
-                        </li>
-                      </ul>
+                  {isAdmin ? (
+                    <>
+                    <li className="nav-item">
+                      <Link to="/Admin" className="nav-link mx-3 text-white">
+                        Admin Dashboard
+                      </Link>
                     </li>
+                    <li className="nav-item">
+                      <a
+                        href=""
+                        className="nav-link mx-3 text-white"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </a>
+                    </li>
+                  </>
                   ) : (
                     <>
                    

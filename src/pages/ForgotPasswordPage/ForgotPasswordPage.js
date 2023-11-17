@@ -1,25 +1,20 @@
 import Cookies from "js-cookie";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../components/client";
-import loginPicture from "../images/loginPicture.png";
-import { useAuth } from "../utils/AuthProvider";
-import "./Login.css";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { supabase } from "../../components/client"
+import loginPicture from "../../images/loginPicture.png";
 import { BeatLoader } from "react-spinners";
-import BPUADOPT_LOGO from "../images/BPUAdopt_smaller.png"
-import ForgotPasswordModal from "../components/ForgotPasswordModal/ForgotPasswordModal";
 
-const Login = ({}) => {
+
+
+const ForgotPassword = ({}) => {
   let navigate = useNavigate();
-  const { setUser, setSession } = useAuth(); 
-  const [loading, setLoading] = useState(false);
-
-
-
+  const [loading, setLoading] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
 
   function handleChange(event) {
     setFormData((prevFormData) => {
@@ -32,29 +27,23 @@ const Login = ({}) => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+    console.log(formData)
+    // try {
+    //   setLoading(true);
+    //   const { data, error } = await supabase.auth.signInWithPassword({
+    //     email: formData.email,
+    //     password: formData.password,
+    //   });
 
-      if (error) {
-        throw error;
-      }
+    //   if (error) {
+    //     throw error;
+    //   }
 
-      Cookies.set("userSession", JSON.stringify({ data }), { expires: 1 });
-      setUser(data.user);
-      setSession(data.session);
-
-
-      console.log("Logged In!");
-      navigate("/");
-    } catch (error) {
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
+    // } catch (error) {
+    //   alert(error);
+    // } finally {
+    //   setLoading(false);
+    // }
   }
 
   if (loading) {
@@ -75,7 +64,7 @@ const Login = ({}) => {
           <img src={loginPicture} className="img-fluid align-self-center" />
         </div>
         <div className="col-xl-8 col-lg-8 col-md-12 px-5 pt-5">
-          <h1 className="formHeader">Login</h1>
+          <h1 className="formHeader">Forgot Password</h1>
           <hr className="w-100 mb-3" />
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -106,21 +95,10 @@ const Login = ({}) => {
               </button>
             </div>
           </form>
-          <div className="">
-            <ForgotPasswordModal/>
-          </div>
-          <div>
-            <Link
-              to="/Register"
-              style={{ textDecoration: "none" }}
-            >
-              <span className="text-primary "> New to BPUAdopt?</span>
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;

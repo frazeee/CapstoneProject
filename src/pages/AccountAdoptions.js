@@ -1,5 +1,6 @@
 import { BeatLoader } from "react-spinners";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useAuth } from "../utils/AuthProvider";
 import { useEffect, useState } from "react";
 import { supabase } from "../components/client";
@@ -29,7 +30,8 @@ const AccountAdoptions = () => {
                   *,
                   Pets (
                       id,
-                      pet_name
+                      pet_name,
+                      Shelter
                   )
                   `
               )
@@ -55,7 +57,6 @@ const AccountAdoptions = () => {
     return(
         <>
         <Navbar />
-  
         <h1 className="text-center mt-3">Your Adoption Requests</h1>
         <hr />
         <div className="container mt-3">
@@ -75,20 +76,23 @@ const AccountAdoptions = () => {
                 <th scope="col">Last Name</th>
                 <th scope="col">Pet Name</th>
                 <th scope="col">Interview Date Time</th>
+                <th scope="col">Shelter</th>
                 <th scope="col">Status</th>
               </thead>
               {userRequests &&
                 userRequests.map((request, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{request.first_name}</td>
-                    <td>{request.last_name}</td>
-                    <td>{request.Pets.pet_name}</td>
-                    <td>
+                    <td scope="row">{request.first_name}</td>
+                    <td scope="row">{request.last_name}</td>
+                    <td scope="row">{request.Pets.pet_name}</td>
+                    <td scope="row">
                       {new Date(request.interview_date).toLocaleString()}
                     </td>
-                    <td className={`badge mt-2 ${
+                    <td scope="row">{request.Pets.Shelter}</td>
+                    <td scope="row" className={`badge mt-1 w-75 ${
                         request.adoption_status === 'For Verification' ? 'text-bg-primary' :
+                        request.adoption_status === 'For Interview' ? 'text-bg-primary' :
                         request.adoption_status === 'Interview Done' ? 'text-light text-bg-info' :
                         request.adoption_status === 'Approved' && 'text-bg-success'
                       }`}>
@@ -100,8 +104,7 @@ const AccountAdoptions = () => {
             </div>
           )}
         </div>
-      </>
-  
+        </>
     )
 }
 

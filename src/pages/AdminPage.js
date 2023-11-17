@@ -7,55 +7,89 @@ import { supabase } from "../components/client";
 import './AdminPage.css';
 import AddPetModal from "../components/AddPetModal/AddPetModal";
 import DeletedModal from "../components/DeletedModal/DeletedModal";
+import Cookies from "js-cookie";
+import { BeatLoader } from "react-spinners";
  
 const AdminPage = () => {
   const [data, setData] = useState([]);
   const [requestListCount, setRequestListCount] = useState(0);
   const [interviewListCount, setInterviewListCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState(null);
+  const [shelterName, setShelterName] = useState("");
+
+  const userData = Cookies.get('userSession')
+  if(userData && userEmail == null){
+      const parsedUserData = JSON.parse(userData);
+      const email = parsedUserData.data.user.email;
+      setUserEmail(email)
+  }
+    
 
 
   useEffect(() => {
-    async function getData() {
-      const { data, error } = await supabase.from("Pets").select("*");
-      if (error) {
-        console.log("Error getting data:", error.message);
-      } else {
-        setData(data);
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const { data: shelterData, error: shelterError } = await supabase
+          .from("Admins")
+          .select("shelter_name")
+          .eq("shelter_email", userEmail);
+  
+        if (shelterError) {
+          throw shelterError;
+        }
+  
+        const shelterName = shelterData[0]?.shelter_name;
+  
+        // Get Pets data
+        const { data: petsData, error: petsError } = await supabase
+          .from("Pets")
+          .select("*")
+          .eq("Shelter", shelterName);
+  
+        if (petsError) {
+          throw petsError;
+        }
+  
+        const sortedPetsData = petsData.slice().sort((a, b) => a.id - b.id);
+  
+        // Get Request List
+        const { data: requestListData, error: requestListError } = await supabase
+          .from("Requests")
+          .select("*")
+          .eq("shelter_from", shelterName);
+  
+        if (requestListError) {
+          throw requestListError;
+        }
+  
+        // Get Interview List
+        const currentDate = new Date();
+        const { data: interviewListData, error: interviewListError } = await supabase
+          .from("Requests")
+          .select()
+          .eq("shelter_from", shelterName)
+          .gt("interview_date", currentDate.toISOString());
+  
+        if (interviewListError) {
+          throw interviewListError;
+        }
+  
+        setShelterName(shelterName);
+        setData(sortedPetsData);
+        setRequestListCount(requestListData.length);
+        setInterviewListCount(interviewListData.length);
+      } catch (error) {
+        console.error("An unexpected error occurred:", error);
+      } finally {
+        setLoading(false);
       }
     }
-    getData();
-    getRequestList();
-    getInterviewList();
-  }, []);
-
-  const getRequestList = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("Requests")
-        .select()
-        .eq("payment_status", "PAID");
-
-      setRequestListCount(data.length);
-    } catch (error) {
-      console.error("An unexpected error occurred:", error);
-    }
-  };
-
-  const getInterviewList = async () => {
-    try {
-      const currentDate = new Date();
-      const { data, error } = await supabase
-        .from("Requests")
-        .select()
-        .gt("interview_date", currentDate.toISOString());
-
-      setInterviewListCount(data.length);
-    } catch (error) {
-      console.error("An unexpected error occurred:", error);
-    }
-  };
-
+  
+    fetchData();
+  }, [userEmail]); // Add userEmail to the dependency array if it's used inside the effect
+  
   let dataCount = data.length;
 
   const [selectedCard, setSelectedCard] = useState({
@@ -101,7 +135,6 @@ const AdminPage = () => {
       ...prevEditedDetails,
       [name]: value,
     }));
-    console.log(editedDetails)
   };
 
   const [file, setFile] = useState(null);
@@ -141,10 +174,6 @@ const AdminPage = () => {
       };
       
 
- 
-
-      
-
       const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false);
 
       const handleClick = (cardItem) => {
@@ -180,14 +209,20 @@ const AdminPage = () => {
         
       }
 
+      if (loading) {
+        return (
+          <div className="d-flex justify-content-center align-items-center">
+          <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+        </div>
+        );
+      }
+
 
   return (
     <>
       <Navbar />
       <div className="container my-5">
-        <h1 className="text-center">
-          Care For Paws Shelter Sanctuary - CPSS Inc
-        </h1>
+        <h1 className="text-center">{shelterName || 'Default Shelter Name'}</h1>
         <hr />
       </div>
       <div className="admin-page container my-5">
@@ -201,14 +236,14 @@ const AdminPage = () => {
                     <h2 style={{ color: "#ffffff" }}>
                       PETS FOR <br /> ADOPTION
                     </h2>
-                    <AddPetModal/>
+                    <AddPetModal shelterName={shelterName}/>
                   </div>
                   <div className="box col-lg-4 text-center py-5">
                     <h1 style={{ color: "#ffffff" }}>{requestListCount}</h1>
                     <h2 style={{ color: "#ffffff" }}>
                       POTENTIAL <br /> ADOPTERS
                     </h2>
-                    <AdminRequestModal />
+                    <AdminRequestModal shelterName={shelterName}/>
                   </div>
                   <div className="box col-lg-4 text-center py-5">
                     <h1 style={{ color: "#ffffff" }}>{interviewListCount}</h1>
@@ -271,6 +306,14 @@ const AdminPage = () => {
               </a>
             </div>
           ))}
+
+          {loading && (
+              <>
+              BeatLoader
+              </>
+          )
+      
+          }
 
           {/* Edit Modal */}
           {isModalOpen && (

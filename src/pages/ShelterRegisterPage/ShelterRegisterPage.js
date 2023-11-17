@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../components/client";
-import loginPicture from "../images/loginPicture.png";
-import "./Register.css";
+import { supabase } from "../../components/client";
+import loginPicture from "../../images/loginPicture.png";
+import "./ShelterRegisterPage.css"
 import { BeatLoader } from "react-spinners";
 
-const Register = () => {
+const ShelterRegister = () => {
   let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    shelterName: "",
     email: "",
     password: "",
-    phoneNumber: "",
-    address: "",
+
   });
 
   const [loading, setLoading] = useState(null);
@@ -54,43 +52,34 @@ const Register = () => {
         return;
       }
 
-      const { user, session, error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            redirectTo: '/login'
-          },
-        },
+        password: formData.password
       });
 
       if (error) {
         console.log(error)
         throw error;
       }
-      const { data, error: insertError } = await supabase.from("Users").insert([
+
+
+      const { adminData, error: insertAdminError } = await supabase.from("Admins").insert([
         {
-          email: formData.email,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          address: formData.address,
-          phone: formData.phoneNumber,
+          shelter_email: formData.email,
+          shelter_name: formData.shelterName
         },
       ]);
 
-      if (insertError) {
-        throw insertError;
+      if (insertAdminError) {
+        throw insertAdminError;
       }
-
       alert("Check your email for a verification link!");
       navigate("/Login");
     } catch (error) {
-      alert(error.error_description || error.message);
+       alert(error.error_description || error.message);
     } finally {
-      setLoading(false);
-      setFormData("")
+        setLoading(false);
+        setFormData("")
     }
   }
 
@@ -107,34 +96,22 @@ const Register = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="left-panel col-xl-4 col-lg-4 col-md-4 d-flex flex-column">
-          <h1 className="text-center mt-5">Adopt a pet today!</h1>
+          <h1 className="text-center mt-5">Become a partner shelter today!</h1>
           <img src={loginPicture} className="img-fluid align-self-center"/>
         </div>
         <div className="col-xl-8 col-lg-8 col-md-8 px-5 pt-5">
-          <h1 className="formHeader">Register</h1>
-          <hr className="mb-3 w-100" />
+          <h1 className="formHeader">Shelter Registration</h1>
+          <hr className="mb-3 w-100"/>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name
+              <label htmlFor="shelterName" className="form-label">
+                Shelter Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                name="firstName"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="lastName"
+                name="shelterName"
                 onChange={handleChange}
                 required
               />
@@ -163,30 +140,6 @@ const Register = () => {
                 required
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="phoneNumber" className="form-label">
-                Phone
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                name="phoneNumber"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="Address" className="form-label">
-                Address
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="address"
-                onChange={handleChange}
-                required
-              />
-            </div>
 
             <button
               type="submit"
@@ -195,16 +148,10 @@ const Register = () => {
               Register
             </button>
           </form>
-          <div>
-            Already have an account?
-            <Link to="/Login" style={{ textDecoration: "none" }}>
-              <span className="text-primary"> Login Here!</span>
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default ShelterRegister;

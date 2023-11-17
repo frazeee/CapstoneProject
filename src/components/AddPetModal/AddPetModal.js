@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { supabase } from "../client";
 
-const AddPetModal = () => {
-
+const AddPetModal = ({shelterName}) => {
+  
     const [file, setFile] = useState(null)
     const [loading, setLoading] = useState(null)
     const [uploading, setUploading] = useState(false)
@@ -61,7 +61,9 @@ const AddPetModal = () => {
               gender: addFormData.gender,
               pet_type: addFormData.petType,
               pet_personality: addFormData.pet_personality,
-              image_url1: publicUrl.publicUrl},
+              image_url1: publicUrl.publicUrl,
+              Shelter: shelterName
+            },
           ])
           .select()
 

@@ -6,17 +6,11 @@ import { BeatLoader } from 'react-spinners';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // Set to null initially
-  const [session, setSession] = useState(null); // Set to null initially
-  const [email, setEmail] = useState(null); // Set to null initially
-  const [loading, setLoading] = useState(null); // Set to null initially
+  const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null); 
+  const [email, setEmail] = useState(null); 
+  const [loading, setLoading] = useState(null); 
   const userData = Cookies.get("userSession")
- 
-  
-  // if (user === null && userData){
-    
-    
-  // }
 
 
 useEffect(() => {
@@ -57,7 +51,7 @@ useEffect(() => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser, session, setSession, email }}>
+    <AuthContext.Provider value={{ user, setUser, session, setSession, email}}>
       {children}
     </AuthContext.Provider>
   );

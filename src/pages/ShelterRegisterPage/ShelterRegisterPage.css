@@ -12,7 +12,7 @@ hr{
 
 }
 
-.login-btn.btn{
+.register-btn.btn{
     background-color: #FFBD59;
     color: white;
     width: 100px;
@@ -23,27 +23,27 @@ hr{
 }
 
 .left-panel{
+
     background-color: #FFBD59;
     min-height: 100vh;
     color:white;
     overflow: hidden;
-}
 
+}
 
 .left-panel img{
     position: relative;
     bottom:0;
+    height: auto;
     max-width: 200%;
-}
+    transform: translateY(100px);
 
-.logo{
-    width: 150px;
-    height: 300px;
+    
 }
 
 @media (max-width: 768px) {
     .left-panel{
-        min-height: 100vh;
+        min-height: 50vh;
     }
     .left-panel img {
         height: auto;

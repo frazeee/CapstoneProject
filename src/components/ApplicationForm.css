@@ -25,3 +25,7 @@ input.form-control {
     border-radius: 0;
     /* Optional: Remove the border radius as well */
 }
+
+.container-bg{
+    background-color: antiquewhite;
+}

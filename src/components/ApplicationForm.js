@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import AdoptionForm from "./AdoptionForm/AdoptionForm";
 import Cookies from "js-cookie";
 import { useAuth } from "../utils/AuthProvider"
+import { useNavigate } from "react-router-dom";
 
 
 const ApplicationForm = () => {
   const currentUrl = window.location.href;
+  const navigate = useNavigate();
 
   // Split the URL by slashes and get the last part
   const petId = currentUrl.split("/").pop();
@@ -164,10 +166,6 @@ const ApplicationForm = () => {
 
           q_source: payload.source.join(", "),
           q_had_adapted: payload.hadAdapted === "Yes" ? true : false,
-          q_animal_type: payload.animalType,
-          q_is_specific_animal:
-            payload.isSpecificAnimal === "Yes" ? true : false,
-          q_ideal_pet: payload.idealPetDescription,
           q_building_type: payload.buildingType,
           q_is_renting: payload.isRenting,
           q_living_with: payload.livingWith.join(", "),
@@ -198,19 +196,19 @@ const ApplicationForm = () => {
 
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <div className="card my-5 rounded-5 ">
-            <div className="card-body">
-              <h1 className="text-center">Adoption Form</h1>
-              <hr className="w-100" />
-              <AdoptionForm parentCallback={handleCallback}></AdoptionForm>
+      <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <div className="card my-5 rounded-5 ">
+              <div className="card-body">
+                <h1 className="text-center">Adoption Form</h1>
+                <hr className="w-100" />
+                <AdoptionForm parentCallback={handleCallback} petId={petId}></AdoptionForm>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

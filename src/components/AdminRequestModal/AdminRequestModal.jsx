@@ -3,7 +3,7 @@ import { supabase } from "../../components/client";
 import "./AdminRequestModal.css";
 import { Link } from "react-router-dom";
 
-function AdminRequestModal() {
+function AdminRequestModal({shelterName}) {
   const [requestList, setRequestList] = useState([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function AdminRequestModal() {
             )
             `
         )
-        .eq("payment_status", "PAID");
+        .eq("shelter_from", shelterName);
 
       console.log(data);
       setRequestList(data);
@@ -65,6 +65,7 @@ function AdminRequestModal() {
               ></button>
             </div>
             <div class="modal-body request-modal-body">
+            <div className="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
@@ -90,6 +91,7 @@ function AdminRequestModal() {
                       <td>{req.email}</td>
                       <td className={`badge mt-2 mx-3 ${
                         req.adoption_status === 'For Verification' ? 'text-bg-primary' :
+                        req.adoption_status === 'For Interview' ? 'text-bg-primary' :
                         req.adoption_status === 'Interview Done' ? 'text-light text-bg-info' :
                         req.adoption_status === 'Approved' && 'text-bg-success'
                       }`}>
@@ -105,6 +107,7 @@ function AdminRequestModal() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
         </div>

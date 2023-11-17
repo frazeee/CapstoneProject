@@ -17,7 +17,8 @@ function Pets({ user }) {
         console.log("Error getting data:", error.message);
         setLoading(false)
       } else {
-        setData(data);
+        const sortedData = data.slice().sort((a, b) => a.id - b.id);
+        setData(sortedData);
         setLoading(false)
       }
     }
@@ -62,7 +63,7 @@ function Pets({ user }) {
         </div>
       </div>
 
-      <div className="container py-3 px-3">
+      <div className="container pt-4 px-3">
         <div className="row">
           <div className="col-12">
             <h1 className="highlight-word">
@@ -85,9 +86,6 @@ function Pets({ user }) {
               <li>Pay the adoption fee (Varying per shelter)</li>
               <li>Take your pet home!</li>
             </ul>
-            <div className="buttons">
-              <Link to="/Application"><button className="btn mr-3">Apply Now!</button></Link>
-            </div>
           </div>
         </div>
       </div>
@@ -113,7 +111,7 @@ function Pets({ user }) {
             Dogs
           </button>
         </div>
-
+          <hr className=" mt-0 mb-3"/>
         
 
         <div className="row" key={`row`}>

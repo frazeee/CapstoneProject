@@ -13,22 +13,32 @@ function AdoptionForm(props) {
   const {user} = useAuth()
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
   const UserData = JSON.parse(Cookies.get("userSession"))
-  const userEmail = UserData.data.user.email
+  if(userData && userEmail == null){
+    const parsedUserData = JSON.parse(userData);
+    const email = parsedUserData.data.user.email;
+    setUserEmail(email)
+}
+
 
   useEffect(() => {
-    async function getUserByEmail(email) {
+    async function getUserByEmail() {
       try {
        setLoading(true)
-        const { data, error } = await supabase.from('Users').select('*').eq('email', email);
+        const { data, error } = await supabase
+        .from('Users')
+        .select()
+        .eq("email", "kyeer9@gmail.com")
+
   
         if (error) {
           console.error('Error fetching user:', error);
           return;
         }
   
-        if (data && data.length > 0) {
-          setUserData(data[0]);
+        if (data) {
+          console.log(userData)
         } else {
           setUserData(null);
         }
@@ -41,8 +51,8 @@ function AdoptionForm(props) {
     }
   
     // Call the getUserByEmail function when the email changes
-    getUserByEmail(userEmail);
-  }, [user]);
+    getUserByEmail();
+  }, [userEmail]);
 
   const onSubmit = (data) => {
     props.parentCallback(data);
@@ -82,7 +92,6 @@ function AdoptionForm(props) {
   const status = ["Single", "Married", "Others"];
   const source = ["Friends", "Website", "Social Media", "Others"];
   const yesOrNo = ["Yes", "No"];
-  const animalTypes = ["Cat", "Dog", "Both", "Not Decided"];
   const buildingTypes = ["House", "Apartment", "Condo", "Others"];
   const livingWith = [
     "Living Alone",
@@ -95,15 +104,12 @@ function AdoptionForm(props) {
 
   const houseInspectionItems = [
     "Front of the house",
-    "Street photo",
     "Living room",
-    "Dining area",
-    "Kitchen",
     "Bedroom/s (if your pet will have access)",
-    "Windows (if adopting a cat)",
-    "Front & backyard (if adopting a dog)",
+    "Front & backyard",
   ];
 
+  
 
 
   if(loading){
@@ -130,7 +136,7 @@ function AdoptionForm(props) {
               name="firstName"
               className="form-control"
               type="text"
-              placeholder={userData?.first_name}
+              defaultValue={userData?.first_name}
               required
               {...register("firstName", { required: true })}
             ></input>
@@ -141,7 +147,7 @@ function AdoptionForm(props) {
               name="lastName"
               className="form-control"
               type="text"
-              placeholder={userData?.last_name}
+              defaultValue={userData?.last_name}
               required
               {...register("lastName", { required: true })}
             ></input>
@@ -155,7 +161,7 @@ function AdoptionForm(props) {
               name="address"
               className="form-control"
               type="text"
-              placeholder={userData?.address}
+              defaultValue={userData?.address}
               required
               {...register("address", { required: true })}
             ></input>
@@ -169,7 +175,7 @@ function AdoptionForm(props) {
               name="phone"
               className="form-control"
               type="text"
-              placeholder={userData?.phone}
+              defaultValue={userData?.phone}
               required
               {...register("phone", { required: true })}
             ></input>
@@ -180,7 +186,7 @@ function AdoptionForm(props) {
               name="email"
               className="form-control"
               type="email"
-              placeholder={userData?.email}
+              defaultValue={userData?.email}
               required
               {...register("email", { required: true })}
             ></input>
@@ -345,62 +351,6 @@ function AdoptionForm(props) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
-            <label>What are you looking to adopt?</label>
-            <div className="d-flex mb-0 btn-group">
-              {animalTypes.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register("animalType")}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <label>Are you applying to adopt a specific shelter animal?</label>
-            <div className="d-flex mb-0 btn-group">
-              {yesOrNo.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register("isSpecificAnimal")}
-                  />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
-            <label>
-              Describe your ideal pet, including its sex, age, appearance,
-              temperament, etc.
-            </label>
-            <textarea
-              className="form-control"
-              type="text"
-              required
-              {...register("idealPetDescription")}
-            ></textarea>
           </div>
         </div>
 
@@ -607,8 +557,10 @@ function AdoptionForm(props) {
 
         <div>
           <p>
-            Please attach photos of your home. This has replaced our on-site
-            ocular inspections.
+            Please attach photos of your home. Format your pictures with your last name and corresponding area or place it under one .PDF file.
+          </p>
+          <p>
+            Example: (Cruz_livingRoom, Cruz_HouseFront)
           </p>
 
           <ol type="1">
@@ -631,6 +583,7 @@ function AdoptionForm(props) {
                 accept="image/*"
                 className="form-control"
                 required
+                multiple
                 {...register("housePicture")}
               />
             </div>

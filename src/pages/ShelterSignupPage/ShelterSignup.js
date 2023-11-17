@@ -14,42 +14,70 @@ const ShelterSignup = ({}) => {
         ShelterSocMed: "",
         ShelterPetNumber: ""
       });
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
 
-      function handleChange(event) {
-        console.log(formData);
-        setFormData((prevFormData) => {
-          return {
-            ...prevFormData,
-            [event.target.name]: event.target.value,
-          };
+    const handleInvite = async () => {
+      setLoading(true);
+      try {
+        const { error } = await supabase.auth.signInWithOtp({
+          email: formData.ShelterEmail,
+        });
+  
+        if (error) {
+          alert(error.error_description || error.message);
+        } else {
+          alert('Check your email for the invite link!');
+        }
+      } catch (error) {
+        console.error('Failed to send invite:', error);
+        alert('Failed to send invite. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const handleChange = (event) => {
+      console.log(formData);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [event.target.name]: event.target.value,
+      }));
+    };
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      setLoading(true);
+  
+      try {
+        const { data, error: insertError } = await supabase.from('ShelterSignup').insert([
+          {
+            shelter_name: formData.ShelterName,
+            shelter_email: formData.ShelterEmail,
+            shelter_socmed: formData.ShelterSocMed,
+            shelter_petNumber: formData.PetNumber,
+          },
+        ]);
+  
+        if (insertError) {
+          throw insertError;
+        }
+  
+        // After successful signup, send an invite
+        await handleInvite();
+      } catch (error) {
+        console.error('Error during signup:', error);
+        alert('Failed to sign up. Please try again.');
+      } finally {
+        setLoading(false);
+        setFormData({
+          ShelterName: '',
+          ShelterEmail: '',
+          ShelterSocMed: '',
+          PetNumber: '',
         });
       }
-
-      async function handleSubmit(event) {
-        event.preventDefault();
-        setLoading(true);
-        console.log(formData)
-        try {
-          const { data, error: insertError } = await supabase.from("ShelterSignup").insert([
-            {
-                shelter_name: formData.ShelterName,
-                shelter_email: formData.ShelterEmail,
-                shelter_socmed: formData.ShelterSocMed,
-                shelter_petNumber: formData.PetNumber
-            },
-          ]);
-    
-          if (insertError) {
-            throw insertError;
-          }
- 
-        } catch (error) {
-          alert(error.error_description || error.message);
-        } finally {
-          setLoading(false);
-          setFormData("")
-        }
-      }
+    };
 
   if (loading) {
     return (
@@ -128,17 +156,6 @@ const ShelterSignup = ({}) => {
           </form>
         </div>
       </div>
-
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <img src="..." class="rounded me-2" alt="..."/>
-                <strong class="me-auto">Bootstrap</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Hello, world! This is a toast message.
-            </div>
-        </div>
 
     </div>
 

@@ -124,27 +124,27 @@ const AccountInformation = () => {
                                     <div className="col-md-6 my-2">
                                         <label for="firstName">First Name</label>
                                         <input type="text" className="form-control" id="firstName"
-                                             placeholder={userData?.first_name} />
+                                             defaultValue={userData?.first_name} />
                                     </div>
                                     <div className="col-md-6 my-2">
                                         <label for="lastName">Last Name</label>
                                         <input type="text" className="form-control" id="lastName"
-                                           placeholder={userData?.last_name}/>
+                                           defaultValue={userData?.last_name}/>
                                     </div>
                                     <div className="col-md-6 my-2">
                                         <label for="email">Email</label>
                                         <input type="email" className="form-control" id="email"
-                                            placeholder={userData?.email} disabled />
+                                            defaultValue={userData?.email} disabled />
                                     </div>
                                     <div className="col-md-6 my-2">
                                         <label for="number">Phone Number</label>
                                         <input type="number" className="form-control " id="number" 
-                                            pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  placeholder={userData?.phone}/>
+                                            pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  defaultValue={userData?.phone}/>
                                     </div>
                                     <div className="col-12 my-2">
                                         <label for="address">Address</label>
                                         <textarea className="form-control " id="address" rows="5"
-                                            placeholder={userData?.address}></textarea>
+                                            defaultValue={userData?.address}></textarea>
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-end">

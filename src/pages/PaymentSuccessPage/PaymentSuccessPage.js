@@ -49,7 +49,15 @@ function PaymentSuccessPage() {
           </Link>
         </div>
       ) : (
-        <h1 className="my-3">You have no access to this record</h1>
+        <div className="d-flex justify-content-center text-center pt-5">
+          <div className="p-5 d-flex align-items-center flex-column">
+          <Unicons.UilExclamationCircle size="100" color="#ff0033" />
+          <h1 className="my-3">You have no access to this record</h1>
+          <Link to="/" className="nav-link link-color text-primary">
+            Go back to homepage
+          </Link>
+          </div>
+        </div>
       )}
     </div>
   );
