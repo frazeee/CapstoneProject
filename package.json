@@ -67,6 +67,7 @@
   },
   "browser": {
     "path": false,
-    "stream": false
+    "stream": false,
+    "os": false
   }
 }
