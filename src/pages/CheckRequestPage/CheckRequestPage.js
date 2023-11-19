@@ -48,13 +48,7 @@ function CheckRequestPage() {
   };
 
   const handleCheckPictures = (housePicture) => {
-    if (housePicture) {
-      // Open the image in a new tab
-      window.open(housePicture, '_blank');
-    } else {
-      // Handle the case where the image URL is not available
-      console.error('Image URL not available.');
-    }
+
   };
 
   const handleStatusUpdate = async () => {
@@ -129,7 +123,7 @@ function CheckRequestPage() {
                         <strong>Adopters Email:</strong>
                       </label>
                       <input
-                        type="text"
+                        type="email"
                         className="form-control"
                         value={`${data.email}`}
                         readOnly

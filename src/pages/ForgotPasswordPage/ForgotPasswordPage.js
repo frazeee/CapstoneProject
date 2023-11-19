@@ -27,23 +27,22 @@ const ForgotPassword = ({}) => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData)
-    // try {
-    //   setLoading(true);
-    //   const { data, error } = await supabase.auth.signInWithPassword({
-    //     email: formData.email,
-    //     password: formData.password,
-    //   });
-
-    //   if (error) {
-    //     throw error;
-    //   }
-
-    // } catch (error) {
-    //   alert(error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    console.log(formData);
+    try {
+      setLoading(true);
+      const { user, error } = await supabase.auth.updateUser({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+      navigate('/')
+    }
   }
 
   if (loading) {
@@ -90,8 +89,8 @@ const ForgotPassword = ({}) => {
               />
             </div>
             <div className="">
-              <button type="submit" className="login-btn btn rounded-pill mb-2">
-                Login
+              <button type="submit" className="btn rounded-pill mb-2">
+                Update Password
               </button>
             </div>
           </form>
