@@ -5,7 +5,6 @@ import { supabase } from "../client";
 import { useAuth } from "../../utils/AuthProvider";
 import { BeatLoader } from 'react-spinners';
 import Cookies from "js-cookie";
-import { parse } from "dotenv";
 
 
 function AdoptionForm(props) {

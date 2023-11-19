@@ -4,7 +4,7 @@ import "./CheckRequestPage.css";
 import { BeatLoader } from "react-spinners";
 import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
-import { Link } from "react-router-dom";
+
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
   const [loading, setLoading] = useState(false);
