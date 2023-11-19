@@ -35,13 +35,11 @@ const Navbar = ({}) => {
 
 
         if (error) {
-          console.error('Error fetching user role:', error.message);
           setIsAdmin(false)
         } else {
           setIsAdmin(true)
         }
       } catch (error) {
-        console.error('An error occurred:', error);
       }
     };
     if(userData){

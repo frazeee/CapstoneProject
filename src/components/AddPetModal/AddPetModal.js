@@ -50,7 +50,7 @@ const AddPetModal = ({shelterName}) => {
           }
 
           setImageUrl(publicUrl)
-          console.log(publicUrl.publicUrl)
+
 
           
           const { data, error } = await supabase

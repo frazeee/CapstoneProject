@@ -5,6 +5,7 @@ import { supabase } from "../client";
 import { useAuth } from "../../utils/AuthProvider";
 import { BeatLoader } from 'react-spinners';
 import Cookies from "js-cookie";
+import { parse } from "dotenv";
 
 
 function AdoptionForm(props) {
@@ -14,49 +15,13 @@ function AdoptionForm(props) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
-  const UserData = JSON.parse(Cookies.get("userSession"))
-  if(userData && userEmail == null){
-    const parsedUserData = JSON.parse(userData);
-    const email = parsedUserData.data.user.email;
-    setUserEmail(email)
-}
 
 
-  useEffect(() => {
-    async function getUserByEmail() {
-      try {
-       setLoading(true)
-        const { data, error } = await supabase
-        .from('Users')
-        .select()
-        .eq("email", "kyeer9@gmail.com")
+  
 
-  
-        if (error) {
-          console.error('Error fetching user:', error);
-          return;
-        }
-  
-        if (data) {
-          console.log(userData)
-        } else {
-          setUserData(null);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-      finally{
-        setLoading(false)
-      }
-    }
-  
-    // Call the getUserByEmail function when the email changes
-    getUserByEmail();
-  }, [userEmail]);
 
   const onSubmit = (data) => {
     props.parentCallback(data);
-    console.log(data);
   };
 
   const birthdate = watch("birthdate");
@@ -334,7 +299,7 @@ function AdoptionForm(props) {
               ))}
             </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-12 col-sm-6">
             <label>Have you adopted pet before?</label>
             <div className="d-flex mb-0 btn-group">
               {yesOrNo.map((option) => (
@@ -355,7 +320,7 @@ function AdoptionForm(props) {
         </div>
 
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-12 col-sm-3">
             <label>What type of building do you live in?</label>
             <div className="d-flex mb-0 btn-group">
               {buildingTypes.map((option) => (
@@ -394,11 +359,11 @@ function AdoptionForm(props) {
         </div>
 
         <div className="row">
-          <div className="col-12 form-check">
+          <div className="col-lg-12 col-md-3 form-check">
             <label>Who do you live with?</label>
             <div className="d-flex mb-0 btn-group">
               {livingWith.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
+                <div className="form-check mr-3 d-flex align-items-center justify-items-center mb-0">
                   <input
                     className="form-check-input mb-1"
                     type="checkbox"
@@ -489,6 +454,8 @@ function AdoptionForm(props) {
               className="form-control"
               type="number"
               required
+              min="1"
+              max="24"
               {...register("awayHours")}
             ></input>
           </div>
@@ -557,10 +524,10 @@ function AdoptionForm(props) {
 
         <div>
           <p>
-            Please attach photos of your home. Format your pictures with your last name and corresponding area or place it under one .PDF file.
+            Please attach photos of your home and place it under one .PDF file.
           </p>
           <p>
-            Example: (Cruz_livingRoom, Cruz_HouseFront)
+            Note:
           </p>
 
           <ol type="1">
@@ -580,10 +547,9 @@ function AdoptionForm(props) {
             <div className="col-12">
               <input
                 type="file"
-                accept="image/*"
+                accept="application/pdf"
                 className="form-control"
                 required
-                multiple
                 {...register("housePicture")}
               />
             </div>

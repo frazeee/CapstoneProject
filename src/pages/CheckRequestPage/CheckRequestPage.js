@@ -4,7 +4,7 @@ import "./CheckRequestPage.css";
 import { BeatLoader } from "react-spinners";
 import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
-
+import { Link } from "react-router-dom";
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,6 +44,16 @@ function CheckRequestPage() {
       console.error("An unexpected error occurred:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCheckPictures = (housePicture) => {
+    if (housePicture) {
+      // Open the image in a new tab
+      window.open(housePicture, '_blank');
+    } else {
+      // Handle the case where the image URL is not available
+      console.error('Image URL not available.');
     }
   };
 
@@ -201,6 +211,7 @@ function CheckRequestPage() {
                       </select>
                     </div>
                     <div className="d-flex justify-content-end">
+                        <button type="button" className="btn btn-lg me-3" onClick={handleCheckPictures(data.q_house_pic)} >Check Pictures</button>
                         <CheckApplicationFormModal requestDetails={requestDetails[0]}/>
                         <button type="button" className="btn btn-lg ms-3" onClick={handleStatusUpdate}>Update Status</button>
                     </div>

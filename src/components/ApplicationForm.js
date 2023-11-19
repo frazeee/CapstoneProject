@@ -16,6 +16,7 @@ const ApplicationForm = () => {
   const UserData = JSON.parse(Cookies.get("userSession"))
   const userEmail = UserData.data.user.email
   const {user} = useAuth()
+  const [imageURL, setImageUrl] = useState('')
 
 
 
@@ -110,40 +111,38 @@ const ApplicationForm = () => {
   };
 
   const handleFileChange = async (childData) => {
-    const file = childData.housePicture[0];
+    const file = childData.housePicture;
 
     if (file) {
-      const base64String = await convertFileToBase64(file);
-      // console.log(base64String);
-
-      childData.housePicture = base64String;
-      console.log("childData", childData);
-      saveData(childData);
+      saveData(childData)
     }
   };
 
-  const convertFileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
 
-      reader.onload = () => {
-        resolve({
-          src: reader.result.split(",")[1], // Extract the base64 string (excluding the data URI prefix)
-          fileName: file.name,
-          fileType: file.type,
-        });
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
 
   async function saveData(payload) {
     try {
+     
+      const fileExt = payload.housePicture[0].name.split('.').pop();
+      const fileName = `${payload.lastName}-${petId}-Pictures`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage.from('Requests_Images').upload(filePath, payload.housePicture[0])
+      
+      if (uploadError) {
+        console.log(uploadError)
+        throw uploadError
+      }
+
+      const { data: publicUrl, error: getUrlError } = await supabase.storage
+      .from('Requests_Images')
+      .getPublicUrl(filePath)
+      console.log(publicUrl)
+
+      if (getUrlError) {
+        throw getUrlError
+      }
+
       const { data, error } = await supabase
         .from("Requests")
         .insert({
@@ -177,16 +176,17 @@ const ApplicationForm = () => {
           q_introduce_steps: payload.introduceSteps,
           q_is_supported: payload.isFamilySupported,
           q_have_other_pets: payload.haveOtherPets,
-          q_house_pic: payload.housePicture,
+          q_house_pic: publicUrl.publicUrl,
         })
         .select();
+
 
       if (error) {
         throw error;
       } else {
         // Data was inserted successfully
         console.log(data[0].id);
-        openGateway(data[0].id);
+        // openGateway(data[0].id);
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);

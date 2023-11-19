@@ -248,7 +248,7 @@ const AdminPage = () => {
                   <div className="box col-lg-4 text-center py-5">
                     <h1 style={{ color: "#ffffff" }}>{interviewListCount}</h1>
                     <h2 style={{ color: "#ffffff" }}>SCHEDULED INTERVIEWS</h2>
-                    <AdminInterviewModal />
+                    <AdminInterviewModal shelterName={shelterName}/>
                   </div>
                 </div>
               </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../components/client";
 import "./AdminInterviewModal.css";
 
-function AdminInterviewModal() {
+function AdminInterviewModal({shelterName}) {
   const [interviewLsit, setInterviewList] = useState([]);
 
   useEffect(() => {
@@ -29,7 +29,8 @@ function AdminInterviewModal() {
               `
         )
         .gt("interview_date", currentDate.toISOString())
-        .order("interview_date");
+        .order("interview_date")
+        .eq("shelter_from", shelterName)
 
       setInterviewList(data);
     } catch (error) {
@@ -78,11 +79,10 @@ function AdminInterviewModal() {
                       <th scope="col">Pet Name</th>
                       <th scope="col">First Name</th>
                       <th scope="col">Last Name</th>
-                      <th scope="col">Address</th>
                       <th scope="col">Phone Number</th>
                       <th scope="col">Email</th>
-                      <th scope="col">Social Media</th>
                       <th scope="col">Interview Schedule (mm//dd/yyy)</th>
+                      <th scope="col">Social Media</th>
                       <th scope="col">Had Adopted</th>
                       <th scope="col">Payment Status</th>
                       <th scope="col">Alternate Contact First Name</th>
@@ -98,15 +98,14 @@ function AdminInterviewModal() {
                         <td>{req.Pets.pet_name}</td>
                         <td>{req.first_name}</td>
                         <td>{req.last_name}</td>
-                        <td>{req.address}</td>
                         <td>{req.phone_number}</td>
                         <td>{req.email}</td>
-                        <td>{req.soc_med}</td>
                         <td>
                           {req.interview_date
                             ? transformDateTime(req.interview_date)
                             : ""}
                         </td>
+                        <td>{req.soc_med}</td>
                         <td>{req.had_adapted ? "Yes" : "No"}</td>
                         <td>{req.payment_status}</td>
                         <td>{req.ac_first_name}</td>
