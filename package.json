@@ -57,10 +57,6 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "dotenv": "^16.3.1"
   },
-  "resolutions": {
-    "path": "path-browserify",
-    "os": "os-browserify"
-  },
   "webpack": {
     "resolve": {
       "fallback": {
