@@ -130,14 +130,12 @@ const ApplicationForm = () => {
       const { error: uploadError } = await supabase.storage.from('Requests_Images').upload(filePath, payload.housePicture[0])
       
       if (uploadError) {
-        console.log(uploadError)
         throw uploadError
       }
 
       const { data: publicUrl, error: getUrlError } = await supabase.storage
       .from('Requests_Images')
       .getPublicUrl(filePath)
-      console.log(publicUrl)
 
       if (getUrlError) {
         throw getUrlError
@@ -185,8 +183,7 @@ const ApplicationForm = () => {
         throw error;
       } else {
         // Data was inserted successfully
-        console.log(data[0].id);
-        // openGateway(data[0].id);
+        openGateway(data[0].id);
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);

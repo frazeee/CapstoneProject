@@ -57,12 +57,14 @@
     "dotenv": "^16.3.1"
   },
   "resolutions": {
-    "path": "path-browserify"
+    "path": "path-browserify",
+    "os": "os-browserify"
   },
   "webpack": {
     "resolve": {
       "fallback": {
-        "path": "path-browserify"
+        "path": "path-browserify",
+        "os": "os-browserify/browser"
       }
     }
   } 
