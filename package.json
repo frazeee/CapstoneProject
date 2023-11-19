@@ -57,11 +57,21 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "dotenv": "^16.3.1"
   },
+  "resolutions": {
+    "path": "path-browserify",
+    "os": "os-browserify",
+    "stream": "stream-browserify",
+    "buffer": "buffer/",
+    "crypto": "crypto-browserify"
+  },
   "webpack": {
     "resolve": {
       "fallback": {
-        "path": "path-browserify",
-        "os": "os-browserify/browser"
+        "os": "os-browserify/browser",
+        "stream": "stream-browserify",
+        "buffer": "buffer/",
+        "crypto": "crypto-browserify",
+        "path": "path-browserify"
       }
     }
   },
