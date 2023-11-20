@@ -8,16 +8,46 @@ import Cookies from "js-cookie";
 
 
 function AdoptionForm(props) {
-  const { register, handleSubmit, watch} = useForm();
+  const { register, handleSubmit, watch, setValue} = useForm();
   const [adoptFormData, setAdoptFormData] = useState(null);
+  const [userData, setUserData] = useState("");
   const {user} = useAuth()
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
+  const UserData = JSON.parse(Cookies.get("userSession"))
+  const userEmail = UserData.data.user.email
 
-
+  useEffect(() => {
+    async function getUserByEmail(email) {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase.from('Users').select('*').eq('email', email);
   
-
+        if (error) {
+          console.error('Error fetching user:', error);
+          return;
+        }
+  
+        if (data && data.length > 0) {
+          // Set the user data in the form using setValue
+          setValue('firstName', data[0].first_name);
+          setValue('lastName', data[0].last_name);
+          setValue('address', data[0].address);
+          setValue('phone', data[0].phone);
+          setValue('email', data[0].email);
+        } else {
+          // Handle the case when the user is not found
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    getUserByEmail(userEmail);
+  }, [user, setValue]);
+  
+ 
 
   const onSubmit = (data) => {
     props.parentCallback(data);
@@ -100,7 +130,6 @@ function AdoptionForm(props) {
               name="firstName"
               className="form-control"
               type="text"
-              defaultValue={userData?.first_name}
               required
               {...register("firstName", { required: true })}
             ></input>
@@ -111,7 +140,7 @@ function AdoptionForm(props) {
               name="lastName"
               className="form-control"
               type="text"
-              defaultValue={userData?.last_name}
+              defaultValue={userData.last_name}
               required
               {...register("lastName", { required: true })}
             ></input>
@@ -125,7 +154,6 @@ function AdoptionForm(props) {
               name="address"
               className="form-control"
               type="text"
-              defaultValue={userData?.address}
               required
               {...register("address", { required: true })}
             ></input>
@@ -139,7 +167,6 @@ function AdoptionForm(props) {
               name="phone"
               className="form-control"
               type="text"
-              defaultValue={userData?.phone}
               required
               {...register("phone", { required: true })}
             ></input>

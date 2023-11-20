@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../components/client';
-import { useAuth } from './AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -30,8 +29,8 @@ const LogoutModal = ({ show, onHide }) => {
 };
 
 const InactivityTimer = () => {
+  const userCookie = Cookies.get("userSession")
   const [showModal, setShowModal] = useState(false);
-  const {user} = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -43,13 +42,12 @@ const InactivityTimer = () => {
     };
 
     const logout = async () => {
-      console.log(user)
-      if(user){
+      if(userCookie){
       console.log("User Timeout")
       await supabase.auth.signOut();
       Cookies.remove("userSession")
       setShowModal(true);
-    }
+      }
     };
 
     const handleActivity = () => {

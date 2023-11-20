@@ -15,8 +15,38 @@ const ApplicationForm = () => {
 
   const UserData = JSON.parse(Cookies.get("userSession"))
   const userEmail = UserData.data.user.email
-  const {user} = useAuth()
-  const [imageURL, setImageUrl] = useState('')
+  const [petData, setPetData] = useState(null);
+  const [userData, setUserData] = useState(null)
+ 
+  useEffect(() => {
+    // Function to fetch pet data by ID
+    async function fetchPetData() {
+      try {
+        // Query the 'pets' table in your Supabase database
+        const { data, error } = await supabase
+          .from('Pets')
+          .select('Shelter')
+          .eq('id', petId)
+          .single(); // Use .single() when you expect only one result
+
+        if (error) {
+          console.error('Error fetching pet:', error);
+          return;
+        }
+
+        // Set the pet data if found
+        if (data) {
+          setPetData(data.Shelter);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Fetch pet data when the component mounts
+    fetchPetData();
+  }, [petId]);
+  
 
 
 
@@ -175,6 +205,7 @@ const ApplicationForm = () => {
           q_is_supported: payload.isFamilySupported,
           q_have_other_pets: payload.haveOtherPets,
           q_house_pic: publicUrl.publicUrl,
+          shelter_from: petData
         })
         .select();
 
@@ -200,7 +231,7 @@ const ApplicationForm = () => {
               <div className="card-body">
                 <h1 className="text-center">Adoption Form</h1>
                 <hr className="w-100" />
-                <AdoptionForm parentCallback={handleCallback} petId={petId}></AdoptionForm>
+                <AdoptionForm parentCallback={handleCallback} petId={petId} userData={userData}></AdoptionForm>
               </div>
             </div>
           </div>

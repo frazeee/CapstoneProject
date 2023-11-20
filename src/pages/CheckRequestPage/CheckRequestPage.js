@@ -47,8 +47,12 @@ function CheckRequestPage() {
     }
   };
 
-  const handleCheckPictures = (housePicture) => {
+  console.log(requestDetails.q_house_pic)
 
+  const handleCheckPictures = () => {
+    const url = requestDetails[0].q_house_pic
+    // Open the URL in a new tab
+    window.open(url, '_blank');
   };
 
   const handleStatusUpdate = async () => {
@@ -205,7 +209,7 @@ function CheckRequestPage() {
                       </select>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <button type="button" className="btn btn-lg me-3" onClick={handleCheckPictures(data.q_house_pic)} >Check Pictures</button>
+                        <button type="button" className="btn btn-lg me-3" onClick={handleCheckPictures} >Check Pictures</button>
                         <CheckApplicationFormModal requestDetails={requestDetails[0]}/>
                         <button type="button" className="btn btn-lg ms-3" onClick={handleStatusUpdate}>Update Status</button>
                     </div>
