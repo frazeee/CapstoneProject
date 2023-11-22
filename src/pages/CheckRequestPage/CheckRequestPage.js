@@ -127,12 +127,12 @@ function CheckRequestPage() {
       text = text.replace('[User]', requestEmail);  
       text = text.replace('[Your Organization]', 'BPUAdopt');  
   
-      await axios.post('bpuadopt.vercel.app/update-process', {
+      await axios.post('https://bpuadopt.vercel.app/update-process', {
         to: requestEmail, 
         subject,
         text, 
       });
-  
+      
       console.log('Process update email sent successfully');
     } catch (error) {
       console.error('Error sending process update email:', error);
