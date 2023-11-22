@@ -6,8 +6,12 @@ require("dotenv").config();
 
 const app = express();
 
-// Enable CORS
-app.use(cors());
+const corsOptions = {
+    origin: 'https://bpuadopt.vercel.app',
+    optionsSuccessStatus: 200,
+  };
+
+app.use(cors(corsOptions));
 
 // Body parsing middleware
 app.use(bodyParser.json());
