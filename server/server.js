@@ -29,7 +29,11 @@ app.post('/update-process', async (req, res) => {
         user: emailUser,
         pass: emailPass,
     },
-  });
+    tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  
 
   // Define the email options
   const mailOptions = {

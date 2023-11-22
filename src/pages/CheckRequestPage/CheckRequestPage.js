@@ -127,7 +127,7 @@ function CheckRequestPage() {
       text = text.replace('[User]', requestEmail);  
       text = text.replace('[Your Organization]', 'BPUAdopt');  
   
-      await axios.post('https://bpuadopt.vercel.app/update-process', {
+      await axios.post('bpuadopt.vercel.app/update-process', {
         to: requestEmail, 
         subject,
         text, 
