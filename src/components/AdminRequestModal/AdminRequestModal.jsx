@@ -69,7 +69,6 @@ function AdminRequestModal({shelterName}) {
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">Id</th>
                     <th scope="col">Pet Name</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
@@ -83,7 +82,6 @@ function AdminRequestModal({shelterName}) {
                 <tbody>
                   {requestList.map((req) => (
                     <tr>
-                      <th scope="row">{req.id}</th>
                       <td>{req.Pets.pet_name}</td>
                       <td>{req.first_name}</td>
                       <td>{req.last_name}</td>
@@ -93,7 +91,8 @@ function AdminRequestModal({shelterName}) {
                         req.adoption_status === 'For Verification' ? 'text-bg-primary' :
                         req.adoption_status === 'For Interview' ? 'text-bg-primary' :
                         req.adoption_status === 'Interview Done' ? 'text-light text-bg-info' :
-                        req.adoption_status === 'Approved' && 'text-bg-success'
+                        req.adoption_status === 'Approved' ? 'text-bg-success':
+                        req.adoption_status === 'Rejected' && 'text-bg-danger'
                       }`}>
                         {req.adoption_status}
                       </td>

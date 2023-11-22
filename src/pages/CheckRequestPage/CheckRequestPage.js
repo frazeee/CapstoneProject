@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../components/client";
+import axios from "axios";
 import "./CheckRequestPage.css";
 import { BeatLoader } from "react-spinners";
 import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
+
 
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
@@ -11,6 +13,7 @@ function CheckRequestPage() {
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [requestEmail, setRequestEmail] = useState('');
   const currentUrl = window.location.href;
 
 
@@ -40,6 +43,7 @@ function CheckRequestPage() {
       console.log(data);
       setRequestDetails(data);
       setSelectedStatus(data.adoption_status)
+      setRequestEmail(data[0].email)
     } catch (error) {
       console.error("An unexpected error occurred:", error);
     } finally {
@@ -47,13 +51,97 @@ function CheckRequestPage() {
     }
   };
 
-  console.log(requestDetails.q_house_pic)
+
 
   const handleCheckPictures = () => {
     const url = requestDetails[0].q_house_pic
     // Open the URL in a new tab
     window.open(url, '_blank');
   };
+
+  const sendProcessUpdateEmail = async (status) => {
+    try {
+      setLoading(true)
+      let subject, text;
+  
+      // Determine email content based on the status
+      switch (status) {
+        case 'For Verification':
+          subject = 'Adoption Process Update: Document Verification';
+          text = `Dear [User],
+  
+  Your adoption process is now at the "For Verification" stage. The respective shelter will review your submitted documents to ensure everything is in order. Thank you for your patience and cooperation.
+  
+  Best regards,
+  [Your Organization]`;
+          break;
+        
+        case 'For Interview':
+          subject = 'Adoption Process Update: Interview Scheduled';
+          text = `Dear [User],
+  
+  Exciting news! Your adoption process has progressed to the "For Interview" stage. The respective shelter will schedule an interview with you to discuss the adoption process further. Please let them know your availability.
+  
+  Best regards,
+  [Your Organization]`;
+          break;
+        
+        case 'Interview Done':
+          subject = 'Adoption Process Update: Interview Completed';
+          text = `Dear [User],
+  
+  Great news! Your interview for the adoption process has been successfully completed. We appreciate your time and effort in the process. Our team & the shelter will now review the interview results.
+  
+  Best regards,
+  [Your Organization]`;
+          break;
+  
+        case 'Approved':
+          subject = 'Adoption Process Update: Approval Granted';
+          text = `Dear [User],
+  
+  Congratulations! Your adoption process has been approved. We thank you for using the website as a gateway towards responsible adoption! The shelter will provide further instructions on the next steps.
+  
+  Best regards,
+  [Your Organization]`;
+          break;
+  
+        case 'Rejected':
+          subject = 'Adoption Process Update: Regrettably Rejected';
+          text = `Dear [User],
+  
+  We regret to inform you that your adoption request has been rejected.
+  For reasons: 
+  
+  We appreciate your interest, and we understand that this news may be disappointing. If you have any questions or concerns, please don't hesitate to reach out to us.
+  
+  Best regards,
+  [Your Organization]`;
+          break;
+  
+        default:
+          throw new Error('Invalid status');
+      }
+  
+  
+      text = text.replace('[User]', requestEmail);  
+      text = text.replace('[Your Organization]', 'BPUAdopt');  
+  
+      await axios.post('http://bpuadopt.vercel.app/update-process', {
+        to: requestEmail, 
+        subject,
+        text, 
+      });
+  
+      console.log('Process update email sent successfully');
+    } catch (error) {
+      console.error('Error sending process update email:', error);
+    }
+    finally{
+      setLoading(false)
+    }
+  };
+  
 
   const handleStatusUpdate = async () => {
     try {
@@ -63,23 +151,22 @@ function CheckRequestPage() {
         .update({ adoption_status: selectedStatus })
         .eq('id', dataId)
         .select();
-        if (data) {
-            setModalMessage('Record updated successfully!');
-          } else if (error) {
-            throw new Error('Update failed');
-          }
-    
-        } catch (error) {
-          console.error('Error updating status:', error);
-          setModalMessage('Error updating record.');
-          setShowModal(true);
-    
-        } finally {
-          // Set loading back to false regardless of success or failure
-          setLoading(false);
-          setShowModal(true);
-        }
+  
+      await sendProcessUpdateEmail(selectedStatus);
+  
+      if (data) {
+        setModalMessage(`Record updated successfully! An email has been sent to ${requestEmail}`);
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      setModalMessage('Error updating record.');
+      setShowModal(true);
+    } finally {
+      setLoading(false);
+      setShowModal(true);
+    }
   };
+  
 
   if (loading) {
     <>
@@ -92,7 +179,6 @@ function CheckRequestPage() {
           className="spinner"
         />
       </div>
-      <h5 className="text-warning text-center">Fetching User Data...</h5>
     </>;
   }
 
@@ -206,42 +292,16 @@ function CheckRequestPage() {
                         <option value="For Interview">For Interview</option>
                         <option value="Interview Done">Interview Done</option>
                         <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
                       </select>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <button type="button" className="btn btn-lg me-3" onClick={handleCheckPictures} >Check Pictures</button>
                         <CheckApplicationFormModal requestDetails={requestDetails[0]}/>
+                        <button type="button" className="btn btn-lg ms-3" onClick={handleCheckPictures} >Check Pictures</button>
                         <button type="button" className="btn btn-lg ms-3" onClick={handleStatusUpdate}>Update Status</button>
                     </div>
                   </div>
                 </div>
-                {/* <div className="row mt-2">
-                  <div className="col-xl-6">
-                    <h3 className="text-primary">Alternate Contact</h3>
-                    <div className="form-group">
-                      <label className="fs-5">
-                        <strong>Contact Name:</strong>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={`${data.ac_last_name}, ${data.ac_first_name}`}
-                        readOnly
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="fs-5">
-                        <strong>Phone Number:</strong>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={`${data.ac_phone_number}`}
-                        readOnly
-                      />
-                    </div>
-                  </div>
-                </div> */}
               </>
             ))}
           </div>
