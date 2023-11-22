@@ -135,7 +135,9 @@ function Pets({ user }) {
             Dogs
           </button>
 
-          <div class="form-floating w-50"> 
+          
+
+          <div className="form-floating w-50"> 
             <select className="form-select" id="genderSelect" value={activeGender} onChange={(event) => handleGenderChange(event.target.value)}>
               <option value="">All Genders</option>
               <option value="Male">Male</option>
@@ -144,7 +146,7 @@ function Pets({ user }) {
             <label for="genderSelect">Gender</label>
           </div>
 
-          <div class="form-floating w-50"> 
+          <div className="form-floating w-50"> 
             <select
               className="form-select"
               value={activeAge}
@@ -160,7 +162,7 @@ function Pets({ user }) {
             <label for="ageSelect">Age</label>
           </div>
 
-          <div class="form-floating w-50"> 
+          <div className="form-floating w-50"> 
             <select
               className="form-select"
               value={activeShelter}
