@@ -20,7 +20,7 @@ const emailPass = process.env.EMAIL_PASS;
 // Define your email sending endpoint
 app.post('/update-process', async (req, res) => {
     const { to, subject, text } = req.body;
-    console.log(emailUser)
+
 
   // Create a nodemailer transporter
   const transporter = nodemailer.createTransport({
@@ -53,8 +53,7 @@ app.post('/update-process', async (req, res) => {
   }
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
+const PORT =  5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
