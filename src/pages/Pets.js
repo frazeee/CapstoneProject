@@ -49,14 +49,22 @@ function Pets({ user }) {
   const uniqueAges = Array.from(new Set(data.map((cardItem) => cardItem.age))).sort((a, b) => a - b);
   const uniqueShelters = Array.from(new Set(data.map((cardItem) => cardItem.Shelter)));
 
-  const filteredCardItems = data.filter((cardItem) => {
-    const isMatchingPetType = activeButton === 'All' || cardItem.pet_type === activeButton;
-  
-    return isMatchingPetType &&
-      (!activeGender || cardItem.gender === activeGender) &&
-      (!activeAge || cardItem.age.toString() === activeAge) &&
-      (!activeShelter || cardItem.Shelter.toString() === activeShelter);
+   const filteredCardItems = data.filter((cardItem) => {
+    if (activeButton === 'All' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+      return true;
+    }
+
+    if (activeButton === 'Cats' && cardItem.pet_type === 'Cat' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+      return true;
+    }
+
+    if (activeButton === 'Dogs' && cardItem.pet_type === 'Dog' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+      return true;
+    }
+
+    return false;
   });
+  
 
   return (
     <>
