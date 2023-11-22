@@ -26,20 +26,36 @@ function Pets({ user }) {
   }, []);
 
   const [activeButton, setActiveButton] = useState("All");
+  const [activeAge, setActiveAge] = useState("");
+  const [activeShelter, setActiveShelter] = useState("");
+  const [activeGender, setActiveGender] = useState("");
 
   const handleButtonClick = (buttonText) => {
     setActiveButton(buttonText);
   };
+  
+  const handleGenderChange = (selectedGender) => {
+    setActiveGender(selectedGender);
+  };
+
+  const handleAgeChange = (selectedAge) => {
+    setActiveAge(selectedAge);
+  };
+
+  const handleShelterChange = (selectedShelter) => {
+    setActiveShelter(selectedShelter);
+  };
+
+  const uniqueAges = Array.from(new Set(data.map((cardItem) => cardItem.age))).sort((a, b) => a - b);
+  const uniqueShelters = Array.from(new Set(data.map((cardItem) => cardItem.Shelter)));
 
   const filteredCardItems = data.filter((cardItem) => {
-    if (activeButton === "All") {
-      return true;
-    } else if (activeButton === "Dogs" && cardItem.pet_type === "Dog") {
-      return true;
-    } else if (activeButton === "Cats" && cardItem.pet_type === "Cat") {
-      return true;
-    }
-    return false;
+    const isMatchingPetType = activeButton === 'All' || cardItem.pet_type === activeButton;
+  
+    return isMatchingPetType &&
+      (!activeGender || cardItem.gender === activeGender) &&
+      (!activeAge || cardItem.age.toString() === activeAge) &&
+      (!activeShelter || cardItem.Shelter.toString() === activeShelter);
   });
 
   return (
@@ -110,7 +126,42 @@ function Pets({ user }) {
           >
             Dogs
           </button>
-        </div>
+
+            <select className="form-select" value={activeGender} onChange={(event) => handleGenderChange(event.target.value)}>
+              <option value="">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+
+            <select
+              className="form-select"
+              value={activeAge}
+              onChange={(event) => handleAgeChange(event.target.value)}
+            >
+              <option value="">All Ages</option>
+              {uniqueAges.map((age) => (
+                <option key={age} value={age.toString()}>
+                  {`${age} ${age === 1 ? 'year' : 'years'} old`}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="form-select"
+              value={activeShelter}
+              onChange={(event) => handleShelterChange(event.target.value)}
+            >
+              <option value="">All Shelters</option>
+              {uniqueShelters.map((shelter) => (
+                <option key={shelter} value={shelter}>
+                  {shelter}
+                </option>
+              ))}
+          </select>
+                  </div>
+                  
+
+
           <hr className=" mt-0 mb-3"/>
         
 
@@ -120,10 +171,6 @@ function Pets({ user }) {
               key={cardItem.id}
               className="container col-xl-3 col-lg-6 col-md-6 col-sm-12 pb-4 d-flex flex-column justify-content-center align-items-center"
             >
-              <Link
-                to={`/petPage/${cardItem.id}`}
-                className="text-decoration-none"
-              >
                 <div className="card shadow on-hover">
                   <div className="card-image-top">
                     <img src={cardItem.image_url1} alt={cardItem.pet_name} />
@@ -133,17 +180,17 @@ function Pets({ user }) {
                   </div>
                   <div className="card-body">
                     <p>
-                      Age: {cardItem.age}{" "}
+                      <strong>  Age: </strong> {cardItem.age}{" "}
                       {cardItem.gender === "Male" ? (
                         <i className="icon bi bi-gender-male "></i>
                       ) : (
                         <i className="icon bi bi-gender-female"></i>
                       )}{" "}
                     </p>
-                    <p>Personality: {cardItem.pet_personality}</p>
+                    <p><strong>Personality:</strong> {cardItem.pet_personality}</p>
+                    <p><strong>Shelter:</strong> {cardItem.Shelter}</p>
                   </div>
                 </div>
-              </Link>
             </div>
           ))}
         </div>
