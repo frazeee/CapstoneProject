@@ -11,7 +11,7 @@ const corsOptions = {
     optionsSuccessStatus: 200,
   };
 
-app.use(cors(corsOptions));
+app.options('/update-process', cors(corsOptions));
 
 // Body parsing middleware
 app.use(bodyParser.json());
