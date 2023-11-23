@@ -1,3 +1,5 @@
+// api/server.js
+
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -7,10 +9,7 @@ require('dotenv').config();
 const app = express();
 
 // Enable CORS
-app.use(cors({
-  origin: '*',
-}));
-
+app.use(cors());
 
 // Body parsing middleware
 app.use(bodyParser.json());
@@ -20,38 +19,38 @@ const emailPass = process.env.EMAIL_PASS;
 
 // Define your email sending endpoint
 app.post('/update-process', async (req, res) => {
-  const { to, subject, text } = req.body;
+  if (req.method === 'POST') {
+    const { to, subject, text } = req.body;
 
-  // Create a nodemailer transporter
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    port: 465,
-    auth: {
-      user: emailUser,
-      pass: emailPass,
-    },
-  });
+    // Create a nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+    });
 
-  // Define the email options
-  const mailOptions = {
-    from: 'kyleeeee09@gmail.com',
-    to,
-    subject,
-    text,
-  };
+    // Define the email options
+    const mailOptions = {
+      from: 'kyleeeee09@gmail.com',
+      to,
+      subject,
+      text,
+    };
 
-  try {
-    // Send the email
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Email sent successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    try {
+      // Send the email
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Email sent successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  } else {
+    res.status(405).send('Method Not Allowed');
   }
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Export the Express app for Vercel
+module.exports = app;
