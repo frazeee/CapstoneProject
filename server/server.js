@@ -6,12 +6,12 @@ require("dotenv").config();
 
 const app = express();
 
-const corsOptions = {
-    origin: 'https://bpuadopt.vercel.app',
-    optionsSuccessStatus: 200,
-  };
-
-app.options('/update-process', cors(corsOptions));
+// Enable CORS
+app.use(cors(
+  {
+    origin: 'https://bpuadopt.vercel.app'
+  }
+));
 
 // Body parsing middleware
 app.use(bodyParser.json());
@@ -24,7 +24,7 @@ const emailPass = process.env.EMAIL_PASS;
 // Define your email sending endpoint
 app.post('/update-process', async (req, res) => {
     const { to, subject, text } = req.body;
-
+    console.log(emailUser)
 
   // Create a nodemailer transporter
   const transporter = nodemailer.createTransport({
@@ -33,11 +33,7 @@ app.post('/update-process', async (req, res) => {
         user: emailUser,
         pass: emailPass,
     },
-    tls: {
-        rejectUnauthorized: false,
-      },
-    });
-  
+  });
 
   // Define the email options
   const mailOptions = {
@@ -57,7 +53,8 @@ app.post('/update-process', async (req, res) => {
   }
 });
 
-const PORT =  5000;
+// Start the server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
