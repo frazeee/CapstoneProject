@@ -5,7 +5,7 @@ import "./CheckRequestPage.css";
 import { BeatLoader } from "react-spinners";
 import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
-
+import emailjs from 'emailjs-com';
 
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
@@ -40,7 +40,6 @@ function CheckRequestPage() {
         )
         .eq("id", dataId);
 
-      console.log(data);
       setRequestDetails(data);
       setSelectedStatus(data.adoption_status)
       setRequestEmail(data[0].email)
@@ -53,92 +52,60 @@ function CheckRequestPage() {
 
 
 
+
   const handleCheckPictures = () => {
     const url = requestDetails[0].q_house_pic
     // Open the URL in a new tab
     window.open(url, '_blank');
   };
 
-  const sendProcessUpdateEmail = async (status) => {
+  const sendProcessUpdateEmail = async (status, requestEmail) => {
     try {
-      setLoading(true)
-      let subject, text;
+      setLoading(true);
+      let templateId;
   
-      // Determine email content based on the status
+      // Determine email template based on the status
       switch (status) {
         case 'For Verification':
-          subject = 'Adoption Process Update: Document Verification';
-          text = `Dear [User],
-  
-  Your adoption process is now at the "For Verification" stage. The respective shelter will review your submitted documents to ensure everything is in order. Thank you for your patience and cooperation.
-  
-  Best regards,
-  [Your Organization]`;
+          templateId = 'template_1izgsbl';
           break;
-        
+  
         case 'For Interview':
-          subject = 'Adoption Process Update: Interview Scheduled';
-          text = `Dear [User],
-  
-  Exciting news! Your adoption process has progressed to the "For Interview" stage. The respective shelter will schedule an interview with you to discuss the adoption process further. Please let them know your availability.
-  
-  Best regards,
-  [Your Organization]`;
+          templateId = 'template_interview';
           break;
-        
+  
         case 'Interview Done':
-          subject = 'Adoption Process Update: Interview Completed';
-          text = `Dear [User],
-  
-  Great news! Your interview for the adoption process has been successfully completed. We appreciate your time and effort in the process. Our team & the shelter will now review the interview results.
-  
-  Best regards,
-  [Your Organization]`;
+          templateId = 'template_interview_done';
           break;
   
         case 'Approved':
-          subject = 'Adoption Process Update: Approval Granted';
-          text = `Dear [User],
-  
-  Congratulations! Your adoption process has been approved. We thank you for using the website as a gateway towards responsible adoption! The shelter will provide further instructions on the next steps.
-  
-  Best regards,
-  [Your Organization]`;
+          templateId = 'template_approval';
           break;
   
         case 'Rejected':
-          subject = 'Adoption Process Update: Regrettably Rejected';
-          text = `Dear [User],
-  
-  We regret to inform you that your adoption request has been rejected.
-  For reasons: 
-  
-  We appreciate your interest, and we understand that this news may be disappointing. If you have any questions or concerns, please don't hesitate to reach out to us.
-  
-  Best regards,
-  [Your Organization]`;
+          templateId = 'template_rejection';
           break;
   
         default:
           throw new Error('Invalid status');
       }
   
+
+      const templateParams = {
+        to_email: requestEmail,
+        status,
+        user: requestDetails.first_name,
+        organization: 'BPUAdopt',
+      };
   
-      text = text.replace('[User]', requestEmail);  
-      text = text.replace('[Your Organization]', 'BPUAdopt');  
+      // Send email using Email.js
+      await emailjs.send('service_8r6eaxe', templateId, templateParams, '-fD_Lzps7ypbyVDAa');
   
-      await axios.post('https://bpuadopt.vercel.app/update-process', {
-        to: requestEmail, 
-        subject,
-        text, 
-      });
-      
       console.log('Process update email sent successfully');
     } catch (error) {
       console.error('Error sending process update email:', error);
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -152,7 +119,7 @@ function CheckRequestPage() {
         .eq('id', dataId)
         .select();
   
-      await sendProcessUpdateEmail(selectedStatus);
+      await sendProcessUpdateEmail(selectedStatus, requestEmail);
   
       if (data) {
         setModalMessage(`Record updated successfully! An email has been sent to ${requestEmail}`);
