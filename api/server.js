@@ -9,7 +9,8 @@ const app = express();
 // Enable CORS
 app.use(cors(
   {
-    origin: 'https://bpuadopt.vercel.app'
+    origin: 'https://bpuadopt.vercel.app',
+    methods: ['GET', 'POST'],
   }
 ));
 
