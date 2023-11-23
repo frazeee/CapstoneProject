@@ -18,8 +18,6 @@
   ],
   "functions": {
     "api/server.js": {
-      "runtime": "nodejs14.x",
-      "methods": ["POST"]
     }
   }
 }
