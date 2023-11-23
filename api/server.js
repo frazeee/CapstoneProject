@@ -19,7 +19,7 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 
 // Define your email sending endpoint
-app.post('/api/update-process', async (req, res) => {
+app.post('/update-process', async (req, res) => {
   const { to, subject, text } = req.body;
 
   // Create a nodemailer transporter
