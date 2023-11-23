@@ -1,9 +1,10 @@
 
 {
-  "functions": {
-    "api/server.js": {
-      "runtime": "nodejs14.x",
-      "methods": ["POST"]
+  "routes": [
+    {
+      "src": "/api/update-process",
+      "methods": ["POST"],
+      "dest": "/api/server.js"
     }
-  }
+  ]
 }
