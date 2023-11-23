@@ -25,6 +25,7 @@ app.post('/update-process', async (req, res) => {
   // Create a nodemailer transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
+    port: 465,
     auth: {
       user: emailUser,
       pass: emailPass,
