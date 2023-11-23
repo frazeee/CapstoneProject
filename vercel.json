@@ -15,9 +15,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "api/server.js": {
-    }
-  }
+  ]
 }
