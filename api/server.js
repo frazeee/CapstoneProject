@@ -2,37 +2,29 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require("dotenv").config();
+require('dotenv').config();
 
 const app = express();
 
 // Enable CORS
-app.use(cors(
-  {
-    origin: 'https://bpuadopt.vercel.app',
-    methods: ['GET', 'POST'],
-  }
-));
+app.use(cors());
 
 // Body parsing middleware
 app.use(bodyParser.json());
 
-
 const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 
-
 // Define your email sending endpoint
-app.post('/update-process', async (req, res) => {
-    const { to, subject, text } = req.body;
-    console.log(emailUser)
+app.post('/api/update-process', async (req, res) => {
+  const { to, subject, text } = req.body;
 
   // Create a nodemailer transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: emailUser,
-        pass: emailPass,
+      user: emailUser,
+      pass: emailPass,
     },
   });
 
