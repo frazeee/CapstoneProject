@@ -43,7 +43,7 @@ hr{
 
 @media (max-width: 768px) {
     .left-panel{
-        min-height: 100vh;
+        min-height: 50vh;
     }
     .left-panel img {
         height: auto;

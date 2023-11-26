@@ -20,9 +20,10 @@ const EmailForm = () => {
       to_email: formData.toEmail,
       from_name: formData.fromName,
       message: formData.message,
+      subject: "Test Subject"
     };
 
-    emailjs.send('service_8r6eaxe', 'template_z1bvfv4', templateParams, '-fD_Lzps7ypbyVDAa')
+    emailjs.send('service_8r6eaxe', 'template_email', templateParams, '-fD_Lzps7ypbyVDAa')
       .then((response) => {
         console.log('Email sent successfully:', response);
         // You can update state or show a success message to the user here

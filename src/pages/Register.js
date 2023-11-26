@@ -13,11 +13,13 @@ const Register = () => {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     phoneNumber: "",
     address: "",
   });
 
   const [loading, setLoading] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   function handleChange(event) {
     console.log(formData);
@@ -49,7 +51,13 @@ const Register = () => {
       const emailExists = await checkEmailExists(formData.email);
       console.log(emailExists);
       if (emailExists) {
-        alert("This email has already been registered");
+        setAlertMessage("This email has already been registered");
+        setLoading(false);
+        return;
+      }
+
+      if (formData.password !== formData.confirmPassword) {
+        setAlertMessage("Password and confirm password do not match");
         setLoading(false);
         return;
       }
@@ -115,29 +123,31 @@ const Register = () => {
           <hr className="mb-3 w-100" />
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="firstName"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="lastName"
-                onChange={handleChange}
-                required
-              />
+            <div className="row">
+                <div className="mb-3 col-md-6">
+                  <label htmlFor="firstName" className="form-label">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="firstName"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3 col-md-6">
+                  <label htmlFor="lastName" className="form-label">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="lastName"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
@@ -151,17 +161,31 @@ const Register = () => {
                 required
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="exampleInputPassword1" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={handleChange}
-                required
-              />
+            <div className="row"> 
+              <div className="mb-3 col-md-6">
+                <label htmlFor="exampleInputPassword1" className="form-label">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3 col-md-6">
+                <label htmlFor="exampleInputPassword1" className="form-label">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
             <div className="mb-3">
               <label htmlFor="phoneNumber" className="form-label">
@@ -187,6 +211,12 @@ const Register = () => {
                 required
               />
             </div>
+
+            {alertMessage && (
+              <div className="alert alert-danger" role="alert">
+                {alertMessage}
+              </div>
+            )}
 
             <button
               type="submit"

@@ -7,6 +7,7 @@ import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
 import emailjs from 'emailjs-com';
 
+
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,9 @@ function CheckRequestPage() {
   const [modalMessage, setModalMessage] = useState('');
   const [requestEmail, setRequestEmail] = useState('');
   const currentUrl = window.location.href;
+
+  const serviceID = process.env.REACT_APP_SERVICE_ID;
+  const userID = process.env.REACT_APP_USER_ID;
 
 
   // Split the URL by slashes and get the last part
@@ -52,7 +56,6 @@ function CheckRequestPage() {
 
 
 
-
   const handleCheckPictures = () => {
     const url = requestDetails[0].q_house_pic
     // Open the URL in a new tab
@@ -62,29 +65,64 @@ function CheckRequestPage() {
   const sendProcessUpdateEmail = async (status, requestEmail) => {
     try {
       setLoading(true);
-      let templateId;
+      let templateMessage;
   
       // Determine email template based on the status
       switch (status) {
         case 'For Verification':
-          templateId = 'template_1izgsbl';
+          templateMessage = `Hello ${requestDetails[0].first_name},
+
+          Your adoption process for <strong> ${requestDetails[0].Pets.pet_name} </strong> is now at the  <strong> "For Verification" </strong> stage. The respective shelter will review your submitted documents to ensure everything is in order.
+          
+          Thank you for your patience and cooperation.
+          
+          Best regards,
+          BPUAdopt Team`
           break;
   
-        case 'For Interview':
-          templateId = 'template_interview';
-          break;
+          case 'For Interview':
+            templateMessage = `Hello ${requestDetails[0].first_name},
+
+            Your adoption process for ${requestDetails[0].Pets.pet_name} is now at the "For Interview" stage. We will be conducting an interview as part of the adoption process. Please be prepared for a discussion about your suitability as a pet owner.
+
+            Thank you for your cooperation.
+
+            Best regards,
+            BPUAdopt Team`;
+            break;
+
+          case 'Interview Done':
+            templateMessage = `Hello ${requestDetails[0].first_name},
+          
+            Congratulations! Your interview for the adoption of ${requestDetails[0].Pets.pet_name} is complete. We appreciate your time and cooperation throughout the process.
+          
+            The shelter will communicate with you regarding next steps in the adoption process.
+          
+            Best regards,
+            BPUAdopt Team`;
+            break;
   
-        case 'Interview Done':
-          templateId = 'template_interview_done';
-          break;
+            case 'Approved':
+              templateMessage = `Hello ${requestDetails[0].first_name},
+            
+              Great news! Your adoption request for ${requestDetails[0].Pets.pet_name} has been Approved. We are delighted to welcome you and your new furry friend to the BPUAdopt family!
+            
+              Further instructions for completing the adoption will be provided shortly.
+            
+              Best regards,
+              BPUAdopt Team`;
+              break;
   
-        case 'Approved':
-          templateId = 'template_approval';
-          break;
-  
-        case 'Rejected':
-          templateId = 'template_rejection';
-          break;
+              case 'Rejected':
+                templateMessage = `Hello ${requestDetails[0].first_name},
+              
+                We regret to inform you that your adoption request for ${requestDetails[0].Pets.pet_name} has been Rejected. We appreciate your interest in adopting from us and encourage you to consider other pets in the future.
+              
+                If you have any questions or concerns, feel free to reach out to us.
+              
+                Best regards,
+                BPUAdopt Team`;
+                break;
   
         default:
           throw new Error('Invalid status');
@@ -93,13 +131,14 @@ function CheckRequestPage() {
 
       const templateParams = {
         to_email: requestEmail,
-        status,
+        subject: selectedStatus,
+        message: templateMessage,
         user: requestDetails.first_name,
         organization: 'BPUAdopt',
       };
   
       // Send email using Email.js
-      await emailjs.send('service_8r6eaxe', templateId, templateParams, '-fD_Lzps7ypbyVDAa');
+      await emailjs.send('service_8r6eaxe', 'template_email', templateParams, '-fD_Lzps7ypbyVDAa');
   
       console.log('Process update email sent successfully');
     } catch (error) {
