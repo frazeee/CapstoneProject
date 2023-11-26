@@ -72,7 +72,7 @@ function CheckRequestPage() {
         case 'For Verification':
           templateMessage = `Hello ${requestDetails[0].first_name},
 
-          Your adoption process for <strong> ${requestDetails[0].Pets.pet_name} </strong> is now at the  <strong> "For Verification" </strong> stage. The respective shelter will review your submitted documents to ensure everything is in order.
+          Your adoption process for ${requestDetails[0].Pets.pet_name}  is now at the  "For Verification" stage. The respective shelter will review your submitted documents to ensure everything is in order.
           
           Thank you for your patience and cooperation.
           
