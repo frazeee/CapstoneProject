@@ -22,7 +22,7 @@ import ShelterSignup from "./pages/ShelterSignupPage/ShelterSignup";
 import CheckRequestPage from "./pages/CheckRequestPage/CheckRequestPage";
 import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import ShelterRegister from "./pages/ShelterRegisterPage/ShelterRegisterPage";
-import EmailForm from "./pages/EmailJSTest";
+
 
 
 function App() {
@@ -62,7 +62,6 @@ function App() {
             <Route path="/ShelterSignup" element={<ShelterSignup/>}/>
             <Route path="/account/forgotPassword" element={<ForgotPassword/>}/>
             <Route path="/ShelterRegister" element={<ShelterRegister/>}/>
-            <Route path="/EmailTest" element={<EmailForm/>}/>
           </Routes>
           </AuthProvider>
         </Router>

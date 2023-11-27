@@ -22,62 +22,77 @@ const Register = () => {
   const [alertMessage, setAlertMessage] = useState(null);
 
   function handleChange(event) {
+    const { name, value } = event.target;
+  
     console.log(formData);
+  
     setFormData((prevFormData) => {
-      return {
+      const updatedFormData = {
         ...prevFormData,
-        [event.target.name]: event.target.value,
+        [name]: value,
       };
+  
+      // If the changed field is the password, also update the confirmPassword validation
+      if (name === "password") {
+        handlePasswordChange(value, updatedFormData.confirmPassword);
+      } else if (name === "confirmPassword") {
+        handlePasswordChange(updatedFormData.password, value);
+      }
+  
+      return updatedFormData;
     });
   }
+  
+  function handlePasswordChange(password, confirmPassword) {
+    if (password !== confirmPassword) {
+      setAlertMessage("Password and confirm password do not match");
+    } else {
+      setAlertMessage("");
+    }
+  }
 
-  const checkEmailExists = async (email) => {
-    const { data, error } = await supabase
-      .from("Users")
-      .select("email")
-      .eq("email", email)
-
+  async function checkEmailExists(email) {
+    const { data, error } = await supabase.from("Users").select("email").eq("email", email);
     if (error) {
+      console.error(error);
       throw error;
     }
-
-    return data.length > 0;
-  };
+    return data && data.length > 0;
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setLoading(true);
     try {
+      setLoading(true);
+  
       const emailExists = await checkEmailExists(formData.email);
       console.log(emailExists);
       if (emailExists) {
         setAlertMessage("This email has already been registered");
-        setLoading(false);
         return;
       }
-
+  
       if (formData.password !== formData.confirmPassword) {
         setAlertMessage("Password and confirm password do not match");
-        setLoading(false);
         return;
       }
-
-      const { user, session, error } = await supabase.auth.signUp({
+  
+      const { user, session, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
           data: {
             firstName: formData.firstName,
             lastName: formData.lastName,
-            redirectTo: '/login'
           },
         },
       });
-
-      if (error) {
-        console.log(error)
-        throw error;
+  
+      if (signUpError) {
+        console.error(signUpError);
+        throw signUpError;
       }
+  
       const { data, error: insertError } = await supabase.from("Users").insert([
         {
           email: formData.email,
@@ -87,20 +102,30 @@ const Register = () => {
           phone: formData.phoneNumber,
         },
       ]);
-
+  
       if (insertError) {
+        console.error(insertError);
         throw insertError;
       }
-
+  
       alert("Check your email for a verification link!");
       navigate("/Login");
     } catch (error) {
       alert(error.error_description || error.message);
     } finally {
       setLoading(false);
-      setFormData("")
+      setFormData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        firstName: "",
+        lastName: "",
+        address: "",
+        phoneNumber: "",
+      });
     }
   }
+  
 
   if (loading) {
     return (
@@ -181,7 +206,7 @@ const Register = () => {
                 <input
                   type="password"
                   className="form-control"
-                  name="password"
+                  name="confirmPassword"
                   onChange={handleChange}
                   required
                 />

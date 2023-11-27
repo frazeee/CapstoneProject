@@ -115,70 +115,82 @@ function Pets({ user }) {
       </div>
 
       <div className="container-fluid pt-3 padding-bottom-mobile">
-        <div className="d-flex justify-content-center align-items-center pb-3 filter-buttons">
-          <button
-            className={`btn ${activeButton === "All" ? "active" : ""} mx-3`}
-            onClick={() => handleButtonClick("All")}
-          >
-            All
-          </button>
-          <button
-            className={`btn ${activeButton === "Cats" ? "active" : ""}  mx-3`}
-            onClick={() => handleButtonClick("Cats")}
-          >
-            Cats
-          </button>
-          <button
-            className={`btn ${activeButton === "Dogs" ? "active" : ""}  mx-3`}
-            onClick={() => handleButtonClick("Dogs")}
-          >
-            Dogs
-          </button>
+  {/* First row with buttons */}
+  <div className="d-flex justify-content-center align-items-center pb-3 filter-buttons">
+    <button
+      className={`btn ${activeButton === "All" ? "active" : ""} mx-3`}
+      onClick={() => handleButtonClick("All")}
+    >
+      All
+    </button>
+    <button
+      className={`btn ${activeButton === "Cats" ? "active" : ""}  mx-3`}
+      onClick={() => handleButtonClick("Cats")}
+    >
+      Cats
+    </button>
+    <button
+      className={`btn ${activeButton === "Dogs" ? "active" : ""}  mx-3`}
+      onClick={() => handleButtonClick("Dogs")}
+    >
+      Dogs
+    </button>
+  </div>
 
-          
+  {/* Second row with dropdown lists */}
+  <div className="row mb-3 justify-content-center">
+    <div className="col-lg-4 mb-1">
+      <div className="form-floating w-100">
+        <select
+          className="form-select"
+          id="genderSelect"
+          value={activeGender}
+          onChange={(event) => handleGenderChange(event.target.value)}
+        >
+          <option value="">All Genders</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <label htmlFor="genderSelect">Gender</label>
+      </div>
+    </div>
 
-          <div className="form-floating w-50"> 
-            <select className="form-select" id="genderSelect" value={activeGender} onChange={(event) => handleGenderChange(event.target.value)}>
-              <option value="">All Genders</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <label for="genderSelect">Gender</label>
-          </div>
+    <div className="col-lg-4 mb-1">
+      <div className="form-floating w-100">
+        <select
+          className="form-select"
+          value={activeAge}
+          onChange={(event) => handleAgeChange(event.target.value)}
+        >
+          <option value="">All Ages</option>
+          {uniqueAges.map((age) => (
+            <option key={age} value={age.toString()}>
+              {`${age} ${age === 1 ? 'year' : 'years'} old`}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="ageSelect">Age</label>
+      </div>
+    </div>
 
-          <div className="form-floating w-50"> 
-            <select
-              className="form-select"
-              value={activeAge}
-              onChange={(event) => handleAgeChange(event.target.value)}
-            >
-              <option value="">All Ages</option>
-              {uniqueAges.map((age) => (
-                <option key={age} value={age.toString()}>
-                  {`${age} ${age === 1 ? 'year' : 'years'} old`}
-                </option>
-              ))}
-            </select>
-            <label for="ageSelect">Age</label>
-          </div>
-
-          <div className="form-floating w-50"> 
-            <select
-              className="form-select"
-              value={activeShelter}
-              onChange={(event) => handleShelterChange(event.target.value)}
-            >
-              <option value="">All Shelters</option>
-              {uniqueShelters.map((shelter) => (
-                <option key={shelter} value={shelter}>
-                  {shelter}
-                </option>
-              ))}
-          </select>
-          <label for="">Shelter</label>
-            </div>
-          </div>
-                  
+    <div className="col-lg-4 mb-1">
+      <div className="form-floating w-100">
+        <select
+          className="form-select"
+          value={activeShelter}
+          onChange={(event) => handleShelterChange(event.target.value)}
+        >
+          <option value="">All Shelters</option>
+          {uniqueShelters.map((shelter) => (
+            <option key={shelter} value={shelter}>
+              {shelter}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="shelterSelect">Shelter</label>
+      </div>
+    </div>
+  </div>
 
 
           <hr className=" mt-0 mb-3"/>
