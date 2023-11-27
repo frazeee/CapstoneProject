@@ -202,6 +202,10 @@ function Pets({ user }) {
               key={cardItem.id}
               className="container col-xl-3 col-lg-6 col-md-6 col-sm-12 pb-4 d-flex flex-column justify-content-center align-items-center"
             >
+              <Link
+                to={`/petPage/${cardItem.id}`}
+                className="text-decoration-none"
+              >
                 <div className="card shadow on-hover">
                   <div className="card-image-top">
                     <img src={cardItem.image_url1} alt={cardItem.pet_name} />
@@ -222,6 +226,7 @@ function Pets({ user }) {
                     <p><strong>Shelter:</strong> {cardItem.Shelter}</p>
                   </div>
                 </div>
+                </Link>
             </div>
           ))}
         </div>

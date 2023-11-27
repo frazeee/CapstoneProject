@@ -4,6 +4,7 @@ import CPSS_Image from "../images/CPSS_Image.png";
 import CPSS_Image2 from "../images/CPSS_Image2.png";
 import HeaderBanner from "../images/HeaderBanner.jpg";
 import LoginPicture from "../images/loginPicture.png"
+import BPUHeader from "../images/BPUAdoptHeader.png"
 import "./Header.css";
 
 const Header = () => {
@@ -102,7 +103,7 @@ const Header = () => {
   <div className="container col-xl-10 px-4 py-5">
     <div className="row flex-lg-row-reverse align-items-center g-5 py-2">
       <div className="col-10 col-sm-8 col-lg-6">
-        <img src={CPSS_Image2} className="d-block mx-lg-auto img-fluid"  width="700" height="500" loading="lazy"/>
+        <img src={BPUHeader} className="d-block mx-lg-auto img-fluid"  width="500" loading="lazy"/>
       </div>
       <div className="col-lg-6">
         <h1 className="display-5 fw-bold lh-1 mb-3 pb-1">Welcome To BPUAdopt!</h1>
