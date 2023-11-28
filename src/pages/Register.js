@@ -68,12 +68,12 @@ const Register = () => {
       const emailExists = await checkEmailExists(formData.email);
       console.log(emailExists);
       if (emailExists) {
-        setAlertMessage("This email has already been registered");
+        setAlertMessage("This email has already been registered.");
         return;
       }
   
       if (formData.password !== formData.confirmPassword) {
-        setAlertMessage("Password and confirm password do not match");
+        setAlertMessage("Password and confirm password do not match.");
         return;
       }
   
@@ -221,6 +221,7 @@ const Register = () => {
                 className="form-control"
                 name="phoneNumber"
                 onChange={handleChange}
+                pattern="(09|\+639)\d{9}$"
                 required
               />
             </div>

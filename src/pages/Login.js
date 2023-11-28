@@ -30,6 +30,8 @@ const Login = ({}) => {
     });
   }
 
+  const [alertMessage, setAlertMessage] = useState(null);
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -40,6 +42,7 @@ const Login = ({}) => {
       });
 
       if (error) {
+        setAlertMessage("Invalid Login Credentials.")
         throw error;
       }
 
@@ -51,11 +54,12 @@ const Login = ({}) => {
       console.log("Logged In!");
       navigate("/");
     } catch (error) {
-      alert(error);
+        console.log(error)
     } finally {
       setLoading(false);
     }
   }
+
 
   if (loading) {
     return (
@@ -64,8 +68,6 @@ const Login = ({}) => {
     </div>
     );
   }
-
-
 
    return(
       <div className="container-fluid">
@@ -106,6 +108,14 @@ const Login = ({}) => {
               </button>
             </div>
           </form>
+
+          {alertMessage && (
+              <div className="alert alert-danger" role="alert">
+                {alertMessage}
+              </div>
+            )}
+
+
           <div className="">
             <ForgotPasswordModal/>
           </div>

@@ -64,6 +64,19 @@ function Pets({ user }) {
 
     return false;
   });
+
+  const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age;
+  };
   
 
   return (
@@ -215,7 +228,7 @@ function Pets({ user }) {
                   </div>
                   <div className="card-body">
                     <p>
-                      <strong>  Age: </strong> {cardItem.age}{" "}
+                      <strong>  Age: </strong> {calculateAge(cardItem.birthdate)}{" "}
                       {cardItem.gender === "Male" ? (
                         <i className="icon bi bi-gender-male "></i>
                       ) : (

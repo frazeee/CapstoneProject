@@ -4,7 +4,7 @@ import { useAuth } from '../utils/AuthProvider';
 import { supabase } from '../components/client';
 import { BeatLoader } from 'react-spinners';
 import Cookies from 'js-cookie';
-import "./AccountInformation.css"
+
 
 
 const AccountInformation = () => {
@@ -125,11 +125,11 @@ const AccountInformation = () => {
 
         <>        
         <Navbar />
-        <div className='body-bg pb-2'>
+        <div className='bg-body pb-2' style={{}}>
           <div className='container-fluid'>
                 <div className="row justify-content-center">
                     <div className="col-xl-10">
-                        <div className="card my-5 rounded-3 ">
+                        <div className="card shadow my-5 rounded-3 ">
                             <div className="card-body">
                                 <h1 className="text-center">Account Information</h1>
                                 <hr className='w-100'/>
@@ -169,7 +169,7 @@ const AccountInformation = () => {
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-end">
-                                    <button type="button" className="btn rounded-pill my-2 p-2" id="updateBtn" onClick={updateUser}>Update</button>
+                                    <button type="button" className="btn rounded-pill my-2 p-2 fw-bold " style={{width: "100px"}} id="updateBtn" onClick={updateUser}>Update</button>
                                 </div>
                             </div>
                         </div>
