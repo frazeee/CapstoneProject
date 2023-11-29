@@ -105,7 +105,7 @@ function CheckApplicationFormModal(requestDetails) {
                 />
               </div>
 
-              {data.q_is_allergic === "Yes" && (
+              {data.q_is_allergic === true && (
                 <div>
                   <span className="mb-2">
                     Even if members of your family have allergies, are you still
