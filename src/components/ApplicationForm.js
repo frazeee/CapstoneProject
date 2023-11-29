@@ -197,6 +197,7 @@ const ApplicationForm = () => {
           q_is_renting: payload.isRenting,
           q_living_with: payload.livingWith.join(", "),
           q_is_allergic: payload.isAllergic === "Yes" ? true : false,
+          q_willing_to_allergies: payload.willingToAllergies === "Yes" ? true : payload.willingToAllergies === "No" ? false : null,
           q_responsible_feeder: payload.responsibleFeeding,
           q_responsible_financial: payload.responsibleFinancial,
           q_look_after: payload.petSitter,

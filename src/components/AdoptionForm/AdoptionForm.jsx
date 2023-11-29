@@ -7,6 +7,7 @@ import { BeatLoader } from 'react-spinners';
 import Cookies from "js-cookie";
 
 
+
 function AdoptionForm(props) {
   const { register, handleSubmit, watch, setValue} = useForm();
   const [adoptFormData, setAdoptFormData] = useState(null);
@@ -56,7 +57,6 @@ function AdoptionForm(props) {
   const birthdate = watch("birthdate");
   const [isUnder18, setIsUnder18] = useState(false)
 
-
   useEffect(() => {
     const bdayDate = new Date(birthdate);
     const today = new Date();
@@ -64,10 +64,24 @@ function AdoptionForm(props) {
     setIsUnder18(age < 18);
   }, [birthdate]);
 
+  const isAllergicValue = watch('isAllergic');
+  const [hasAllergies, setHasAllergies] = useState(false)
+
+  useEffect(() => {
+    console.log(isAllergicValue)
+    if(isAllergicValue === "Yes"){
+      setHasAllergies(true)
+    }
+    else{
+      setHasAllergies(false)
+    }
+  
+  }, [isAllergicValue])
+
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const month = (today.getMonth() + 1).toString().padStart(2, "0"); 
     const day = today.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
@@ -426,6 +440,32 @@ function AdoptionForm(props) {
           </div>
         </div>
 
+        {hasAllergies && (
+          <>
+       <div className="row">
+          <div className="col-12">
+            <label>
+              Even if members of your family have allergies, are you still willing to adopt a pet?
+            </label>
+            <div className="d-flex mb-0 btn-group">
+              {['Yes', 'No'].map((option) => (
+                <div className="form-check mr-3 d-flex align-items-center mb-0" key={option}>
+                  <input
+                    className="form-check-input mb-1"
+                    type="radio"
+                    value={option}
+                    {...register('willingToAllergies')}
+                  />
+                  <label className="form-check-label">{option}</label>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        </>
+        )}
+
+
         <div className="row">
           <div className="col-12">
             <label>
@@ -558,13 +598,13 @@ function AdoptionForm(props) {
 
           <ol type="1">
             {houseInspectionItems.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index} className="">{item}</li>
             ))}
           </ol>
         </div>
 
         <div>
-          <p>
+          <p className="text-warning">
             We value your privacy. Your photos will not be used for purposes
             other than this adoption application.
           </p>
@@ -593,7 +633,7 @@ function AdoptionForm(props) {
         </div>
         <div className="row">
           <div className="col-md-6">
-            <label>Preferred date for Zoom interview</label>
+            <label>Preferred date for interview</label>
             <input
               type="date"
               className="form-control"
@@ -604,7 +644,7 @@ function AdoptionForm(props) {
           </div>
 
           <div className="col-md-6">
-            <label>Preferred date for Zoom interview</label>
+            <label>Preferred time for interview</label>
             <div>
               <input
                 type="number"

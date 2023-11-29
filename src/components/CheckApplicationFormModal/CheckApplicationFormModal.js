@@ -39,8 +39,13 @@ function CheckApplicationFormModal(requestDetails) {
               ></button>
             </div>
             <div class="modal-body request-modal-body">
-              <h1 className="text-primary text-center fw-medium">Questionnaire</h1>
-              <hr className="mb-3"style={{color: 'black', backgroundColor: 'black'}}/>
+              <h1 className="text-primary text-center fw-medium">
+                Questionnaire
+              </h1>
+              <hr
+                className="mb-3"
+                style={{ color: "black", backgroundColor: "black" }}
+              />
               <span className="mb-2">What prompted you to adopt a pet?</span>
               <div className="form-check">
                 <input
@@ -55,11 +60,13 @@ function CheckApplicationFormModal(requestDetails) {
                 <input
                   className="form-control mb-1"
                   type="text"
-                  value={data.q_had_adapted ? 'Yes' : 'No'}
+                  value={data.q_had_adapted ? "Yes" : "No"}
                   readOnly
                 />
               </div>
-              <span className="mb-2">What type of building do you live in?</span>
+              <span className="mb-2">
+                What type of building do you live in?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -73,7 +80,7 @@ function CheckApplicationFormModal(requestDetails) {
                 <input
                   className="form-control mb-1"
                   type="text"
-                  value={data.q_renting ? 'Yes' : 'No'}
+                  value={data.q_renting ? "Yes" : "No"}
                   readOnly
                 />
               </div>
@@ -86,17 +93,40 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2">Are members of your household allergic to animals?</span>
+              <span className="mb-2">
+                Are members of your household allergic to animals?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
                   type="text"
-                  value={data.q_is_allergic ? 'Yes' : 'No'}
+                  value={data.q_is_allergic ? "Yes" : "No"}
                   readOnly
                 />
               </div>
-              <span className="mb-2"> Who will be responsible for feeding, grooming, and generally
-              caring for your pet?</span>
+
+              {data.q_is_allergic === "Yes" && (
+                <div>
+                  <span className="mb-2">
+                    Even if members of your family have allergies, are you still
+                    willing to adopt a pet?
+                  </span>
+                  <div className="form-check">
+                    <input
+                      className="form-control mb-1"
+                      type="text"
+                      value={data.q_willing_to_allergies ? "Yes" : "No"}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              )}
+
+              <span className="mb-2">
+                {" "}
+                Who will be responsible for feeding, grooming, and generally
+                caring for your pet?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -105,7 +135,9 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2">Who will be financially responsible for your pet’s needs?</span>
+              <span className="mb-2">
+                Who will be financially responsible for your pet’s needs?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -114,7 +146,10 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2">How many hours in an average workday will your pet be left alone?</span>
+              <span className="mb-2">
+                How many hours in an average workday will your pet be left
+                alone?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -123,8 +158,11 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2"> Who will look after your pet if you go on vacation or in case of
-              emergency?</span>
+              <span className="mb-2">
+                {" "}
+                Who will look after your pet if you go on vacation or in case of
+                emergency?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -133,8 +171,11 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2"> What steps will you take to introduce your new pet to his/her new
-              surroundings?</span>
+              <span className="mb-2">
+                {" "}
+                What steps will you take to introduce your new pet to his/her
+                new surroundings?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
@@ -143,12 +184,16 @@ function CheckApplicationFormModal(requestDetails) {
                   readOnly
                 />
               </div>
-              <span className="mb-2"> Does everyone in the family support your decision to adopt a pet?</span>
+              <span className="mb-2">
+                {" "}
+                Does everyone in the family support your decision to adopt a
+                pet?
+              </span>
               <div className="form-check">
                 <input
                   className="form-control mb-1"
                   type="text"
-                  value={data.q_is_supported ?'Yes' : 'No'}
+                  value={data.q_is_supported ? "Yes" : "No"}
                   readOnly
                 />
               </div>
@@ -157,7 +202,7 @@ function CheckApplicationFormModal(requestDetails) {
                 <input
                   className="form-control mb-1"
                   type="text"
-                  value={data.q_have_other_pets ? 'Yes' : 'No'}
+                  value={data.q_have_other_pets ? "Yes" : "No"}
                   readOnly
                 />
               </div>
