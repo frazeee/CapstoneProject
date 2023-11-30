@@ -30,8 +30,6 @@ const AdminRoute = () => {
       .eq('shelter_email', userEmail)
       .single();
 
-
-      console.log(userEmail)
       if (error) {
         console.error('Error fetching user role:', error.message);
       } else {

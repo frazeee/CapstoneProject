@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../components/client";
-import "./AdminRequestModal.css";
+import { useState, useEffect } from "react";
+import { supabase } from "../client";
 import { Link } from "react-router-dom";
 
-function AdminRequestModal({ shelterName }) {
-  const [requestList, setRequestList] = useState([]);
+const AdoptionHistory = ({ shelterName }) => {
+    const [requestList, setRequestList] = useState([]);
 
   useEffect(() => {
     getRequestList();
@@ -31,48 +30,21 @@ function AdminRequestModal({ shelterName }) {
     }
   };
 
+    const [activeStatus, setActiveStatus] = useState("For Interview");
 
-  const [activeStatus, setActiveStatus] = useState("For Interview");
+    const handleStatusChange = async (status) => {
+      setActiveStatus(status)
+    };
+ 
 
-  const handleStatusChange = async (status) => {
-    setActiveStatus(status)
-  };
-
-  
 
 
   return (
-    <>
-      <button
-        type="button"
-        class="btn btn-lg request-check-btn"
-        data-bs-toggle="modal"
-        data-bs-target="#adminRequestModal"
-      >
-        Check
-      </button>
-
-      <div
-        class="modal fade admin-request-modal"
-        id="adminRequestModal"
-        tabindex="-1"
-        aria-labelledby="adminRequestModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="adminRequestModalLabel">
-                Requests
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body request-modal-body">
+    <div className="container my-5">
+      <h1 className="text-center">ADOPTION HISTORY</h1>
+      <hr />
+      <div className="card w-100 mt-3">
+        <div className="card-body text-dark">
               <ul class="nav nav-tabs">
                 <li class="nav-item">
                   <a class="nav-link text-primary" aria-current="page" onClick={() => handleStatusChange("For Verification")}>
@@ -87,6 +59,16 @@ function AdminRequestModal({ shelterName }) {
                 <li class="nav-item">
                   <a class="nav-link text-primary" onClick={() => handleStatusChange("Interview Done")}>
                     Interview Done
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-primary" onClick={() => handleStatusChange("Approved")}>
+                    Approved
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-primary" onClick={() => handleStatusChange("Rejected")}>
+                    Rejected
                   </a>
                 </li>
               
@@ -145,12 +127,10 @@ function AdminRequestModal({ shelterName }) {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
-export default AdminRequestModal;
+export default AdoptionHistory;
