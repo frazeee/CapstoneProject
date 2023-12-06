@@ -1,25 +1,19 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../components/client";
-import axios from "axios";
 import "./CheckRequestPage.css";
 import { BeatLoader } from "react-spinners";
 import Navbar from "../../components/Navbar";
 import CheckApplicationFormModal from "../../components/CheckApplicationFormModal/CheckApplicationFormModal";
-import emailjs from 'emailjs-com';
-
+import emailjs from "emailjs-com";
 
 function CheckRequestPage() {
   const [requestDetails, setRequestDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [requestEmail, setRequestEmail] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
+  const [requestEmail, setRequestEmail] = useState("");
   const currentUrl = window.location.href;
-
-  const serviceID = process.env.REACT_APP_SERVICE_ID;
-  const userID = process.env.REACT_APP_USER_ID;
-
 
   // Split the URL by slashes and get the last part
   const dataId = currentUrl.split("/").pop();
@@ -45,8 +39,8 @@ function CheckRequestPage() {
         .eq("id", dataId);
 
       setRequestDetails(data);
-      setSelectedStatus(data.adoption_status)
-      setRequestEmail(data[0].email)
+      setSelectedStatus(data.adoption_status);
+      setRequestEmail(data[0].email);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
     } finally {
@@ -54,22 +48,24 @@ function CheckRequestPage() {
     }
   };
 
-
-
   const handleCheckPictures = () => {
-    const url = requestDetails[0].q_house_pic
+    const url = requestDetails[0].q_house_pic;
     // Open the URL in a new tab
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
+  const [getInfoModalShow, setGetInfoModalShow] = useState(false);
+  const [additionalInfo, setAdditionalInfo] = useState("");
+
+  //email for status for verification, interview done, and approved
   const sendProcessUpdateEmail = async (status, requestEmail) => {
     try {
       setLoading(true);
       let templateMessage;
-  
+
       // Determine email template based on the status
       switch (status) {
-        case 'For Verification':
+        case "For Verification":
           templateMessage = `Hello ${requestDetails[0].first_name},
 
           Your adoption process for ${requestDetails[0].Pets.pet_name}  is now at the  "For Verification" stage. The respective shelter will review your submitted documents to ensure everything is in order.
@@ -77,22 +73,12 @@ function CheckRequestPage() {
           Thank you for your patience and cooperation.
           
           Best regards,
-          BPUAdopt Team`
+          BPUAdopt Team`;
           break;
-  
-          case 'For Interview':
-            templateMessage = `Hello ${requestDetails[0].first_name},
 
-            Your adoption process for ${requestDetails[0].Pets.pet_name} is now at the "For Interview" stage. We will be conducting an interview as part of the adoption process. Please be prepared for a discussion about your suitability as a pet owner.
 
-            Thank you for your cooperation.
-
-            Best regards,
-            BPUAdopt Team`;
-            break;
-
-          case 'Interview Done':
-            templateMessage = `Hello ${requestDetails[0].first_name},
+        case "Interview Done":
+          templateMessage = `Hello ${requestDetails[0].first_name},
           
             Congratulations! Your interview for the adoption of ${requestDetails[0].Pets.pet_name} is complete. We appreciate your time and cooperation throughout the process.
           
@@ -100,10 +86,10 @@ function CheckRequestPage() {
           
             Best regards,
             BPUAdopt Team`;
-            break;
-  
-            case 'Approved':
-              templateMessage = `Hello ${requestDetails[0].first_name},
+          break;
+
+        case "Approved":
+          templateMessage = `Hello ${requestDetails[0].first_name},
             
               Great news! Your adoption request for ${requestDetails[0].Pets.pet_name} has been Approved. We are delighted to welcome you and your new furry friend to the BPUAdopt family!
             
@@ -111,40 +97,101 @@ function CheckRequestPage() {
             
               Best regards,
               BPUAdopt Team`;
-              break;
-  
-              case 'Rejected':
-                templateMessage = `Hello ${requestDetails[0].first_name},
-              
-                We regret to inform you that your adoption request for ${requestDetails[0].Pets.pet_name} has been Rejected. We appreciate your interest in adopting from us and encourage you to consider other pets in the future.
-              
-                If you have any questions or concerns, feel free to reach out to us.
-              
-                Best regards,
-                BPUAdopt Team`;
-                break;
-  
+          break;
+
         default:
-          throw new Error('Invalid status');
+          throw new Error("Invalid status");
       }
-  
 
       const templateParams = {
         to_email: requestEmail,
         subject: selectedStatus,
         message: templateMessage,
         user: requestDetails.first_name,
-        organization: 'BPUAdopt',
+        organization: "BPUAdopt",
       };
-  
-      // Send email using Email.js
-      await emailjs.send('service_8r6eaxe', 'template_email', templateParams, '-fD_Lzps7ypbyVDAa');
-  
-      console.log('Process update email sent successfully');
+
+      await emailjs.send(
+        "service_8r6eaxe",
+        "template_email",
+        templateParams,
+        "-fD_Lzps7ypbyVDAa"
+      );
+
+      console.log("Process update email sent successfully");
     } catch (error) {
-      console.error('Error sending process update email:', error);
+      console.error("Error sending process update email:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  //email for status rejected and for interview
+  const handleGetInfoModalSubmit = async () => {
+    try {
+      setLoading(true);
+      setGetInfoModalShow(false)
+      let templateMessage;
+  
+      // Determine email template based on the status
+      switch (selectedStatus) {
+        case "For Interview":
+          templateMessage = `Hello ${requestDetails[0].first_name},
+  
+            Your adoption process for ${requestDetails[0].Pets.pet_name} is now at the "For Interview" stage. We will be conducting an interview as part of the adoption process. Please be prepared for a discussion about your suitability as a pet owner.
+  
+            Interview Date and Time: ${additionalInfo}
+  
+            If you have any concerns or if the scheduled interview time is inconvenient, kindly contact the shelter.
+            
+            Thank you for your cooperation.
+  
+            Best regards,
+            BPUAdopt Team`;
+          break;
+  
+        case "Rejected":
+          templateMessage = `Hello ${requestDetails[0].first_name},
+              
+              We regret to inform you that your adoption request for ${requestDetails[0].Pets.pet_name} has been Rejected. We appreciate your interest in adopting from us and encourage you to consider other pets in the future.
+            
+              Reason for Rejection: ${additionalInfo}
+  
+              If you have any questions or concerns, feel free to reach out to us.
+            
+              Best regards,
+              BPUAdopt Team`;
+          break;
+  
+        default:
+          throw new Error("Invalid status");
+      }
+  
+      const templateParams = {
+        to_email: requestEmail,
+        subject: selectedStatus,
+        message: templateMessage,
+        user: requestDetails.first_name,
+        organization: "BPUAdopt",
+      };
+  
+      await emailjs.send(
+        "service_8r6eaxe",
+        "template_email",
+        templateParams,
+        "-fD_Lzps7ypbyVDAa"
+      );
+  
+      setModalMessage(
+        `Record updated successfully! An email has been sent to ${requestEmail}`
+      );
+      setShowModal(true);
+  
+    } catch (error) {
+      console.error("Error sending email:", error);
+    } finally {
+      setLoading(false);
+      setAdditionalInfo("")
     }
   };
   
@@ -152,25 +199,39 @@ function CheckRequestPage() {
   const handleStatusUpdate = async () => {
     try {
       setLoading(true);
+  
       const { data, error } = await supabase
-        .from('Requests')
+        .from("Requests")
         .update({ adoption_status: selectedStatus })
-        .eq('id', dataId)
+        .eq("id", dataId)
         .select();
   
-      await sendProcessUpdateEmail(selectedStatus, requestEmail);
-  
       if (data) {
-        setModalMessage(`Record updated successfully! An email has been sent to ${requestEmail}`);
+        if (selectedStatus === "For Interview" || selectedStatus === "Rejected") {
+          anotherFunction(selectedStatus);
+          return; // Exit the handleStatusUpdate function
+        }
+  
+        await sendProcessUpdateEmail(
+          selectedStatus,
+          requestEmail,
+        );
+
+        setModalMessage(
+          `Record updated successfully! An email has been sent to ${requestEmail}`
+        );
+        setShowModal(true);
       }
     } catch (error) {
-      console.error('Error updating status:', error);
-      setModalMessage('Error updating record.');
-      setShowModal(true);
+      console.error("Error updating status:", error);
+      setModalMessage("Error updating record.");
     } finally {
       setLoading(false);
-      setShowModal(true);
     }
+  };
+ 
+  const anotherFunction = (status) => {
+    setGetInfoModalShow(true)
   };
   
 
@@ -294,7 +355,9 @@ function CheckRequestPage() {
                         defaultValue={data.adoption_status}
                         onChange={(e) => setSelectedStatus(e.target.value)}
                       >
-                        <option value="For Verification">For Verification</option>
+                        <option value="For Verification">
+                          For Verification
+                        </option>
                         <option value="For Interview">For Interview</option>
                         <option value="Interview Done">Interview Done</option>
                         <option value="Approved">Approved</option>
@@ -302,9 +365,23 @@ function CheckRequestPage() {
                       </select>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <CheckApplicationFormModal requestDetails={requestDetails[0]}/>
-                        <button type="button" className="btn btn-lg ms-3" onClick={handleCheckPictures} >Check Pictures</button>
-                        <button type="button" className="btn btn-lg ms-3" onClick={handleStatusUpdate}>Update Status</button>
+                      <CheckApplicationFormModal
+                        requestDetails={requestDetails[0]}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-lg ms-3"
+                        onClick={handleCheckPictures}
+                      >
+                        Check Pictures
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-lg ms-3"
+                        onClick={handleStatusUpdate}
+                      >
+                        Update Status
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -317,27 +394,91 @@ function CheckRequestPage() {
       {showModal && (
         <div>
           <div className="modal-backdrop show"></div>
-          <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+          <div
+            className="modal"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+          >
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Adoption Status</h5>
-                  <button type="button" className="btn-close" onClick={() => setShowModal(false)} aria-label="Close"></button>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowModal(false)}
+                    aria-label="Close"
+                  ></button>
                 </div>
-                <div className="modal-body">
-                  {modalMessage}
-                </div>
+                <div className="modal-body">{modalMessage}</div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-primary" onClick={() => setShowModal(false)}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
-      
 
-
+      {getInfoModalShow && (
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  {selectedStatus === "For Interview"
+                    ? "Interview Details"
+                    : "Rejection Reason"}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setGetInfoModalShow(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">
+                    {selectedStatus === "For Interview"
+                      ? "Interview Date and Time"
+                      : "Rejection Reason"}
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={additionalInfo}
+                    onChange={(e) => setAdditionalInfo(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => handleGetInfoModalSubmit()}
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setGetInfoModalShow(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

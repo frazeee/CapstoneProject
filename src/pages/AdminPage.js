@@ -78,7 +78,7 @@ const AdminPage = () => {
         setData(petsData);
         setShelterName(shelterName);
         setRequestListData(requestListData)
-        setRequestListCount(requestListData.length);
+        setRequestListCount(calculateCount(requestListData))
         setInterviewListCount(interviewListData.length);
       } catch (error) {
         console.error("An unexpected error occurred:", error);
@@ -89,6 +89,13 @@ const AdminPage = () => {
   
     fetchData();
   }, [userEmail]); // Add userEmail to the dependency array if it's used inside the effect
+
+  const calculateCount = (requests) => {
+    const filteredRequests = requests.filter(
+      (req) => req.adoption_status !== "Approved" && req.adoption_status !== "Rejected"
+    );
+    return filteredRequests.length;
+  };
   
   let dataCount = data.length
 
@@ -103,8 +110,6 @@ const AdminPage = () => {
   return (
     <>
       <Navbar />
-     
-
       <div className="container my-5">
         <h1 className="text-center">{shelterName || 'Default Shelter Name'}</h1>
         <hr />
@@ -141,10 +146,7 @@ const AdminPage = () => {
         </div>
       </div>
       <PetList/>
-
       <AdoptionHistory shelterName={shelterName}/>
-      
-
       <Footer />
     </>
   );

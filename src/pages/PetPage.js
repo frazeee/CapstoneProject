@@ -36,7 +36,7 @@ const PetPage = ({ user }) => {
               <img
                 src={pet.image_url1}
                 alt={pet.pet_name}
-                className="profile-img img-fluid rounded"
+                className="img-fluid rounded"
               />
             </div>
             <div className="details-container">
@@ -64,7 +64,7 @@ const PetPage = ({ user }) => {
                 </ul>
                 <Link to={`/Application/${pet.id}`}>
                   {" "}
-                  <button className="btn w-25">Apply Now</button>{" "}
+                  <button className="btn w-30">Apply Now</button>{" "}
                 </Link>
               </div>
             </div>

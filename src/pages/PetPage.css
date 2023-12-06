@@ -48,14 +48,6 @@
     text-align: center;
   }
 
-  .profile-img {
-    display: block;
-    margin: 0 auto;
-    max-width: 500px;
-    height: auto;
-    border-radius: 5px;
-  }
-
   .details-container {
     margin-top: 20px;
     padding: 10px;

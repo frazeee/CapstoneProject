@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "../../components/client";
 import "./ShelterSignup.css"
-import BPUADOPT_LOGO from "../../images/BPUADOPT_LOGO.png"
 import loginPicture from "../../images/loginPicture.png";
 
 const ShelterSignup = ({}) => {
@@ -14,8 +13,6 @@ const ShelterSignup = ({}) => {
         ShelterSocMed: "",
         ShelterPetNumber: ""
       });
-    const [modalTitle, setModalTitle] = useState('');
-    const [modalMessage, setModalMessage] = useState('');
 
     const handleInvite = async () => {
       setLoading(true);

@@ -32,7 +32,7 @@ function AdminRequestModal({ shelterName }) {
   };
 
 
-  const [activeStatus, setActiveStatus] = useState("For Interview");
+  const [activeStatus, setActiveStatus] = useState("For Verification");
 
   const handleStatusChange = async (status) => {
     setActiveStatus(status)
@@ -45,7 +45,7 @@ function AdminRequestModal({ shelterName }) {
     <>
       <button
         type="button"
-        class="btn btn-lg request-check-btn"
+        className="btn btn-lg request-check-btn"
         data-bs-toggle="modal"
         data-bs-target="#adminRequestModal"
       >
@@ -53,46 +53,46 @@ function AdminRequestModal({ shelterName }) {
       </button>
 
       <div
-        class="modal fade admin-request-modal"
+        className="modal fade admin-request-modal"
         id="adminRequestModal"
         tabindex="-1"
         aria-labelledby="adminRequestModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="adminRequestModalLabel">
+        <div className="modal-dialog modal-dialog-scrollable modal-xl">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="adminRequestModalLabel">
                 Requests
               </h5>
               <button
                 type="button"
-                class="btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body request-modal-body">
-              <ul class="nav nav-tabs">
-                <li class="nav-item">
-                  <a class="nav-link text-primary" aria-current="page" onClick={() => handleStatusChange("For Verification")}>
+            <div className="modal-body request-modal-body">
+              <ul className="nav nav-tabs">
+                <li className="nav-item">
+                  <a className="nav-link text-primary" aria-current="page" onClick={() => handleStatusChange("For Verification")}>
                     For Verification
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link text-primary" onClick={() => handleStatusChange("For Interview")}>
+                <li className="nav-item">
+                  <a className="nav-link text-primary" onClick={() => handleStatusChange("For Interview")}>
                     For Interview
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link text-primary" onClick={() => handleStatusChange("Interview Done")}>
+                <li className="nav-item">
+                  <a className="nav-link text-primary" onClick={() => handleStatusChange("Interview Done")}>
                     Interview Done
                   </a>
                 </li>
               
               </ul>
               <div className="table-responsive">
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th scope="col">Pet Name</th>

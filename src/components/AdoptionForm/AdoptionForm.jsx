@@ -3,59 +3,58 @@ import { useForm } from "react-hook-form";
 import "./AdoptionForm.css";
 import { supabase } from "../client";
 import { useAuth } from "../../utils/AuthProvider";
-import { BeatLoader } from 'react-spinners';
+import { BeatLoader } from "react-spinners";
 import Cookies from "js-cookie";
 
-
-
 function AdoptionForm(props) {
-  const { register, handleSubmit, watch, setValue} = useForm();
+  const { register, handleSubmit, watch, setValue } = useForm();
   const [adoptFormData, setAdoptFormData] = useState(null);
   const [userData, setUserData] = useState("");
-  const {user} = useAuth()
+  const { user } = useAuth();
   const [loading, setLoading] = useState(null);
-  const UserData = JSON.parse(Cookies.get("userSession"))
-  const userEmail = UserData.data.user.email
+  const UserData = JSON.parse(Cookies.get("userSession"));
+  const userEmail = UserData.data.user.email;
 
   useEffect(() => {
     async function getUserByEmail(email) {
       try {
         setLoading(true);
-        const { data, error } = await supabase.from('Users').select('*').eq('email', email);
-  
+        const { data, error } = await supabase
+          .from("Users")
+          .select("*")
+          .eq("email", email);
+
         if (error) {
-          console.error('Error fetching user:', error);
+          console.error("Error fetching user:", error);
           return;
         }
-  
+
         if (data && data.length > 0) {
           // Set the user data in the form using setValue
-          setValue('firstName', data[0].first_name);
-          setValue('lastName', data[0].last_name);
-          setValue('address', data[0].address);
-          setValue('phone', data[0].phone);
-          setValue('email', data[0].email);
+          setValue("firstName", data[0].first_name);
+          setValue("lastName", data[0].last_name);
+          setValue("address", data[0].address);
+          setValue("phone", data[0].phone);
+          setValue("email", data[0].email);
         } else {
           // Handle the case when the user is not found
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       } finally {
         setLoading(false);
       }
     }
-  
+
     getUserByEmail(userEmail);
   }, [user, setValue]);
-  
- 
 
   const onSubmit = (data) => {
     props.parentCallback(data);
   };
 
   const birthdate = watch("birthdate");
-  const [isUnder18, setIsUnder18] = useState(false)
+  const [isUnder18, setIsUnder18] = useState(false);
 
   useEffect(() => {
     const bdayDate = new Date(birthdate);
@@ -64,24 +63,22 @@ function AdoptionForm(props) {
     setIsUnder18(age < 18);
   }, [birthdate]);
 
-  const isAllergicValue = watch('isAllergic');
-  const [hasAllergies, setHasAllergies] = useState(false)
+  const isAllergicValue = watch("isAllergic");
+  const [hasAllergies, setHasAllergies] = useState(false);
 
   useEffect(() => {
-    console.log(isAllergicValue)
-    if(isAllergicValue === "Yes"){
-      setHasAllergies(true)
+    console.log(isAllergicValue);
+    if (isAllergicValue === "Yes") {
+      setHasAllergies(true);
+    } else {
+      setHasAllergies(false);
     }
-    else{
-      setHasAllergies(false)
-    }
-  
-  }, [isAllergicValue])
+  }, [isAllergicValue]);
 
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0"); 
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
     const day = today.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
@@ -117,18 +114,21 @@ function AdoptionForm(props) {
     "Front & backyard",
   ];
 
-  
-
-
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <>
         <div className="d-flex justify-content-center align-items-center mt-5">
-          <BeatLoader type="ThreeDots" color="#fee481" height={200} width={200} className="spinner" />
+          <BeatLoader
+            type="ThreeDots"
+            color="#fee481"
+            height={200}
+            width={200}
+            className="spinner"
+          />
         </div>
-          <h5 className='text-warning text-center'>Fetching User Data...</h5>
+        <h5 className="text-warning text-center">Fetching User Data...</h5>
       </>
-    )
+    );
   }
 
   return (
@@ -309,7 +309,7 @@ function AdoptionForm(props) {
                 ></input>
               </div>
             </div>
-        </>
+          </>
         )}
 
         <div className="my-3">
@@ -321,24 +321,23 @@ function AdoptionForm(props) {
         </div>
 
         <div className="row">
-          <div className="col-md-6 form-check">
+          <div className="col-md-6">
             <label>What prompted you to adopt a pet?</label>
-            <div className="d-flex mb-0 btn-group">
+            <div className="mb-0">
               {source.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
+                <div key={option} className="form-check mb-3">
                   <input
-                    className="form-check-input mb-1"
+                    className="form-check-input"
                     type="checkbox"
                     value={option}
                     {...register("source", { required: true })}
                   />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
+                  <label className="form-check-label">{option}</label>
                 </div>
               ))}
             </div>
           </div>
+
           <div className="col-md-12 col-sm-6">
             <label>Have you adopted pet before?</label>
             <div className="d-flex mb-0 btn-group">
@@ -362,22 +361,21 @@ function AdoptionForm(props) {
         <div className="row">
           <div className="col-md-12 col-sm-3">
             <label>What type of building do you live in?</label>
-            <div className="d-flex mb-0 btn-group">
+            <div className="mb-0">
               {buildingTypes.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0">
+                <div key={option} className="form-check mb-3">
                   <input
                     className="form-check-input mb-1"
                     type="radio"
                     value={option}
                     {...register("buildingType")}
                   />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
+                  <label className="form-check-label">{option}</label>
                 </div>
               ))}
             </div>
           </div>
+
           <div className="col-md-6">
             <label>Are you currently renting?</label>
             <div className="d-flex mb-0 btn-group">
@@ -401,18 +399,16 @@ function AdoptionForm(props) {
         <div className="row">
           <div className="col-lg-12 col-md-3 form-check">
             <label>Who do you live with?</label>
-            <div className="d-flex mb-0 btn-group">
+            <div className="mb-0">
               {livingWith.map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center justify-items-center mb-0">
+                <div key={option} className="form-check mb-3">
                   <input
                     className="form-check-input mb-1"
                     type="checkbox"
                     value={option}
                     {...register("livingWith")}
                   />
-                  <label className="form-check-label" key={option}>
-                    {option}
-                  </label>
+                  <label className="form-check-label">{option}</label>
                 </div>
               ))}
             </div>
@@ -442,29 +438,32 @@ function AdoptionForm(props) {
 
         {hasAllergies && (
           <>
-       <div className="row">
-          <div className="col-12">
-            <label>
-              Even if members of your family have allergies, are you still willing to adopt a pet?
-            </label>
-            <div className="d-flex mb-0 btn-group">
-              {['Yes', 'No'].map((option) => (
-                <div className="form-check mr-3 d-flex align-items-center mb-0" key={option}>
-                  <input
-                    className="form-check-input mb-1"
-                    type="radio"
-                    value={option}
-                    {...register('willingToAllergies')}
-                  />
-                  <label className="form-check-label">{option}</label>
+            <div className="row">
+              <div className="col-12">
+                <label>
+                  Even if members of your family have allergies, are you still
+                  willing to adopt a pet?
+                </label>
+                <div className="d-flex mb-0 btn-group">
+                  {["Yes", "No"].map((option) => (
+                    <div
+                      className="form-check mr-3 d-flex align-items-center mb-0"
+                      key={option}
+                    >
+                      <input
+                        className="form-check-input mb-1"
+                        type="radio"
+                        value={option}
+                        {...register("willingToAllergies")}
+                      />
+                      <label className="form-check-label">{option}</label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
-        </>
+          </>
         )}
-
 
         <div className="row">
           <div className="col-12">
@@ -592,13 +591,13 @@ function AdoptionForm(props) {
           <p>
             Please attach photos of your home and place it under one .PDF file.
           </p>
-          <p>
-            Note:
-          </p>
+          <p>Note:</p>
 
           <ol type="1">
             {houseInspectionItems.map((item, index) => (
-              <li key={index} className="">{item}</li>
+              <li key={index} className="">
+                {item}
+              </li>
             ))}
           </ol>
         </div>

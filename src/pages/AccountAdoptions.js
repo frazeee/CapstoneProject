@@ -1,7 +1,5 @@
 import { BeatLoader } from "react-spinners";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { useAuth } from "../utils/AuthProvider";
 import { useEffect, useState } from "react";
 import { supabase } from "../components/client";
 import Cookies from "js-cookie";
@@ -11,12 +9,6 @@ const AccountAdoptions = () => {
     const [userRequests, setUserRequests] = useState(null)
     const userData = JSON.parse(Cookies.get('userSession'))
     const email = userData.data.user.email
-    
-
-    const tranformDateTime = (dateString) => {
-        const dateTime = new Date(dateString);
-        return `${dateTime.toLocaleDateString()}, ${dateTime.toLocaleTimeString()}`;
-      };
     
 
     useEffect(() => {
@@ -83,18 +75,19 @@ const AccountAdoptions = () => {
                 userRequests.map((request, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td scope="row">{request.first_name}</td>
-                    <td scope="row">{request.last_name}</td>
-                    <td scope="row">{request.Pets.pet_name}</td>
-                    <td scope="row">
+                    <td>{request.first_name}</td>
+                    <td>{request.last_name}</td>
+                    <td>{request.Pets.pet_name}</td>
+                    <td>
                       {new Date(request.interview_date).toLocaleString()}
                     </td>
-                    <td scope="row">{request.Pets.Shelter}</td>
-                    <td scope="row" className={`badge mt-1 w-75 ${
+                    <td >{request.Pets.Shelter}</td>
+                    <td className={`badge mt-1 w-75 ${
                         request.adoption_status === 'For Verification' ? 'text-bg-primary' :
                         request.adoption_status === 'For Interview' ? 'text-bg-primary' :
                         request.adoption_status === 'Interview Done' ? 'text-light text-bg-info' :
-                        request.adoption_status === 'Approved' && 'text-bg-success'
+                        request.adoption_status === 'Approved' ? 'text-bg-success':
+                        request.adoption_status === "Rejected" && "text-bg-danger"
                       }`}>
                         {request.adoption_status}
                       </td>
