@@ -137,7 +137,7 @@ const Navbar = ({}) => {
                     <>
                    
                       <li className="nav-item dropdown">
-                        <li
+                        <a
                           className="nav-link dropdown-toggle mx-3 text-white"
                           id="navbarDropdown"
                           role="button"
@@ -145,7 +145,7 @@ const Navbar = ({}) => {
                           aria-expanded="false"
                         >
                           {user.user_metadata.firstName}
-                        </li>
+                        </a>
                         <ul className="dropdown-menu">
                           <li className="dropdown-item">
                             <Link

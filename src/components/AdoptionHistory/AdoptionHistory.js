@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../client";
 import { Link } from "react-router-dom";
 import ReportGeneration from "../../utils/ReportGeneration";
+import PDFGeneration from "../../utils/PDFGeneration";
 
 const AdoptionHistory = ({ shelterName }) => {
   const [requestList, setRequestList] = useState([]);
@@ -118,6 +119,7 @@ const AdoptionHistory = ({ shelterName }) => {
                   <th scope="col">Pet Name</th>
                   <th scope="col">First Name</th>
                   <th scope="col">Last Name</th>
+                  <th scope="col">Date Created</th>
                   <th scope="col">Phone Number</th>
                   <th scope="col">Email</th>
                   <th scope="col">Status</th>
@@ -149,17 +151,18 @@ const AdoptionHistory = ({ shelterName }) => {
                       <td>{req.Pets.pet_name}</td>
                       <td>{req.first_name}</td>
                       <td>{req.last_name}</td>
+                      <td>{new Date(req.created_at).toLocaleString()}</td>
                       <td>{req.phone_number}</td>
                       <td>{req.email}</td>
                       <td
-                        className={`badge mt-2 mx-3 ${
+                        className={`badge w-75 mt-2 mx-3 ${
                           req.adoption_status === "For Verification"
                             ? "text-bg-primary"
                             : req.adoption_status === "For Interview"
                             ? "text-bg-primary"
                             : req.adoption_status === "Interview Done"
                             ? "text-light text-bg-info"
-                            : req.adoption_status === "Approved"
+                            : req.adoption_status === "Approved"  
                             ? "text-bg-success"
                             : req.adoption_status === "Rejected" &&
                               "text-bg-danger"
@@ -184,6 +187,7 @@ const AdoptionHistory = ({ shelterName }) => {
           </div>
         </div>
         <ReportGeneration data={requestList}/>
+        <PDFGeneration data={requestList} shelterName={shelterName} />
       </div>
     </div>
   );
