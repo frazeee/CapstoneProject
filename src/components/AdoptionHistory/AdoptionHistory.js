@@ -26,7 +26,7 @@ const AdoptionHistory = ({ shelterName }) => {
         )
         .eq("shelter_from", shelterName);
 
-      console.log(data)
+      console.log(data);
       setRequestList(data);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
@@ -44,6 +44,61 @@ const AdoptionHistory = ({ shelterName }) => {
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const handleStartDateChange = (e) => {
+    const newStartDate = e.target.value;
+    setStartDate(newStartDate);
+
+    // If end date is set and it's less than the new start date, update end date
+    if (endDate && new Date(endDate) < new Date(newStartDate)) {
+      setEndDate("");
+    }
+  };
+
+  const handleEndDateChange = (e) => {
+    const newEndDate = e.target.value;
+
+    // If start date is set and it's greater than the new end date, update start date
+    if (startDate && new Date(startDate) > new Date(newEndDate)) {
+      setStartDate(newEndDate);
+    }
+
+    // Limit the end date to be up to the current date
+    const currentDate = new Date().toISOString().split("T")[0];
+    if (newEndDate > currentDate) {
+      setEndDate(currentDate);
+    } else {
+      setEndDate(newEndDate);
+    }
+  };
+
+  const [filteredRequests, setFilteredRequests] = useState([]);
+
+  useEffect(() => {
+    const filteredData = requestList
+      .filter(
+        (req) =>
+          (activeStatus === "All" || req.adoption_status === activeStatus) &&
+          (searchInput.trim() === "" ||
+            req.first_name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            req.last_name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            req.email.toLowerCase().includes(searchInput.toLowerCase()) ||
+            req.Pets.pet_name
+              .toLowerCase()
+              .includes(searchInput.toLowerCase())) &&
+          (!startDate || startDate <= req.created_at) &&
+          (!endDate || req.created_at <= endDate)
+      )
+      .map((req) => ({
+        ...req,
+        formattedDate: new Date(req.created_at).toLocaleString(),
+      }));
+
+    setFilteredRequests(filteredData);
+  }, [requestList, activeStatus, searchInput, startDate, endDate]);
 
   return (
     <div className="container my-5">
@@ -111,7 +166,30 @@ const AdoptionHistory = ({ shelterName }) => {
                 Rejected
               </a>
             </li>
+
+            <input
+              type="text"
+              style={{ width: "200px" }}
+              className="form-control ms-auto"
+              placeholder="Start Date"
+              onFocus={(e) => (e.target.type = "date")}
+              onBlur={(e) => (e.target.type = "text")}
+              onChange={handleStartDateChange}
+              value={startDate}
+            />
+
+            <input
+              type="text"
+              style={{ width: "200px" }}
+              className="form-control ms-auto"
+              placeholder="End Date"
+              onFocus={(e) => (e.target.type = "date")}
+              onBlur={(e) => (e.target.type = "text")}
+              onChange={handleEndDateChange}
+              value={endDate}
+            />
           </ul>
+
           <div className="table-responsive">
             <table class="table">
               <thead>
@@ -127,67 +205,48 @@ const AdoptionHistory = ({ shelterName }) => {
                 </tr>
               </thead>
               <tbody>
-                {requestList
-                  .filter(
-                    (req) =>
-                      (activeStatus === "All" ||
-                        req.adoption_status === activeStatus) &&
-                      (searchInput.trim() === "" ||
-                        req.first_name
-                          .toLowerCase()
-                          .includes(searchInput.toLowerCase()) ||
-                        req.last_name
-                          .toLowerCase()
-                          .includes(searchInput.toLowerCase()) ||
-                        req.email
-                          .toLowerCase()
-                          .includes(searchInput.toLowerCase()) ||
-                        req.Pets.pet_name
-                          .toLowerCase()
-                          .includes(searchInput.toLowerCase()))
-                  )
-                  .map((req) => (
-                    <tr>
-                      <td>{req.Pets.pet_name}</td>
-                      <td>{req.first_name}</td>
-                      <td>{req.last_name}</td>
-                      <td>{new Date(req.created_at).toLocaleString()}</td>
-                      <td>{req.phone_number}</td>
-                      <td>{req.email}</td>
-                      <td
-                        className={`badge w-75 mt-2 mx-3 ${
-                          req.adoption_status === "For Verification"
-                            ? "text-bg-primary"
-                            : req.adoption_status === "For Interview"
-                            ? "text-bg-primary"
-                            : req.adoption_status === "Interview Done"
-                            ? "text-light text-bg-info"
-                            : req.adoption_status === "Approved"  
-                            ? "text-bg-success"
-                            : req.adoption_status === "Rejected" &&
-                              "text-bg-danger"
-                        }`}
-                      >
-                        {req.adoption_status}
-                      </td>
-                      <td>
-                        <Link to={`/CheckApplication/${req.id}`}>
-                          <span
-                            className=" ms-2 check-link"
-                            data-bs-dismiss="modal"
-                          >
-                            Check Application
-                          </span>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+                {filteredRequests.map((req) => (
+                  <tr>
+                    <td>{req.Pets.pet_name}</td>
+                    <td>{req.first_name}</td>
+                    <td>{req.last_name}</td>
+                    <td>{new Date(req.created_at).toLocaleString()}</td>
+                    <td>{req.phone_number}</td>
+                    <td>{req.email}</td>
+                    <td
+                      className={`badge w-75 mt-2 mx-3 ${
+                        req.adoption_status === "For Verification"
+                          ? "text-bg-primary"
+                          : req.adoption_status === "For Interview"
+                          ? "text-bg-primary"
+                          : req.adoption_status === "Interview Done"
+                          ? "text-light text-bg-info"
+                          : req.adoption_status === "Approved"
+                          ? "text-bg-success"
+                          : req.adoption_status === "Rejected" &&
+                            "text-bg-danger"
+                      }`}
+                    >
+                      {req.adoption_status}
+                    </td>
+                    <td>
+                      <Link to={`/CheckApplication/${req.id}`}>
+                        <span
+                          className=" ms-2 check-link"
+                          data-bs-dismiss="modal"
+                        >
+                          Check Application
+                        </span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
-        <ReportGeneration data={requestList}/>
-        <PDFGeneration data={requestList} shelterName={shelterName} />
+        <ReportGeneration data={requestList} />
+        <PDFGeneration data={filteredRequests} shelterName={shelterName} />
       </div>
     </div>
   );
