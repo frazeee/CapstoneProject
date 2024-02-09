@@ -1,21 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
-import Cookies from "js-cookie";
 import "./PetPage.css";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const PetPage = ({ user }) => {
   const { cardId } = useParams();
-  const UserData = JSON.parse(Cookies.get("userSession"))
-  const userEmail = UserData.data.user.email
-  const navigate = useNavigate()
 
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  
 
   useEffect(() => {
     async function getData() {
@@ -31,26 +24,6 @@ const PetPage = ({ user }) => {
     }
     getData();
   }, []);
-
-  const checkRecord = async () => {
-    const { data, error } = await supabase
-      .from('Requests')
-      .select('*')
-      .eq('pet_id', cardId)
-      .eq('email', userEmail)
-      .neq('adoption_status', "Rejected")
-
-    if (error) {
-      console.log('Error fetching data:', error);
-    } else {
-      if (data.length > 0) {
-        setShowModal(true)
-      } else {
-        console.log('Record does not exist');
-        navigate(`/Application/${cardId}`);
-      }
-    }
-  };
 
   return (
     <div className="container-bg">
@@ -89,53 +62,17 @@ const PetPage = ({ user }) => {
                     </span>{" "}
                   </li>
                 </ul>
-                  <button className="btn w-30" onClick={checkRecord}>Apply Now</button>{" "}
+                <Link to={`/Application/${pet.id}`}>
+                  {" "}
+                  <button className="btn w-30">Apply Now</button>{" "}
+                </Link>
               </div>
             </div>
           </div>
         ))}
       </div>
       <Footer />
-
-      {showModal && (
-  <div>
-    <div className="modal-backdrop show"></div>
-    <div
-      className="modal"
-      tabIndex="-1"
-      role="dialog"
-      style={{ display: "block" }}
-    >
-      <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Existing Adoption Request</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setShowModal(false)}
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">You already have an adoption request for this pet.</div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-)}
-
-
-    </div>
-    
   );
 };
 
