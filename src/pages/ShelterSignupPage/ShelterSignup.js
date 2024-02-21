@@ -17,6 +17,13 @@ const ShelterSignup = ({}) => {
       const handleInvite = async () => {
         setLoading(true);
         try {
+
+          const { error: otpError } = await supabase.auth.signIn({ email: formData.ShelterEmail });
+    
+          if (otpError) {
+            throw new Error(otpError.message || otpError.error_description);
+          }
+          
           const message = `Dear Shelter,\n\nThank you for your interest in joining BPUAdopt!\n\nOur team will be in contact with you shortly with regards to your application.\n\nBest regards,\nBPUAdopt Team`;
       
           const templateParams = {
