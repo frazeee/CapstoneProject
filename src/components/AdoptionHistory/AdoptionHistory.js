@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import flatpickr from "flatpickr";
 import { supabase } from "../client";
 import { Link } from "react-router-dom";
 import ReportGeneration from "../../utils/ReportGeneration";
 import PDFGeneration from "../../utils/PDFGeneration";
+import ReportsGeneration from "../ReportsGeneration/ReportsGeneration";
+import DateRangePicker from "../../utils/DateRangePicker";
+import emailjs from "emailjs-com";
+
 
 const AdoptionHistory = ({ shelterName }) => {
   const [requestList, setRequestList] = useState([]);
@@ -20,7 +25,8 @@ const AdoptionHistory = ({ shelterName }) => {
             *,
             Pets (
                 id,
-                pet_name
+                pet_name,
+                pet_type
             )
             `
         )
@@ -32,6 +38,29 @@ const AdoptionHistory = ({ shelterName }) => {
       console.error("An unexpected error occurred:", error);
     }
   };
+
+  const [userData, setUserData] = useState([]);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("Users")
+          .select("email, is_Restricted");
+
+        if (error) {
+          throw error;
+        }
+
+        setUserData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  console.log(userData);
 
   const [activeStatus, setActiveStatus] = useState("All");
 
@@ -45,34 +74,10 @@ const AdoptionHistory = ({ shelterName }) => {
     setSearchInput(event.target.value);
   };
 
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
-  const handleStartDateChange = (e) => {
-    const newStartDate = e.target.value;
-    setStartDate(newStartDate);
-
-    // If end date is set and it's less than the new start date, update end date
-    if (endDate && new Date(endDate) < new Date(newStartDate)) {
-      setEndDate("");
-    }
-  };
-
-  const handleEndDateChange = (e) => {
-    const newEndDate = e.target.value;
-
-    // If start date is set and it's greater than the new end date, update start date
-    if (startDate && new Date(startDate) > new Date(newEndDate)) {
-      setStartDate(newEndDate);
-    }
-
-    // Limit the end date to be up to the current date
-    const currentDate = new Date().toISOString().split("T")[0];
-    if (newEndDate > currentDate) {
-      setEndDate(currentDate);
-    } else {
-      setEndDate(newEndDate);
-    }
+  const handleSelectRange = (range) => {
+    setSelectedDate(range);
   };
 
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -89,8 +94,8 @@ const AdoptionHistory = ({ shelterName }) => {
             req.Pets.pet_name
               .toLowerCase()
               .includes(searchInput.toLowerCase())) &&
-          (!startDate || startDate <= req.created_at) &&
-          (!endDate || req.created_at <= endDate)
+          (!selectedDate || selectedDate[0] <= req.created_at) &&
+          (!selectedDate[1] || req.created_at <= selectedDate[1])
       )
       .map((req) => ({
         ...req,
@@ -98,156 +103,435 @@ const AdoptionHistory = ({ shelterName }) => {
       }));
 
     setFilteredRequests(filteredData);
-  }, [requestList, activeStatus, searchInput, startDate, endDate]);
+  }, [requestList, activeStatus, searchInput, selectedDate]);
+
+  const [renderedComponent, setRenderedComponent] = useState("History");
+
+  const [showRestrictionModal, setShowRestrictionModal] = useState(false);
+  const [showUnrestrictionModal, setShowUnrestrictionModal] = useState(false);
+  const [selectedUserEmail, setSelectedUserEmail] = useState(null);
+
+  const handleConfirmRestriction = async (email) => {
+    try {
+      const { data, error } = await supabase
+        .from("Users")
+        .update({ is_Restricted: true })
+        .eq("email", email)
+        .select();
+
+      if (error) {
+        console.error("Error restricting user:", error.message);
+      } else {
+        console.log("User restricted successfully:", data);
+        // Add any additional logic here
+      }
+      setUserData((prevUserData) =>
+        prevUserData.map((user) =>
+          user.email === email ? { ...user, is_Restricted: true } : user
+        )
+      );
+      const templateParams = {
+        to_email: email,
+        message:`Dear valued user,
+
+        We regret to inform you that your account has been temporarily restricted due to a violation of our platform's policies. We take the enforcement of our policies seriously to ensure a safe and positive experience for all users.
+        
+        During this restriction period, you will be unable to access certain features of our platform, including the ability to apply for adoptions. We understand that this may be disappointing.
+        
+        If you believe this restriction was made in error or have any questions regarding the matter, please don't hesitate to reach out to our support team. 
+        Thank you for your understanding and cooperation.
+        
+        Best regards,
+        BPUAdopt Team`
+        
+      };
+  
+      const serviceId = "service_8r6eaxe";
+      const templateId = "template_restriction";
+      const userId = "-fD_Lzps7ypbyVDAa";
+  
+      emailjs.send(serviceId, templateId, templateParams, userId)
+        .then((response) => {
+          console.log("Email sent:", response);
+        })
+        .catch((error) => {
+          console.error("Error sending email:", error);
+        });
+    } catch (error) {
+      console.error("Error restricting user:", error.message);
+    }
+    setShowRestrictionModal(false);
+  };
+
+  const handleConfirmUnrestriction = async (email) => {
+    try {
+      const { data, error } = await supabase
+        .from("Users")
+        .update({ is_Restricted: false })
+        .eq("email", email)
+        .select();
+
+      if (error) {
+        console.error("Error unrestricting user:", error.message);
+      } else {
+        console.log("User unrestricted successfully:", data);
+      }
+      setUserData((prevUserData) =>
+        prevUserData.map((user) =>
+          user.email === email ? { ...user, is_Restricted: false } : user
+        )
+      );
+      const templateParams = {
+        to_email: email,
+        message: `Dear valued user,
+
+        We are pleased to inform you that the restriction on your account has been lifted. We understand that there may have been circumstances leading to the restriction, and we appreciate your cooperation and understanding throughout this process.
+        
+        Your commitment to our community is valued, and we believe in second chances. By lifting the restriction, you now have the opportunity to continue engaging with our platform and accessing all features, including the ability to apply for adoptions.
+        
+        Thank you for your understanding and cooperation. 
+        
+        Best regards,
+        BPUAdopt Team`
+      };
+  
+      const serviceId = "service_8r6eaxe";
+      const templateId = "template_restriction";
+      const userId = "-fD_Lzps7ypbyVDAa";
+  
+      emailjs.send(serviceId, templateId, templateParams, userId)
+        .then((response) => {
+          console.log("Email sent:", response);
+        })
+        .catch((error) => {
+          console.error("Error sending email:", error);
+        });
+    } catch (error) {
+      console.error("Error unrestricting user:", error.message);
+    }
+    setShowUnrestrictionModal(false);
+  };
+
+  const handleRestrictUser = (email) => {
+    setSelectedUserEmail(email);
+    setShowRestrictionModal(true);
+  };
+
+  const handleUnrestrictUser = (email) => {
+    setSelectedUserEmail(email);
+    setShowUnrestrictionModal(true);
+  };
 
   return (
     <div className="container my-5">
-      <h1 className="text-center">ADOPTION HISTORY</h1>
-      <hr />
-      <div className="card w-100 mt-3">
-        <div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search..."
-            value={searchInput}
-            onChange={handleSearchInputChange}
-          ></input>
-        </div>
-        <div className="card-body text-dark">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                aria-current="page"
-                onClick={() => handleStatusChange("All")}
-              >
-                All
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                aria-current="page"
-                onClick={() => handleStatusChange("For Verification")}
-              >
-                For Verification
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                onClick={() => handleStatusChange("For Interview")}
-              >
-                For Interview
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                onClick={() => handleStatusChange("Interview Done")}
-              >
-                Interview Done
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                onClick={() => handleStatusChange("Approved")}
-              >
-                Approved
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                onClick={() => handleStatusChange("Rejected")}
-              >
-                Rejected
-              </a>
-            </li>
+      {renderedComponent === "History" && (
+        <>
+          <a
+            className="text-end"
+            style={{
+              textDecorationLine: "underline",
+              textDecorationColor: "#ffbd59",
+            }}
+            onClick={() => setRenderedComponent("Reports")}
+          >
+            <p className="text-primary">
+              {" "}
+              To Reports <i class="bi bi-arrow-right text-primary"></i>
+            </p>
+          </a>
 
-            <input
-              type="text"
-              style={{ width: "200px" }}
-              className="form-control ms-auto"
-              placeholder="Start Date"
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => (e.target.type = "text")}
-              onChange={handleStartDateChange}
-              value={startDate}
-            />
-
-            <input
-              type="text"
-              style={{ width: "200px" }}
-              className="form-control ms-auto"
-              placeholder="End Date"
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => (e.target.type = "text")}
-              onChange={handleEndDateChange}
-              value={endDate}
-            />
-          </ul>
-
-          <div className="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Pet Name</th>
-                  <th scope="col">First Name</th>
-                  <th scope="col">Last Name</th>
-                  <th scope="col">Date Created</th>
-                  <th scope="col">Phone Number</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Check Application</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRequests.map((req) => (
-                  <tr>
-                    <td>{req.Pets.pet_name}</td>
-                    <td>{req.first_name}</td>
-                    <td>{req.last_name}</td>
-                    <td>{new Date(req.created_at).toLocaleString()}</td>
-                    <td>{req.phone_number}</td>
-                    <td>{req.email}</td>
-                    <td
-                      className={`badge w-75 mt-2 mx-3 ${
-                        req.adoption_status === "For Verification"
-                          ? "text-bg-primary"
-                          : req.adoption_status === "For Interview"
-                          ? "text-bg-primary"
-                          : req.adoption_status === "Interview Done"
-                          ? "text-light text-bg-info"
-                          : req.adoption_status === "Approved"
-                          ? "text-bg-success"
-                          : req.adoption_status === "Rejected" &&
-                            "text-bg-danger"
-                      }`}
+          <div>
+            <h1 className="text-center">ADOPTION HISTORY</h1>
+            <hr />
+            <div className="card w-100 mt-3">
+              <div>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search..."
+                  value={searchInput}
+                  onChange={handleSearchInputChange}
+                ></input>
+              </div>
+              <div className="card-body text-dark">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      aria-current="page"
+                      onClick={() => handleStatusChange("All")}
                     >
-                      {req.adoption_status}
-                    </td>
-                    <td>
-                      <Link to={`/CheckApplication/${req.id}`}>
-                        <span
-                          className=" ms-2 check-link"
-                          data-bs-dismiss="modal"
-                        >
-                          Check Application
-                        </span>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      All
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      aria-current="page"
+                      onClick={() => handleStatusChange("For Verification")}
+                    >
+                      For Verification
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      onClick={() => handleStatusChange("For Interview")}
+                    >
+                      For Interview
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      onClick={() => handleStatusChange("Interview Done")}
+                    >
+                      Interview Done
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      onClick={() => handleStatusChange("Approved")}
+                    >
+                      Approved
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link text-primary"
+                      onClick={() => handleStatusChange("Rejected")}
+                    >
+                      Rejected
+                    </a>
+                  </li>
+
+                  <div className="d-flex ms-auto w-25">
+                    <DateRangePicker onSelect={handleSelectRange} />
+                  </div>
+                </ul>
+
+                <div className="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Pet Name</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Date Created</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Check Application</th>
+                        <th scope="col">Restrict User</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredRequests.map((req) => {
+                        // Find the user in userData array
+                        const user = userData.find(
+                          (user) => user.email === req.email
+                        );
+
+                        // Render the table row
+                        return (
+                          <tr key={req.id}>
+                            <td>{req.Pets.pet_name}</td>
+                            <td>{req.first_name}</td>
+                            <td>{req.last_name}</td>
+                            <td>{new Date(req.created_at).toLocaleString()}</td>
+                            <td>{req.email}</td>
+                            <td
+                              className={`badge w-75 mt-2 mx-3 ${
+                                req.adoption_status === "For Verification" ||
+                                req.adoption_status === "For Interview"
+                                  ? "text-bg-primary"
+                                  : req.adoption_status === "Interview Done"
+                                  ? "text-light text-bg-info"
+                                  : req.adoption_status === "Approved"
+                                  ? "text-bg-success"
+                                  : req.adoption_status === "Rejected" &&
+                                    "text-bg-danger"
+                              }`}
+                            >
+                              {req.adoption_status}
+                            </td>
+                            <td>
+                              <Link to={`/CheckApplication/${req.id}`}>
+                                <span
+                                  className="ms-2 check-link"
+                                  data-bs-dismiss="modal"
+                                >
+                                  Check Application
+                                </span>
+                              </Link>
+                            </td>
+                            <td>
+                              {userData.map(
+                                (user) =>
+                                  user.email === req.email &&
+                                  (user.is_Restricted ? (
+                                    <button
+                                      className="text-danger"
+                                      style={{
+                                        backgroundColor: "transparent",
+                                        height: "auto",
+                                        width: "110px",
+                                        border: "none",
+                                        textDecoration: "underline",
+                                      }}
+                                      onClick={() =>
+                                        handleUnrestrictUser(user.email)
+                                      }
+                                    >
+                                      Unrestrict
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="text-danger"
+                                      style={{
+                                        backgroundColor: "transparent",
+                                        height: "auto",
+                                        width: "110px",
+                                        border: "none",
+                                        textDecoration: "underline",
+                                      }}
+                                      onClick={() =>
+                                        handleRestrictUser(user.email)
+                                      }
+                                    >
+                                      Restrict
+                                    </button>
+                                  ))
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <ReportGeneration data={requestList} />
+              <PDFGeneration
+                data={filteredRequests}
+                shelterName={shelterName}
+                activeStatus={activeStatus}
+                dateRange={selectedDate}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {renderedComponent === "Reports" && (
+        <>
+          <p
+            className="text-start"
+            style={{
+              textDecorationLine: "underline",
+              textDecorationColor: "#ffbd59",
+            }}
+            onClick={() => setRenderedComponent("History")}
+          >
+            <i class="bi bi-arrow-left text-primary"></i>
+            <a className="text-primary"> To History</a>{" "}
+          </p>
+          <ReportsGeneration data={requestList} />
+        </>
+      )}
+      <>
+        <div
+          className="modal"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: showRestrictionModal ? "block" : "none" }}
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Restrict User?</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setShowRestrictionModal(false)}
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Are you sure you want to restrict user with email:{" "}
+                  {selectedUserEmail}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  style={{ backgroundColor: "red" }}
+                  onClick={() => handleConfirmRestriction(selectedUserEmail)}
+                >
+                  Restrict
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={() => setShowRestrictionModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <ReportGeneration data={requestList} />
-        <PDFGeneration data={filteredRequests} shelterName={shelterName} />
-      </div>
+
+        <div
+          className="modal"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: showUnrestrictionModal ? "block" : "none" }}
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Unrestrict User?</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setShowRestrictionModal(false)}
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Are you sure you want to unrestrict user with email:{" "}
+                  {selectedUserEmail}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  style={{ backgroundColor: "red" }}
+                  onClick={() => handleConfirmUnrestriction(selectedUserEmail)}
+                >
+                  Unrestrict
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={() => setShowUnrestrictionModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     </div>
   );
 };

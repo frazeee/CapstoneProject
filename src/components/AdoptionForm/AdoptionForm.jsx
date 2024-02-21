@@ -5,6 +5,8 @@ import { supabase } from "../client";
 import { useAuth } from "../../utils/AuthProvider";
 import { BeatLoader } from "react-spinners";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
 
 function AdoptionForm(props) {
   const { register, handleSubmit, watch, setValue } = useForm();
@@ -14,6 +16,7 @@ function AdoptionForm(props) {
   const [loading, setLoading] = useState(null);
   const UserData = JSON.parse(Cookies.get("userSession"));
   const userEmail = UserData.data.user.email;
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getUserByEmail(email) {
@@ -27,6 +30,10 @@ function AdoptionForm(props) {
         if (error) {
           console.error("Error fetching user:", error);
           return;
+        }
+
+        if(data[0].is_Restricted){
+          navigate("/")
         }
 
         if (data && data.length > 0) {

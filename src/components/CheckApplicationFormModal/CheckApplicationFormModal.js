@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 function CheckApplicationFormModal(requestDetails) {
   const [data, setData] = useState(requestDetails.requestDetails);
-  console.log(data);
 
   return (
     <>

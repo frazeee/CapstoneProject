@@ -24,8 +24,6 @@ import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import ShelterRegister from "./pages/ShelterRegisterPage/ShelterRegisterPage";
 
 
-
-
 function App() {
   return (
     <>

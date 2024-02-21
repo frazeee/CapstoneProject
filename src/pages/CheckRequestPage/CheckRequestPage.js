@@ -212,11 +212,24 @@ function CheckRequestPage() {
           return; // Exit the handleStatusUpdate function
         }
   
+        if (selectedStatus === "Approved") {
+          await handleApproval(); // Wait for handleApproval to complete
+          await sendProcessUpdateEmail(
+            selectedStatus,
+            requestEmail,
+          );
+          setModalMessage(
+            `Record updated successfully! An email has been sent to ${requestEmail}`
+          );
+          setShowModal(true);
+          return; // Exit the handleStatusUpdate function
+        }
+  
+        // For other status updates
         await sendProcessUpdateEmail(
           selectedStatus,
           requestEmail,
         );
-
         setModalMessage(
           `Record updated successfully! An email has been sent to ${requestEmail}`
         );
@@ -229,10 +242,33 @@ function CheckRequestPage() {
       setLoading(false);
     }
   };
+  
  
   const anotherFunction = (status) => {
     setGetInfoModalShow(true)
   };
+
+  const handleApproval = async () => {
+    try {
+      // Update the Pets table in Supabase
+      const { data, error } = await supabase
+        .from('Pets')
+        .update({ is_adopted: true }) 
+        .eq('id', requestDetails[0].Pets.id); 
+  
+      if (error) {
+        throw error;
+      }
+  
+      console.log('Pet approved successfully:', data);
+      
+  
+    } catch (error) {
+      console.error('Error approving pet:', error.message);
+  
+    }
+  };
+  
   
 
   if (loading) {
