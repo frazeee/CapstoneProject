@@ -4,6 +4,7 @@ import { useState } from "react";
 import { supabase } from "../../components/client";
 import "./ShelterSignup.css"
 import loginPicture from "../../images/loginPicture.png";
+import emailjs from "emailjs-com";
 
 const ShelterSignup = ({}) => {
     const [loading, setLoading] = useState(null);
@@ -13,29 +14,28 @@ const ShelterSignup = ({}) => {
         ShelterSocMed: "",
         ShelterPetNumber: ""
       });
-
-    const handleInvite = async () => {
-      setLoading(true);
-      try {
-        const { error } = await supabase.auth.signInWithOtp({
-          email: formData.ShelterEmail,
-        });
-  
-        if (error) {
-          alert(error.error_description || error.message);
-        } else {
-          alert('Check your email for the invite link!');
+      const handleInvite = async () => {
+        setLoading(true);
+        try {
+          const message = `Dear Shelter,\n\nThank you for your interest in joining BPUAdopt!\n\nOur team will be in contact with you shortly with regards to your application.\n\nBest regards,\nBPUAdopt Team`;
+      
+          const templateParams = {
+            to_email: formData.ShelterEmail,
+            message: message
+          };
+      
+          await emailjs.send("service_8r6eaxe", "template_email", templateParams, "-fD_Lzps7ypbyVDAa");
+          console.log('Email sent successfully!');
+          alert('Thank you for your interest in joining BPUAdopt. An email has been sent to you shortly.');
+        } catch (error) {
+          console.error('Failed to send invite:', error);
+          alert('Failed to send invite. Please try again.');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Failed to send invite:', error);
-        alert('Failed to send invite. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-  
+      };
+      
     const handleChange = (event) => {
-      console.log(formData);
       setFormData((prevFormData) => ({
         ...prevFormData,
         [event.target.name]: event.target.value,

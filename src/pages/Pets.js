@@ -49,7 +49,12 @@ function Pets({ user }) {
   const uniqueAges = Array.from(new Set(data.map((cardItem) => cardItem.age))).sort((a, b) => a - b);
   const uniqueShelters = Array.from(new Set(data.map((cardItem) => cardItem.Shelter)));
 
+
+  
    const filteredCardItems = data.filter((cardItem) => {
+    if (cardItem.is_adopted){
+      return false;
+    }
     if (activeButton === 'All' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
       return true;
     }

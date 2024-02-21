@@ -110,9 +110,9 @@ const ReportsGeneration = ({ data }) => {
     if (selectedReport === "petTypeCount") {
       setHeaderText("Pet Type Count");
     } else if (selectedReport === "petMostRequest") {
-      setHeaderText("Pet Most Request");
+      setHeaderText("Pet with Most Requests");
     } else if (selectedReport === "adoptionCount") {
-      setHeaderText("Adoption Count");
+      setHeaderText("Adoption Request Count");
     } else if (selectedReport === "statusCount") {
       setHeaderText("Adoption Status Count");
     } else {
@@ -134,7 +134,7 @@ const ReportsGeneration = ({ data }) => {
           >
             <option value="petTypeCount">Pet Type Request Count</option>
             <option value="petMostRequest">Pets with Most Requests</option>
-            <option value="adoptionCount">Adoptions</option>
+            <option value="adoptionCount">Adoption Requests</option>
             <option value="statusCount">Status Count</option>
           </select>
           <label for="report-type">Report Type: </label>
