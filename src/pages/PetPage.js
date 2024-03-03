@@ -10,8 +10,8 @@ const PetPage = ({ user }) => {
   const navigate = useNavigate(); // Use useNavigate for navigation
   const { cardId } = useParams();
   const [userEmail, setUserEmail] = useState("");
-  const userSessionCookie = Cookies.get("userSession");
-  if (userSessionCookie) {
+  const userSessionCookie = Cookies.get("userSession") ?? null;
+  if (userSessionCookie !== null) {
     const UserData = JSON.parse(userSessionCookie);
     setUserEmail(UserData.data.user.email);
 }
@@ -19,7 +19,7 @@ const PetPage = ({ user }) => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
-  console.log(userEmail)
+  console.log(userSessionCookie)
 
   useEffect(() => {
     async function getData() {
