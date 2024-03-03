@@ -9,11 +9,17 @@ import Cookies from "js-cookie";
 const PetPage = ({ user }) => {
   const navigate = useNavigate(); // Use useNavigate for navigation
   const { cardId } = useParams();
-  const UserData = JSON.parse(Cookies.get("userSession"));
-  const userEmail = UserData.data.user.email;
+  const [userEmail, setUserEmail] = useState("");
+  const userSessionCookie = Cookies.get("userSession");
+  if (userSessionCookie) {
+    const UserData = JSON.parse(userSessionCookie);
+    setUserEmail(UserData.data.user.email);
+}
   const [isRestricted, setIsRestricted] = useState(false);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
+
+  console.log(userEmail)
 
   useEffect(() => {
     async function getData() {
@@ -59,6 +65,9 @@ const PetPage = ({ user }) => {
   }, [userEmail]);
 
   const handleApplyNowClick = () => {
+    if(!userEmail){
+        navigate("/Login")
+    }
     if (isRestricted) {
       setShowModal(true); // Show modal if user is restricted
     } else {
