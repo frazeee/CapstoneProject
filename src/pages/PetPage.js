@@ -10,11 +10,6 @@ const PetPage = ({ user }) => {
   const navigate = useNavigate(); // Use useNavigate for navigation
   const { cardId } = useParams();
   const [userEmail, setUserEmail] = useState("");
-  const userSessionCookie = Cookies.get("userSession") ?? null;
-  if (userSessionCookie !== null) {
-    const UserData = JSON.parse(userSessionCookie);
-    setUserEmail(UserData.data.user.email);
-}
   const [isRestricted, setIsRestricted] = useState(false);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
@@ -39,28 +34,36 @@ const PetPage = ({ user }) => {
   }, [cardId]);
 
   useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const { data: usersData, error: fetchError } = await supabase
-          .from("Users")
-          .select("is_Restricted")
-          .eq("email", userEmail)
-          .single();
-
-        if (fetchError) {
-          throw fetchError;
+    const userSessionCookie = Cookies.get("userSession") ?? null;
+    if (userSessionCookie !== null) {
+      let UserData = JSON.parse(userSessionCookie);
+      setUserEmail(UserData.data.user.email);
+  
+      // Fetch user data here
+      async function fetchUserData() {
+        try {
+          const { data: usersData, error: fetchError } = await supabase
+            .from("Users")
+            .select("is_Restricted")
+            .eq("email", UserData.data.user.email)
+            .single();
+  
+          if (fetchError) {
+            throw fetchError;
+          }
+  
+          setIsRestricted(usersData.is_Restricted);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-
-        setIsRestricted(usersData.is_Restricted);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
       }
-    }
-
-    if (userEmail) {
+  
       fetchUserData();
     }
-  }, [userEmail]);
+  }, []);
+  
+
+  
 
   const handleApplyNowClick = () => {
     if(!userEmail){
