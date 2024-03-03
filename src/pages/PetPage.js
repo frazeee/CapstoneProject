@@ -19,8 +19,6 @@ const PetPage = ({ user }) => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
-  console.log(userSessionCookie)
-
   useEffect(() => {
     async function getData() {
       try {
