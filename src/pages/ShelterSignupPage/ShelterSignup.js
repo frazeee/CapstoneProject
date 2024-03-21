@@ -18,11 +18,6 @@ const ShelterSignup = ({}) => {
         setLoading(true);
         try {
 
-          const { error: otpError } = await supabase.auth.signIn({ email: formData.ShelterEmail });
-    
-          if (otpError) {
-            throw new Error(otpError.message || otpError.error_description);
-          }
           
           const message = `Dear Shelter,\n\nThank you for your interest in joining BPUAdopt!\n\nOur team will be in contact with you shortly with regards to your application.\n\nBest regards,\nBPUAdopt Team`;
       
@@ -33,10 +28,7 @@ const ShelterSignup = ({}) => {
       
           await emailjs.send("service_8r6eaxe", "template_email", templateParams, "-fD_Lzps7ypbyVDAa");
           console.log('Email sent successfully!');
-          alert('Thank you for your interest in joining BPUAdopt. An email has been sent to you shortly.');
-        } catch (error) {
-          console.error('Failed to send invite:', error);
-          alert('Failed to send invite. Please try again.');
+          alert('Thank you for your interest in joining BPUAdopt. An email will been sent to you shortly.');
         } finally {
           setLoading(false);
         }
@@ -67,7 +59,6 @@ const ShelterSignup = ({}) => {
           throw insertError;
         }
   
-        // After successful signup, send an invite
         await handleInvite();
       } catch (error) {
         console.error('Error during signup:', error);

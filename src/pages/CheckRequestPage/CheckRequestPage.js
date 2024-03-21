@@ -50,20 +50,17 @@ function CheckRequestPage() {
 
   const handleCheckPictures = () => {
     const url = requestDetails[0].q_house_pic;
-    // Open the URL in a new tab
     window.open(url, "_blank");
   };
 
   const [getInfoModalShow, setGetInfoModalShow] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState("");
 
-  //email for status for verification, interview done, and approved
   const sendProcessUpdateEmail = async (status, requestEmail) => {
     try {
       setLoading(true);
       let templateMessage;
 
-      // Determine email template based on the status
       switch (status) {
         case "For Verification":
           templateMessage = `Hello ${requestDetails[0].first_name},
@@ -75,7 +72,6 @@ function CheckRequestPage() {
           Best regards,
           BPUAdopt Team`;
           break;
-
 
         case "Interview Done":
           templateMessage = `Hello ${requestDetails[0].first_name},
@@ -130,17 +126,28 @@ function CheckRequestPage() {
   const handleGetInfoModalSubmit = async () => {
     try {
       setLoading(true);
-      setGetInfoModalShow(false)
+      setGetInfoModalShow(false);
       let templateMessage;
-  
+
       // Determine email template based on the status
       switch (selectedStatus) {
         case "For Interview":
+         const date = new Date(additionalInfo)
+         const formattedDateTime = date.toLocaleString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          hour12: true
+        });
+
           templateMessage = `Hello ${requestDetails[0].first_name},
   
             Your adoption process for ${requestDetails[0].Pets.pet_name} is now at the "For Interview" stage. We will be conducting an interview as part of the adoption process. Please be prepared for a discussion about your suitability as a pet owner.
   
-            Interview Date and Time: ${additionalInfo}
+            Interview Date and Time: ${formattedDateTime} 
   
             If you have any concerns or if the scheduled interview time is inconvenient, kindly contact the shelter.
             
@@ -148,8 +155,18 @@ function CheckRequestPage() {
   
             Best regards,
             BPUAdopt Team`;
+
+            const { data, error } = await supabase
+            .from('Requests')
+            .update({ interview_date: date }) 
+            .eq('id', dataId)
+            .select();
+            if (error) {
+              console.error('Error updating database:', error.message);
+            }
+
           break;
-  
+
         case "Rejected":
           templateMessage = `Hello ${requestDetails[0].first_name},
               
@@ -162,11 +179,11 @@ function CheckRequestPage() {
               Best regards,
               BPUAdopt Team`;
           break;
-  
+
         default:
           throw new Error("Invalid status");
       }
-  
+
       const templateParams = {
         to_email: requestEmail,
         subject: selectedStatus,
@@ -174,62 +191,57 @@ function CheckRequestPage() {
         user: requestDetails.first_name,
         organization: "BPUAdopt",
       };
-  
+
       await emailjs.send(
         "service_8r6eaxe",
         "template_email",
         templateParams,
         "-fD_Lzps7ypbyVDAa"
       );
-  
+
       setModalMessage(
         `Record updated successfully! An email has been sent to ${requestEmail}`
       );
       setShowModal(true);
-  
     } catch (error) {
       console.error("Error sending email:", error);
     } finally {
       setLoading(false);
-      setAdditionalInfo("")
+      setAdditionalInfo("");
     }
   };
-  
 
   const handleStatusUpdate = async () => {
     try {
       setLoading(true);
-  
+
       const { data, error } = await supabase
         .from("Requests")
         .update({ adoption_status: selectedStatus })
         .eq("id", dataId)
         .select();
-  
+
       if (data) {
-        if (selectedStatus === "For Interview" || selectedStatus === "Rejected") {
+        if (
+          selectedStatus === "For Interview" ||
+          selectedStatus === "Rejected"
+        ) {
           anotherFunction(selectedStatus);
-          return; // Exit the handleStatusUpdate function
+          return;
         }
-  
+
         if (selectedStatus === "Approved") {
           await handleApproval(); // Wait for handleApproval to complete
-          await sendProcessUpdateEmail(
-            selectedStatus,
-            requestEmail,
-          );
+          await sendProcessUpdateEmail(selectedStatus, requestEmail);
           setModalMessage(
             `Record updated successfully! An email has been sent to ${requestEmail}`
           );
           setShowModal(true);
           return; // Exit the handleStatusUpdate function
         }
-  
+
         // For other status updates
-        await sendProcessUpdateEmail(
-          selectedStatus,
-          requestEmail,
-        );
+        await sendProcessUpdateEmail(selectedStatus, requestEmail);
         setModalMessage(
           `Record updated successfully! An email has been sent to ${requestEmail}`
         );
@@ -242,34 +254,28 @@ function CheckRequestPage() {
       setLoading(false);
     }
   };
-  
- 
+
   const anotherFunction = (status) => {
-    setGetInfoModalShow(true)
+    setGetInfoModalShow(true);
   };
 
   const handleApproval = async () => {
     try {
       // Update the Pets table in Supabase
       const { data, error } = await supabase
-        .from('Pets')
-        .update({ is_adopted: true }) 
-        .eq('id', requestDetails[0].Pets.id); 
-  
+        .from("Pets")
+        .update({ is_adopted: true })
+        .eq("id", requestDetails[0].Pets.id);
+
       if (error) {
         throw error;
       }
-  
-      console.log('Pet approved successfully:', data);
-      
-  
+
+      console.log("Pet approved successfully:", data);
     } catch (error) {
-      console.error('Error approving pet:', error.message);
-  
+      console.error("Error approving pet:", error.message);
     }
   };
-  
-  
 
   if (loading) {
     <>
@@ -487,12 +493,24 @@ function CheckRequestPage() {
                       ? "Interview Date and Time"
                       : "Rejection Reason"}
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={additionalInfo}
-                    onChange={(e) => setAdditionalInfo(e.target.value)}
-                  />
+                  {selectedStatus === "For Interview" ? (
+                    <>
+                      <input
+                        type="datetime-local"
+                        className="form-control"
+                        value={additionalInfo}
+                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                        min={new Date().toISOString().slice(0, 16)}
+                      />
+                    </>
+                  ) : (
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={additionalInfo}
+                      onChange={(e) => setAdditionalInfo(e.target.value)}
+                    />
+                  )}
                 </div>
               </div>
               <div className="modal-footer">

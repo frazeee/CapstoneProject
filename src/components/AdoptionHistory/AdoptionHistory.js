@@ -8,9 +8,9 @@ import ReportsGeneration from "../ReportsGeneration/ReportsGeneration";
 import DateRangePicker from "../../utils/DateRangePicker";
 import emailjs from "emailjs-com";
 
-
 const AdoptionHistory = ({ shelterName }) => {
   const [requestList, setRequestList] = useState([]);
+  const [reason, setReason] = useState("");
 
   useEffect(() => {
     getRequestList();
@@ -31,8 +31,6 @@ const AdoptionHistory = ({ shelterName }) => {
             `
         )
         .eq("shelter_from", shelterName);
-
-      console.log(data);
       setRequestList(data);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
@@ -59,8 +57,6 @@ const AdoptionHistory = ({ shelterName }) => {
 
     fetchUserData();
   }, []);
-
-  console.log(userData);
 
   const [activeStatus, setActiveStatus] = useState("All");
 
@@ -111,7 +107,13 @@ const AdoptionHistory = ({ shelterName }) => {
   const [showUnrestrictionModal, setShowUnrestrictionModal] = useState(false);
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
 
-  const handleConfirmRestriction = async (email) => {
+  const handleChange = (e) => {
+    setReason(e.target.value);
+  };
+
+  const handleConfirmRestriction = async (email, e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
     try {
       const { data, error } = await supabase
         .from("Users")
@@ -132,9 +134,11 @@ const AdoptionHistory = ({ shelterName }) => {
       );
       const templateParams = {
         to_email: email,
-        message:`Dear valued user,
-
+        message: `Dear valued user,
+  
         We regret to inform you that your account has been temporarily restricted due to a violation of our platform's policies. We take the enforcement of our policies seriously to ensure a safe and positive experience for all users.
+        
+        Reason of Restriction: ${reason}
         
         During this restriction period, you will be unable to access certain features of our platform, including the ability to apply for adoptions. We understand that this may be disappointing.
         
@@ -142,15 +146,15 @@ const AdoptionHistory = ({ shelterName }) => {
         Thank you for your understanding and cooperation.
         
         Best regards,
-        BPUAdopt Team`
-        
+        BPUAdopt Team`,
       };
-  
+
       const serviceId = "service_8r6eaxe";
       const templateId = "template_restriction";
       const userId = "-fD_Lzps7ypbyVDAa";
-  
-      emailjs.send(serviceId, templateId, templateParams, userId)
+
+      emailjs
+        .send(serviceId, templateId, templateParams, userId)
         .then((response) => {
           console.log("Email sent:", response);
         })
@@ -192,14 +196,15 @@ const AdoptionHistory = ({ shelterName }) => {
         Thank you for your understanding and cooperation. 
         
         Best regards,
-        BPUAdopt Team`
+        BPUAdopt Team`,
       };
-  
+
       const serviceId = "service_8r6eaxe";
       const templateId = "template_restriction";
       const userId = "-fD_Lzps7ypbyVDAa";
-  
-      emailjs.send(serviceId, templateId, templateParams, userId)
+
+      emailjs
+        .send(serviceId, templateId, templateParams, userId)
         .then((response) => {
           console.log("Email sent:", response);
         })
@@ -221,6 +226,17 @@ const AdoptionHistory = ({ shelterName }) => {
     setSelectedUserEmail(email);
     setShowUnrestrictionModal(true);
   };
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const indexOfLastRequest = currentPage * 10;
+  const indexOfFirstRequest = indexOfLastRequest - 10;
+  const currentRequests = filteredRequests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="container my-5">
@@ -326,7 +342,7 @@ const AdoptionHistory = ({ shelterName }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredRequests.map((req) => {
+                      {currentRequests.map((req) => {
                         // Find the user in userData array
                         const user = userData.find(
                           (user) => user.email === req.email
@@ -411,6 +427,53 @@ const AdoptionHistory = ({ shelterName }) => {
                   </table>
                 </div>
               </div>
+              <nav>
+                <ul className="pagination justify-content-center">
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage - 1)}
+                    >
+                      &laquo;
+                    </button>
+                  </li>
+                  {Array.from({
+                    length: Math.ceil(filteredRequests.length / 10),
+                  }).map((_, index) => (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        currentPage === index + 1 ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => paginate(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+                  <li
+                    className={`page-item ${
+                      currentPage === Math.ceil(filteredRequests.length / 10)
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage + 1)}
+                    >
+                      &raquo;
+                    </button>
+                  </li>
+                </ul>
+              </nav>
               <ReportGeneration data={requestList} />
               <PDFGeneration
                 data={filteredRequests}
@@ -436,7 +499,7 @@ const AdoptionHistory = ({ shelterName }) => {
             <i class="bi bi-arrow-left text-primary"></i>
             <a className="text-primary"> To History</a>{" "}
           </p>
-          <ReportsGeneration data={requestList} />
+          <ReportsGeneration data={requestList} shelterName={shelterName} />
         </>
       )}
       <>
@@ -458,30 +521,43 @@ const AdoptionHistory = ({ shelterName }) => {
                   onClick={() => setShowRestrictionModal(false)}
                 ></button>
               </div>
-              <div class="modal-body">
-                <p>
-                  Are you sure you want to restrict user with email:{" "}
-                  {selectedUserEmail}
-                </p>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  style={{ backgroundColor: "red" }}
-                  onClick={() => handleConfirmRestriction(selectedUserEmail)}
-                >
-                  Restrict
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                  onClick={() => setShowRestrictionModal(false)}
-                >
-                  Close
-                </button>
-              </div>
+              <form
+                onSubmit={(e) => handleConfirmRestriction(selectedUserEmail, e)}
+              >
+                <div class="modal-body">
+                  <p>
+                    Are you sure you want to restrict user with email:{" "}
+                    {selectedUserEmail}
+                  </p>
+
+                  <p>If yes, kindly add a reason of restriction:</p>
+                  <input
+                    className="form-control"
+                    required
+                    value={reason}
+                    onChange={handleChange}
+                    placeholder="Reason of Restriction"
+                  />
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="submit"
+                    class="btn btn-danger"
+                    style={{ backgroundColor: "red" }}
+                  >
+                    Restrict
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    onClick={() => setShowRestrictionModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

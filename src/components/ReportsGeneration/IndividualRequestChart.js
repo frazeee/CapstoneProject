@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 
-const IndividualRequestChart = ({ data, headerText, backgroundColors ,chartOptions, dateRange}) => {
+const IndividualRequestChart = ({ data, headerText, backgroundColors ,chartOptions, dateRange,  setProcessedData}) => {
   const [individualPetRequestCount, setIndividualPetRequestCount] = useState({});
 
   useEffect(() => {
@@ -18,6 +18,7 @@ const IndividualRequestChart = ({ data, headerText, backgroundColors ,chartOptio
     }, {});
   
     setIndividualPetRequestCount(countResult);
+    setProcessedData(countResult)
   }, [data, dateRange]);
   
 

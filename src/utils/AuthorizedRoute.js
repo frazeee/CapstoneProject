@@ -10,7 +10,6 @@ const AuthorizedRoute = ({}) => {
     if(session){
       const tokenData = JSON.parse(session);
       userSession = tokenData.data.session
-      console.log(userSession)
     }
     else{
       userSession = null

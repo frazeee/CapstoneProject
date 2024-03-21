@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 
-const AdoptionStatusCountChart = ({ data, headerText, backgroundColors,  chartOptions, dateRange }) => {
+const AdoptionStatusCountChart = ({ data, headerText, backgroundColors,  chartOptions, dateRange, setProcessedData }) => {
   const [adoptionStatusCount, setAdoptionStatusCount] = useState({});
 
   useEffect(() => {
@@ -37,6 +37,7 @@ const AdoptionStatusCountChart = ({ data, headerText, backgroundColors,  chartOp
     );
   
     setAdoptionStatusCount(countOccurrencesByStatus);
+    setProcessedData(countOccurrencesByStatus)
   }, [data, dateRange]);
   
 

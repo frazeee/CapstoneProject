@@ -9,7 +9,13 @@ import {
   BarElement,
   Title,
 } from "chart.js";
+import "chartjs-plugin-datalabels";
+
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import flatpickr from "flatpickr";
+
 import AdoptionCountChart from "./AdoptionCountChart";
 import IndividualRequestChart from "./IndividualRequestChart";
 import AdoptionStatusCountChart from "./StatusCountChart";
@@ -26,10 +32,13 @@ ChartJS.register(
   Legend
 );
 
-const ReportsGeneration = ({ data }) => {
+const ReportsGeneration = ({ data, shelterName }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const reportFlatpickrRef = useRef(null);
   const [requestListData, setRequestListData] = useState(data);
+  const [processedData, setProcessedData] = useState("");
+
+  const printRef = useRef(null);
 
   useEffect(() => {
     if (!reportFlatpickrRef.current) {
@@ -60,6 +69,9 @@ const ReportsGeneration = ({ data }) => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        display: true,
+      },
       font: {
         size: 24, // Adjust the font size as needed
       },
@@ -119,6 +131,80 @@ const ReportsGeneration = ({ data }) => {
       setHeaderText("Pet Type Count");
     }
   };
+  const [tableHead, setTableHead] = useState([["Pet Type", "Count"]]);
+
+  useEffect(() => {
+    const updateTableHead = () => {
+      if (activeReport === "petMostRequest") {
+        setTableHead([["Pet Name", "Request Count"]]);
+      }
+      if (activeReport === "adoptionCount") {
+        setTableHead([["Month", "Requests Count"]]);
+      }
+      if (activeReport === "statusCount") {
+        setTableHead([["Adoption Status", "Requests Count"]]);
+      }  else {
+        setTableHead([["Pet Type", "Count"]]);
+      }
+    };
+
+    updateTableHead(); // Call initially to set the head
+  }, [activeReport]);
+
+  const generateHeader = (pdf) => {
+    pdf.setFontSize(18);
+    pdf.setFont("Arial", "bold");
+    pdf.text(`${shelterName}`, 110, 15);
+    pdf.setFontSize(14);
+    pdf.setFont("Arial", "normal");
+    pdf.text(`${headerText}`, 200, 22, { align: "right" });
+    if (selectedDates.length >= 2) {
+      const date1 = new Date(selectedDates[0]).toLocaleDateString("en-US");
+      const date2 = new Date(selectedDates[1]).toLocaleDateString("en-US");
+      pdf.text(`${date1} - ${date2}`, 200, 30, { align: "right" });
+    } else {
+      pdf.text(`No Date Selected`, 200, 30, { align: "right" });
+    }
+
+    pdf.setLineWidth(0.5);
+    pdf.line(5, 35, pdf.internal.pageSize.width - 5, 35);
+  };
+
+  const handleExportClick = async () => {
+    const chartContainer = printRef.current;
+
+    if (!chartContainer) {
+      console.error("Chart container element not found");
+      return;
+    }
+
+    const pdf = new jsPDF();
+    generateHeader(pdf); // Call the header generation function
+
+    const imgData = await html2canvas(chartContainer, { scale: 1 }); // Capture chart as PNG image data
+
+    const desiredWidth = 150;
+    const desiredHeight = 150;
+
+    // Center the image
+    const imgX = pdf.internal.pageSize.width / 2 - desiredWidth / 2;
+    const imgY = 45;
+    pdf.addImage(imgData, "PNG", imgX, imgY, desiredWidth, desiredHeight);
+
+    // Updated table position based on image
+    const tableStartY = imgY + desiredHeight + 10;
+
+    pdf.autoTable({
+      startY: tableStartY,
+      startY: tableStartY,
+      head: tableHead,
+      body: Object.entries(processedData).map(([key, count]) => [key, count]),
+      styles: { fontSize: 10 },
+      theme: "grid",
+    });
+
+    pdf.save(`${activeReport}.pdf`); // Save PDF with report name
+  };
 
   return (
     <div>
@@ -146,51 +232,61 @@ const ReportsGeneration = ({ data }) => {
           <DateRangePicker onSelect={handleSelectRange} />
         </div>
       </div>
-
-      {activeReport === "petTypeCount" && (
-        <>
-          <PetTypeCountChart
-            data={requestListData}
-            headerText={headerText}
-            backgroundColors={backgroundColors}
-            chartOptions={chartOptions}
-            dateRange={selectedDates}
-          />
-        </>
-      )}
-      {activeReport === "petMostRequest" && (
-        <>
-          <IndividualRequestChart
-            data={requestListData}
-            headerText={headerText}
-            backgroundColors={backgroundColors}
-            chartOptions={chartOptions}
-            dateRange={selectedDates}
-          />
-        </>
-      )}
-      {activeReport === "adoptionCount" && (
-        <>
-          <AdoptionCountChart
-            data={requestListData}
-            headerText={headerText}
-            backgroundColors={backgroundColors}
-            chartOptions={chartOptions}
-            dateRange={selectedDates}
-          />
-        </>
-      )}
-      {activeReport === "statusCount" && (
-        <>
-          <AdoptionStatusCountChart
-            data={requestListData}
-            headerText={headerText}
-            backgroundColors={backgroundColors}
-            chartOptions={chartOptions}
-            dateRange={selectedDates}
-          />
-        </>
-      )}
+      <div ref={printRef}>
+        {activeReport === "petTypeCount" && (
+          <>
+            <PetTypeCountChart
+              data={requestListData}
+              headerText={headerText}
+              backgroundColors={backgroundColors}
+              chartOptions={chartOptions}
+              dateRange={selectedDates}
+              setProcessedData={setProcessedData}
+            />
+          </>
+        )}
+        {activeReport === "petMostRequest" && (
+          <>
+            <IndividualRequestChart
+              data={requestListData}
+              headerText={headerText}
+              backgroundColors={backgroundColors}
+              chartOptions={chartOptions}
+              dateRange={selectedDates}
+              setProcessedData={setProcessedData}
+            />
+          </>
+        )}
+        {activeReport === "adoptionCount" && (
+          <>
+            <AdoptionCountChart
+              data={requestListData}
+              headerText={headerText}
+              backgroundColors={backgroundColors}
+              chartOptions={chartOptions}
+              dateRange={selectedDates}
+              setProcessedData={setProcessedData}
+            />
+          </>
+        )}
+        {activeReport === "statusCount" && (
+          <>
+            <AdoptionStatusCountChart
+              data={requestListData}
+              headerText={headerText}
+              backgroundColors={backgroundColors}
+              chartOptions={chartOptions}
+              dateRange={selectedDates}
+              setProcessedData={setProcessedData}
+            />
+          </>
+        )}
+      </div>
+      <div class="container  d-flex justify-content-end">
+        <button className="btn" type="button" onClick={handleExportClick}>
+          Download as PDF
+        </button>
+      </div>
     </div>
   );
 };

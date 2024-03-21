@@ -1,7 +1,6 @@
 import React from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import "jspdf-invoice-template";
 import BPUAdoptLogo from "../images/BPUADOPT_LOGO_BLACK.png";
 
 const PDFGeneration = ({ data, shelterName, activeStatus, dateRange }) => {

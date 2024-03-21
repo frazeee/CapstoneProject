@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import moment from "moment";
+import "chartjs-plugin-datalabels";
 
 const AdoptionCountChart = ({
   data,
@@ -8,32 +9,37 @@ const AdoptionCountChart = ({
   backgroundColors,
   chartOptions,
   dateRange,
+  setProcessedData,
 }) => {
-
   const [monthlyCounts, setMonthlyCounts] = useState(null);
 
   useEffect(() => {
     if (data && data.length > 0) {
       const counts = {};
-  
+
       // Convert date range to moment objects if available
       let startDate, endDate;
       if (dateRange && dateRange.length === 2) {
         startDate = moment(dateRange[0]);
         endDate = moment(dateRange[1]);
       }
-  
+
       // Loop through data to populate counts
       data.forEach((record) => {
         const createdAt = moment(record.created_at);
         const monthYear = createdAt.format("YYYY-MM");
-  
+
         // Check if the record is within the date range, if date range is available
-        if (!startDate || !endDate || (createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate))) {
+        if (
+          !startDate ||
+          !endDate ||
+          (createdAt.isSameOrAfter(startDate) &&
+            createdAt.isSameOrBefore(endDate))
+        ) {
           counts[monthYear] = (counts[monthYear] || 0) + 1;
         }
       });
-  
+
       // Fill in missing months with zero counts
       if (startDate && endDate) {
         const currentDate = moment(startDate);
@@ -45,15 +51,20 @@ const AdoptionCountChart = ({
           currentDate.add(1, "month");
         }
       }
-  
+
       // Sort the counts by date
       const sortedCounts = Object.entries(counts).sort(
         (a, b) => moment(a[0]).valueOf() - moment(b[0]).valueOf()
       );
-  
+
       const labels = sortedCounts.map(([monthYear]) => monthYear);
       const countValues = sortedCounts.map(([_, count]) => count);
-  
+      const dataObject = {};
+      for (let i = 0; i < labels.length; i++) {
+        dataObject[labels[i]] = countValues[i];
+      }
+      setProcessedData(dataObject);
+
       setMonthlyCounts({
         labels,
         datasets: [
@@ -70,10 +81,6 @@ const AdoptionCountChart = ({
       });
     }
   }, [data, dateRange]);
-  
-  
-  
-
 
   return (
     <>
