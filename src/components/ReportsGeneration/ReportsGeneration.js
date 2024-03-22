@@ -110,6 +110,7 @@ const ReportsGeneration = ({ data, shelterName }) => {
   const [headerText, setHeaderText] = useState(
     `Number of Pets by Type Across All Requests`
   );
+  const [tableHead, setTableHead] = useState([["Pet Type", "Count"]]);
 
   const handleSelectRange = (range) => {
     setSelectedDates(range);
@@ -121,35 +122,23 @@ const ReportsGeneration = ({ data, shelterName }) => {
 
     if (selectedReport === "petTypeCount") {
       setHeaderText("Pet Type Count");
+      setTableHead([["Pet Type", "Count"]]);
     } else if (selectedReport === "petMostRequest") {
       setHeaderText("Pet with Most Requests");
+      setTableHead([["Pet Name", "Request Count"]]);
     } else if (selectedReport === "adoptionCount") {
       setHeaderText("Adoption Request Count");
+      setTableHead([["Month", "Request Count"]]);
     } else if (selectedReport === "statusCount") {
       setHeaderText("Adoption Status Count");
+      setTableHead([["Adoption Status", "Requests Count"]]);
     } else {
       setHeaderText("Pet Type Count");
+      setTableHead([["Pet Type", "Count"]]);
     }
   };
-  const [tableHead, setTableHead] = useState([["Pet Type", "Count"]]);
+  
 
-  useEffect(() => {
-    const updateTableHead = () => {
-      if (activeReport === "petMostRequest") {
-        setTableHead([["Pet Name", "Request Count"]]);
-      }
-      if (activeReport === "adoptionCount") {
-        setTableHead([["Month", "Requests Count"]]);
-      }
-      if (activeReport === "statusCount") {
-        setTableHead([["Adoption Status", "Requests Count"]]);
-      }  else {
-        setTableHead([["Pet Type", "Count"]]);
-      }
-    };
-
-    updateTableHead(); // Call initially to set the head
-  }, [activeReport]);
 
   const generateHeader = (pdf) => {
     pdf.setFontSize(18);
@@ -183,7 +172,7 @@ const ReportsGeneration = ({ data, shelterName }) => {
 
     const imgData = await html2canvas(chartContainer, { scale: 1 }); // Capture chart as PNG image data
 
-    const desiredWidth = 150;
+    const desiredWidth = 250;
     const desiredHeight = 150;
 
     // Center the image
@@ -195,7 +184,6 @@ const ReportsGeneration = ({ data, shelterName }) => {
     const tableStartY = imgY + desiredHeight + 10;
 
     pdf.autoTable({
-      startY: tableStartY,
       startY: tableStartY,
       head: tableHead,
       body: Object.entries(processedData).map(([key, count]) => [key, count]),
