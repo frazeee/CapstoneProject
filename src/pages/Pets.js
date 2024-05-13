@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { supabase } from "../components/client";
 import "./Pets.css";
 import Footer from "../components/Footer";
+import moment from "moment";
 
 function Pets({ user }) {
   const [data, setData] = useState([]);
@@ -11,15 +12,15 @@ function Pets({ user }) {
 
   useEffect(() => {
     async function getData() {
-      setLoading(true)
+      setLoading(true);
       const { data, error } = await supabase.from("Pets").select("*");
       if (error) {
         console.log("Error getting data:", error.message);
-        setLoading(false)
+        setLoading(false);
       } else {
         const sortedData = data.slice().sort((a, b) => a.id - b.id);
         setData(sortedData);
-        setLoading(false)
+        setLoading(false);
       }
     }
     getData();
@@ -33,7 +34,7 @@ function Pets({ user }) {
   const handleButtonClick = (buttonText) => {
     setActiveButton(buttonText);
   };
-  
+
   const handleGenderChange = (selectedGender) => {
     setActiveGender(selectedGender);
   };
@@ -46,24 +47,43 @@ function Pets({ user }) {
     setActiveShelter(selectedShelter);
   };
 
-  const uniqueAges = Array.from(new Set(data.map((cardItem) => cardItem.age))).sort((a, b) => a - b);
-  const uniqueShelters = Array.from(new Set(data.map((cardItem) => cardItem.Shelter)));
+  const uniqueAges = Array.from(
+    new Set(data.map((cardItem) => cardItem.age))
+  ).sort((a, b) => a - b);
+  const uniqueShelters = Array.from(
+    new Set(data.map((cardItem) => cardItem.Shelter))
+  );
 
-
-  
-   const filteredCardItems = data.filter((cardItem) => {
-    if (cardItem.is_adopted){
+  const filteredCardItems = data.filter((cardItem) => {
+    if (cardItem.is_adopted) {
       return false;
     }
-    if (activeButton === 'All' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+    if (
+      activeButton === "All" &&
+      (!activeGender || cardItem.gender === activeGender) &&
+      (!activeAge || cardItem.age.toString() === activeAge) &&
+      (!activeShelter || cardItem.Shelter.toString() === activeShelter)
+    ) {
       return true;
     }
 
-    if (activeButton === 'Cats' && cardItem.pet_type === 'Cat' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+    if (
+      activeButton === "Cats" &&
+      cardItem.pet_type === "Cat" &&
+      (!activeGender || cardItem.gender === activeGender) &&
+      (!activeAge || cardItem.age.toString() === activeAge) &&
+      (!activeShelter || cardItem.Shelter.toString() === activeShelter)
+    ) {
       return true;
     }
 
-    if (activeButton === 'Dogs' && cardItem.pet_type === 'Dog' && (!activeGender || cardItem.gender === activeGender) && (!activeAge || cardItem.age.toString() === activeAge) && (!activeShelter || cardItem.Shelter.toString() === activeShelter)) {
+    if (
+      activeButton === "Dogs" &&
+      cardItem.pet_type === "Dog" &&
+      (!activeGender || cardItem.gender === activeGender) &&
+      (!activeAge || cardItem.age.toString() === activeAge) &&
+      (!activeShelter || cardItem.Shelter.toString() === activeShelter)
+    ) {
       return true;
     }
 
@@ -76,13 +96,15 @@ function Pets({ user }) {
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
 
     return age;
   };
-  
 
   return (
     <>
@@ -108,9 +130,7 @@ function Pets({ user }) {
       <div className="container pt-4 px-3">
         <div className="row">
           <div className="col-12">
-            <h1 className="highlight-word">
-              Adopt a Shelter cat or dog
-            </h1>
+            <h1 className="highlight-word">Adopt a Shelter cat or dog</h1>
             <hr className="w-100 mb-3" />
             <p className="fs-6">
               Our adoptable cats and dogs are all spayed/neutered and
@@ -133,86 +153,84 @@ function Pets({ user }) {
       </div>
 
       <div className="container-fluid pt-3 padding-bottom-mobile">
-  {/* First row with buttons */}
-  <div className="d-flex justify-content-center align-items-center pb-3 filter-buttons">
-    <button
-      className={`btn ${activeButton === "All" ? "active" : ""} mx-3`}
-      onClick={() => handleButtonClick("All")}
-    >
-      All
-    </button>
-    <button
-      className={`btn ${activeButton === "Cats" ? "active" : ""}  mx-3`}
-      onClick={() => handleButtonClick("Cats")}
-    >
-      Cats
-    </button>
-    <button
-      className={`btn ${activeButton === "Dogs" ? "active" : ""}  mx-3`}
-      onClick={() => handleButtonClick("Dogs")}
-    >
-      Dogs
-    </button>
-  </div>
+        {/* First row with buttons */}
+        <div className="d-flex justify-content-center align-items-center pb-3 filter-buttons">
+          <button
+            className={`btn ${activeButton === "All" ? "active" : ""} mx-3`}
+            onClick={() => handleButtonClick("All")}
+          >
+            All
+          </button>
+          <button
+            className={`btn ${activeButton === "Cats" ? "active" : ""}  mx-3`}
+            onClick={() => handleButtonClick("Cats")}
+          >
+            Cats
+          </button>
+          <button
+            className={`btn ${activeButton === "Dogs" ? "active" : ""}  mx-3`}
+            onClick={() => handleButtonClick("Dogs")}
+          >
+            Dogs
+          </button>
+        </div>
 
-  {/* Second row with dropdown lists */}
-  <div className="row mb-3 justify-content-center">
-    <div className="col-lg-4 mb-1">
-      <div className="form-floating w-100">
-        <select
-          className="form-select"
-          id="genderSelect"
-          value={activeGender}
-          onChange={(event) => handleGenderChange(event.target.value)}
-        >
-          <option value="">All Genders</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
-        <label htmlFor="genderSelect">Gender</label>
-      </div>
-    </div>
+        {/* Second row with dropdown lists */}
+        <div className="row mb-3 justify-content-center">
+          <div className="col-lg-4 mb-1">
+            <div className="form-floating w-100">
+              <select
+                className="form-select"
+                id="genderSelect"
+                value={activeGender}
+                onChange={(event) => handleGenderChange(event.target.value)}
+              >
+                <option value="">All Genders</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <label htmlFor="genderSelect">Gender</label>
+            </div>
+          </div>
 
-    <div className="col-lg-4 mb-1">
-      <div className="form-floating w-100">
-        <select
-          className="form-select"
-          value={activeAge}
-          onChange={(event) => handleAgeChange(event.target.value)}
-        >
-          <option value="">All Ages</option>
-          {uniqueAges.map((age) => (
-            <option key={age} value={age.toString()}>
-              {`${age} ${age === 1 ? 'year' : 'years'} old`}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="ageSelect">Age</label>
-      </div>
-    </div>
+          <div className="col-lg-4 mb-1">
+            <div className="form-floating w-100">
+              <select
+                className="form-select"
+                value={activeAge}
+                onChange={(event) => handleAgeChange(event.target.value)}
+              >
+                <option value="">All Ages</option>
+                {uniqueAges.map((age) => (
+                  <option key={age} value={age.toString()}>
+                    {`${age} ${age === 1 ? "year" : "years"} old`}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="ageSelect">Age</label>
+            </div>
+          </div>
 
-    <div className="col-lg-4 mb-1">
-      <div className="form-floating w-100">
-        <select
-          className="form-select"
-          value={activeShelter}
-          onChange={(event) => handleShelterChange(event.target.value)}
-        >
-          <option value="">All Shelters</option>
-          {uniqueShelters.map((shelter) => (
-            <option key={shelter} value={shelter}>
-              {shelter}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="shelterSelect">Shelter</label>
-      </div>
-    </div>
-  </div>
+          <div className="col-lg-4 mb-1">
+            <div className="form-floating w-100">
+              <select
+                className="form-select"
+                value={activeShelter}
+                onChange={(event) => handleShelterChange(event.target.value)}
+              >
+                <option value="">All Shelters</option>
+                {uniqueShelters.map((shelter) => (
+                  <option key={shelter} value={shelter}>
+                    {shelter}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="shelterSelect">Shelter</label>
+            </div>
+          </div>
+        </div>
 
-
-          <hr className=" mt-0 mb-3"/>
-        
+        <hr className=" mt-0 mb-3" />
 
         <div className="row" key={`row`}>
           {filteredCardItems.map((cardItem) => (
@@ -232,24 +250,40 @@ function Pets({ user }) {
                     <h2>{cardItem.pet_name}</h2>
                   </div>
                   <div className="card-body">
+                    <div className="d-flex">
+                      Age:{" "}
+                      {moment().diff(moment(cardItem.birthdate), "months") <= 1
+                        ? "1 month"
+                        : moment().diff(moment(cardItem.birthdate), "months") <
+                          12
+                        ? `${moment().diff(
+                            moment(cardItem.birthdate),
+                            "months"
+                          )} months`
+                        : moment(cardItem.birthdate).fromNow(true)}{" "}
+                      old
+                      <span className="ms-auto">
+                        {cardItem.gender === "Male" ? (
+                          <i className="bi bi-gender-male"></i>
+                        ) : (
+                          <i className="bi bi-gender-female"></i>
+                        )}
+                      </span>
+                    </div>
                     <p>
-                      <strong>  Age: </strong> {calculateAge(cardItem.birthdate)}{" "}
-                      {cardItem.gender === "Male" ? (
-                        <i className="icon bi bi-gender-male "></i>
-                      ) : (
-                        <i className="icon bi bi-gender-female"></i>
-                      )}{" "}
+                      <strong>Personality:</strong> {cardItem.pet_personality}
                     </p>
-                    <p><strong>Personality:</strong> {cardItem.pet_personality}</p>
-                    <p><strong>Shelter:</strong> {cardItem.Shelter}</p>
+                    <p>
+                      <strong>Shelter:</strong> {cardItem.Shelter}
+                    </p>
                   </div>
                 </div>
-                </Link>
+              </Link>
             </div>
           ))}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

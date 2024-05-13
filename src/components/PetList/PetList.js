@@ -3,6 +3,7 @@ import { supabase } from "../client";
 import Cookies from "js-cookie";
 import { BeatLoader } from "react-spinners";
 import "./PetList.css";
+import moment from "moment";
 
 const PetList = () => {
   const [data, setData] = useState([]);
@@ -119,11 +120,11 @@ const PetList = () => {
         .from("Pets")
         .update({
           pet_name: editedDetails.pet_name,
-          age: editedDetails.age,
+          birthdate: editedDetails.birthdate,
           gender: editedDetails.gender,
           pet_type: editedDetails.pet_type,
           pet_personality: editedDetails.pet_personality,
-          is_adopted: editedDetails.is_adopted
+          is_adopted: editedDetails.is_adopted,
         })
         .eq("id", parseInt(selectedCard.id, 10))
         .single();
@@ -244,14 +245,31 @@ const PetList = () => {
                             <h2>{cardItem.pet_name}</h2>
                           </div>
                           <div className="card-body">
-                            <p>
-                              Age: {cardItem.age}{" "}
-                              {cardItem.gender === "Male" ? (
-                                <i className="icon bi bi-gender-male"></i>
-                              ) : (
-                                <i className="icon bi bi-gender-female"></i>
-                              )}{" "}
-                            </p>
+                            <div className="d-flex">
+                              Age:{" "}
+                              {moment().diff(
+                                moment(cardItem.birthdate),
+                                "months"
+                              ) <= 1
+                                ? "1 month"
+                                : moment().diff(
+                                    moment(cardItem.birthdate),
+                                    "months"
+                                  ) < 12
+                                ? `${moment().diff(
+                                    moment(cardItem.birthdate),
+                                    "months"
+                                  )} months`
+                                : moment(cardItem.birthdate).fromNow(true)}{" "}
+                              old
+                              <span className="ms-auto">
+                                {cardItem.gender === "Male" ? (
+                                  <i className="bi bi-gender-male"></i>
+                                ) : (
+                                  <i className="bi bi-gender-female"></i>
+                                )}
+                              </span>
+                            </div>
                             <p>Personality: {cardItem.pet_personality}</p>
                             <button
                               className="btn w-100"
@@ -409,14 +427,14 @@ const PetList = () => {
 
                       <div className="mb-3 px-2">
                         <label htmlFor="age" className="form-label">
-                          Age
+                          Birthdate
                         </label>
                         <input
-                          type="text"
+                          type="date"
                           className="form-control"
-                          id="age"
-                          name="age"
-                          value={editedDetails.age}
+                          id="birthdate"
+                          name="birthdate"
+                          value={editedDetails.birthdate}
                           onChange={handleFormChange}
                         />
                       </div>

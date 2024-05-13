@@ -57,7 +57,7 @@ const AddPetModal = ({shelterName}) => {
           .from('Pets')
           .insert([
             { pet_name: addFormData.pet_name, 
-              age: addFormData.age,
+              birthdate: addFormData.birthdate,
               gender: addFormData.gender,
               pet_type: addFormData.petType,
               pet_personality: addFormData.pet_personality,
@@ -131,13 +131,13 @@ const AddPetModal = ({shelterName}) => {
 
                             <div className="mb-3 px-2">
                               <label htmlFor="age" className="form-label">
-                                Age
+                                Birthdate
                               </label>
                               <input
-                                type="text"
+                                type="date"
                                 className="form-control"
-                                id="age"
-                                name="age"
+                                id="birthdate"
+                                name="birthdate"
                                 onChange={handleAddChange}
                                 required
                               />

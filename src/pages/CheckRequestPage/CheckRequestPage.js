@@ -14,9 +14,49 @@ function CheckRequestPage() {
   const [modalMessage, setModalMessage] = useState("");
   const [requestEmail, setRequestEmail] = useState("");
   const currentUrl = window.location.href;
-
-  // Split the URL by slashes and get the last part
   const dataId = currentUrl.split("/").pop();
+
+
+  async function fetchAndUpdateRelevantRequests() {
+    try {
+      // 1. Fetch Relevant Requests:
+      const { data: requests, error: fetchError } = await supabase
+        .from("Requests")
+        .select() // Note: You might want to fetch specific columns for efficiency
+        .eq("pet_id", requestDetails[0].Pets.id) // Assuming requestDetails is available
+        .neq("id", dataId)
+        .filter('adoption_status', 'in', '("For Interview","For Verification","Interview Done")')
+       
+
+      console.log(requests)
+      if (fetchError) {
+        throw fetchError; 
+      }
+  
+      // 2. Check if Requests Exist:
+      if (requests.length > 0) {
+        // 3. Update Requests to "Adopted":
+        const { error: updateError } = await supabase
+          .from("Requests")
+          .update({ adoption_status: "Adopted" })
+          .in("id", requests.map(request => request.id)); // Update multiple rows
+  
+        if (updateError) {
+          throw updateError;
+        }
+      } 
+  
+      // Return the fetched (and potentially updated) requests
+      return requests; 
+    } catch (error) {
+      console.error("Error fetching or updating requests:", error.message);
+      // Handle errors appropriately, e.g., by returning an error value,
+      // throwing a custom error, or updating state to indicate failure
+      throw error; // You can choose to re-throw the error to handle it elsewhere
+    }
+  }
+  
+
 
   useEffect(() => {
     getRequestData();
@@ -132,16 +172,16 @@ function CheckRequestPage() {
       // Determine email template based on the status
       switch (selectedStatus) {
         case "For Interview":
-         const date = new Date(additionalInfo)
-         const formattedDateTime = date.toLocaleString('en-US', {
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          hour12: true
-        });
+          const date = new Date(additionalInfo);
+          const formattedDateTime = date.toLocaleString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+          });
 
           templateMessage = `Hello ${requestDetails[0].first_name},
   
@@ -156,14 +196,14 @@ function CheckRequestPage() {
             Best regards,
             BPUAdopt Team`;
 
-            const { data, error } = await supabase
-            .from('Requests')
-            .update({ interview_date: date }) 
-            .eq('id', dataId)
+          const { data, error } = await supabase
+            .from("Requests")
+            .update({ interview_date: date })
+            .eq("id", dataId)
             .select();
-            if (error) {
-              console.error('Error updating database:', error.message);
-            }
+          if (error) {
+            console.error("Error updating database:", error.message);
+          }
 
           break;
 
@@ -232,7 +272,7 @@ function CheckRequestPage() {
 
         if (selectedStatus === "Approved") {
           await handleApproval(); // Wait for handleApproval to complete
-          await sendProcessUpdateEmail(selectedStatus, requestEmail);
+          // await sendProcessUpdateEmail(selectedStatus, requestEmail);
           setModalMessage(
             `Record updated successfully! An email has been sent to ${requestEmail}`
           );
@@ -241,7 +281,7 @@ function CheckRequestPage() {
         }
 
         // For other status updates
-        await sendProcessUpdateEmail(selectedStatus, requestEmail);
+        // await sendProcessUpdateEmail(selectedStatus, requestEmail);
         setModalMessage(
           `Record updated successfully! An email has been sent to ${requestEmail}`
         );
@@ -259,23 +299,27 @@ function CheckRequestPage() {
     setGetInfoModalShow(true);
   };
 
-  const handleApproval = async () => {
+  async function handleApproval() {
     try {
-      // Update the Pets table in Supabase
-      const { data, error } = await supabase
+      // Attempt to update relevant requests (this might not find any)
+      await fetchAndUpdateRelevantRequests(); 
+  
+      // Always update the pet to 'is_adopted: true'
+      const { error } = await supabase
         .from("Pets")
         .update({ is_adopted: true })
         .eq("id", requestDetails[0].Pets.id);
-
+  
       if (error) {
         throw error;
       }
-
-      console.log("Pet approved successfully:", data);
+  
+      console.log("Pet status updated to 'Adopted'.");
     } catch (error) {
-      console.error("Error approving pet:", error.message);
+      console.error("Error updating pet status:", error.message);
     }
-  };
+  }
+  
 
   if (loading) {
     <>

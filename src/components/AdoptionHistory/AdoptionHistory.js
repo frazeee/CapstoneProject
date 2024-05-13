@@ -365,6 +365,8 @@ const AdoptionHistory = ({ shelterName }) => {
                                   ? "text-light text-bg-info"
                                   : req.adoption_status === "Approved"
                                   ? "text-bg-success"
+                                  : req.adoption_status === "Adopted"
+                                  ? "text-bg-secondary"
                                   : req.adoption_status === "Rejected" &&
                                     "text-bg-danger"
                               }`}
