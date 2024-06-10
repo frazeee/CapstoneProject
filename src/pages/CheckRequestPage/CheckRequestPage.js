@@ -17,6 +17,43 @@ function CheckRequestPage() {
   const dataId = currentUrl.split("/").pop();
 
 
+  const sendProcessSameRequestEmail = async (email, first_name, subject) => {
+    try {
+      setLoading(true);
+      const templateMessage = `Hello ${first_name},
+  
+        We appreciate your interest in adopting ${requestDetails[0].Pets.pet_name}. Unfortunately, another applicant has recently been approved for its adoption.
+  
+        We understand this might be disappointing news, and we apologize for any inconvenience caused. We encourage you to continue browsing our available pets - there might be another furry friend waiting for their forever home!
+  
+        Thank you for your understanding.
+  
+        Best regards,
+        BPUAdopt Team`;
+  
+      const templateParams = {
+        to_email: email,
+        subject: subject,
+        message: templateMessage,
+        user: requestDetails.first_name,
+        organization: "BPUAdopt",
+      };
+  
+      await emailjs.send(
+        "service_8r6eaxe",
+        "template_email",
+        templateParams,
+        "-fD_Lzps7ypbyVDAa"
+      );
+  
+      console.log("Process update email sent successfully");
+    } catch (error) {
+      console.error("Error sending process update email:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   async function fetchAndUpdateRelevantRequests() {
     try {
       // 1. Fetch Relevant Requests:
@@ -38,11 +75,15 @@ function CheckRequestPage() {
         // 3. Update Requests to "Adopted":
         const { error: updateError } = await supabase
           .from("Requests")
-          .update({ adoption_status: "Adopted" })
+          .update({ adoption_status: "Rejected" })
           .in("id", requests.map(request => request.id)); // Update multiple rows
   
         if (updateError) {
           throw updateError;
+        } 
+
+        for (const request of requests) {
+          await sendProcessSameRequestEmail(request.email, request.first_name, "Recently Adopted"); // Call your email sending function
         }
       } 
   
